@@ -12,14 +12,18 @@ tabred,cooking-time,cooking-time__4i5sXpk,495.7,skipped,11,0.472,0.472,"rfr, sca
 tabred,cooking-time,cooking-time__5xD6N3S,482.2,skipped,12,0.472,0.472,"rfr, scaling",29.4
 tabred,cooking-time,cooking-time__jWdyBzF,486.3,skipped,11,0.472,0.472,"rfr, scaling",40.2
 tabred,delivery-eta,delivery-eta__AbuEqMv,807.5,skipped,6,0.571,0.571,"rfr, scaling",56.3
+tabred,delivery-eta,delivery-eta__bBNNjor,894.2,skipped,5,0.571,0.571,,60.0
 tabred,delivery-eta,delivery-eta__gMeVN7t,836.8,skipped,6,0.571,0.571,"rfr, scaling",58.1
 tabred,ecom-offers,ecom-offers__JLmUMKA,24.5,ran,13,0.711,0.711,"logit, catboost, scaling, xgboost, lgbm",21.6
 tabred,ecom-offers,ecom-offers__Ukj4Tip,24.4,ran,7,0.711,0.711,"logit, catboost, scaling, xgboost, lgbm",21.8
 tabred,ecom-offers,ecom-offers__krhCo9W,29.5,ran,,,,"logit, catboost, scaling, xgboost, lgbm",22.3
+tabred,sberbank-housing,sberbank-housing__DHnjWNc,41.2,ran,,,,,60.0
 tabred,sberbank-housing,sberbank-housing__H9dJm6W,43.3,ran,8,0.254,0.244,"lgbmreg, scaling",20.7
+tabred,sberbank-housing,sberbank-housing__fbt9jqR,41.0,ran,,,,,60.0
 tabred,weather,weather__CQG9NBL,404.4,skipped,13,1.693,1.676,"rfr, scaling",34.1
 tabred,weather,weather__HBA3D6s,408.0,skipped,13,1.693,1.693,"rfr, scaling",40.4
 tabred,weather,weather__vKoTuau,401.2,skipped,13,1.693,1.676,"rfr, scaling",31.4
+tabred,sberbank-housing,sberbank-housing__Bjj9qA3,42.0,ran,,,,,60.0
 tabred,sberbank-housing,sberbank-housing__jmjjKcg,49.0,ran,8,0.253,0.246,"lgbmreg, normalization",20.6
 tabred,sberbank-housing,sberbank-housing__ttjbwYe,41.9,ran,6,0.253,0.247,"lgbmreg, normalization",21.0
 tabred,delivery-eta,delivery-eta__YiuqKJP,789.8,skipped,6,0.571,0.571,"rfr, scaling",55.1

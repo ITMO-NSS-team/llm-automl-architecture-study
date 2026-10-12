@@ -1,4 +1,4 @@
-# Harness, Instruction File or Backbone: Where the Accuracy of LLM-Agent AutoML Comes From
+# Architecture over Parameters: How Far Agentic Design Patterns Carry a Weak Model in Automated Machine Learning
 
 Supplementary material for the paper: the execution trace of every trial and
 the tables derived from the traces.
@@ -16,7 +16,7 @@ execute in the [Harbor](https://github.com/harbor-framework/harbor) framework.
 
 | Path | Content |
 |---|---|
-| [`runs/`](runs) | Harbor job directories: 557 trials in 26 cells, grouped by benchmark, harness and configuration |
+| [`runs/`](runs) | Harbor job directories: 558 trials in 26 cells, grouped by benchmark, harness and configuration |
 | [`result_files/`](result_files) | one table with every trial, per-cell and per-task summaries, the paired statistics, the trace analysis and the text of the instruction file |
 
 A trial is one attempt at one task. A cell is one configuration run over all
@@ -31,7 +31,7 @@ to the tables, figures and sections of the paper.
 
 | Directory | Instruction file | Image | Language model | Parallel trials | Trials | Reported in |
 |---|---|---|---|---|---|---|
-| [`fedot-llm/library-built-in`](runs/tabred/fedot-llm/library-built-in) | library built in | FEDOT | gemma-4-31b-it | 2 | 24 | Table 3, Fig. 2, Table 6 |
+| [`fedot-llm/library-built-in`](runs/tabred/fedot-llm/library-built-in) | library built in | FEDOT | gemma-4-31b-it | 2 | 28 | Table 3, Fig. 2, Table 6 |
 | [`terminus-2/stock-image`](runs/tabred/terminus-2/stock-image) | none | stock | gemma-4-31b-it | 2 | 24 | Table 3, Fig. 2, Table 6 |
 | [`terminus-2/enriched-image`](runs/tabred/terminus-2/enriched-image) | none | enriched | gemma-4-31b-it | 2 | 24 | Sections 6.1, 6.5 and 7.1, Fig. 4 |
 | [`terminus-2/file-none`](runs/tabred/terminus-2/file-none) | none | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Section 6.6, Fig. 4 |
@@ -179,16 +179,14 @@ An AutoDS-Tools trial that was cut at the time limit has no
 
 ## Repeated trials
 
-Sixteen trial directories have `counted = no`.
+Thirteen trial directories have `counted = no`.
 
-- `tabred/fedot-llm/library-built-in`: four trials (one of `delivery-eta`,
-  three of `sberbank-housing`) reached the 3,600 s limit without a submission.
-  The two tasks were repeated in the jobs
-  `fedot-tabred-40min-schema-delivery-20260922-224814` and
-  `fedot-tabred-40min-schema-sberbank-20260922-175429`.
 - `tabred/terminus-2/file-library`: two trials ended on an API connection
   error. They were repeated with the same command in
   `terminus-ktool2-fill-20261007-162612`.
+- `tabred/terminus-2/model-gemma-4-26b-a4b-it`: one trial ended on an API
+  connection error. It was repeated with the same command in
+  `terminus-tabred-Msmall-fill-20261012-143233`.
 - `tabred/autods-tools/model-glm-4.7`: the cell consists of three passes over
   the eight tasks. In the second and third pass four trials crashed when the
   file-search tool of the repair agent raised an exception on an absolute
@@ -202,9 +200,10 @@ Sixteen trial directories have `counted = no`.
 - `mlagentbench/autods-tools/file-none_cifar10-imdb`: the job was stopped with
   two trials unfinished.
 
-One trial of `tabred/terminus-2/model-gemma-4-26b-a4b-it` ended on an API
-connection error and is counted among the six trials of that cell without a
-submission.
+The cell `tabred/fedot-llm/library-built-in` has 28 trials. Four of them (one
+of `delivery-eta`, three of `sberbank-housing`) reached the 3,600 s limit
+without a submission and are counted as trials without a submission. The two
+tasks were repeated until each had three scored attempts.
 
 ## Traces on Harbor Hub
 
@@ -253,5 +252,5 @@ Case studies:
 ## Citation
 
 S. Chumakov, D. Ezhov, A. Lapin, P. Marian, K. Anpilov, H. Wang, L. Goliatt,
-N. O. Nikitin. Harness, Instruction File or Backbone: Where the Accuracy of
-LLM-Agent AutoML Comes From. Manuscript, 2026.
+N. O. Nikitin. Architecture over Parameters: How Far Agentic Design Patterns
+Carry a Weak Model in Automated Machine Learning. Manuscript, 2026.

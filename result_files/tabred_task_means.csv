@@ -2,9 +2,9 @@ harness,cell,task,metric,trials,scored,mean,min,max,normalised_score
 fedot-llm,library-built-in,homesite-insurance,ROC-AUC,3,3,0.959719,0.959719,0.959719,0.9062
 fedot-llm,library-built-in,ecom-offers,ROC-AUC,3,3,0.620040,0.620040,0.620040,1.4288
 fedot-llm,library-built-in,homecredit-default,ROC-AUC,3,3,0.856865,0.856865,0.856865,0.9167
-fedot-llm,library-built-in,sberbank-housing,RMSE,3,3,0.239792,0.234004,0.243414,0.9645
+fedot-llm,library-built-in,sberbank-housing,RMSE,6,3,0.239792,0.234004,0.243414,0.9645
 fedot-llm,library-built-in,cooking-time,RMSE,3,3,0.486700,0.486160,0.487496,0.2179
-fedot-llm,library-built-in,delivery-eta,RMSE,3,3,0.562040,0.562040,0.562040,0.6854
+fedot-llm,library-built-in,delivery-eta,RMSE,4,3,0.562040,0.562040,0.562040,0.6854
 fedot-llm,library-built-in,maps-routing,RMSE,3,3,0.166449,0.166449,0.166449,0.4589
 fedot-llm,library-built-in,weather,RMSE,3,3,1.565056,1.554733,1.580636,0.6642
 terminus-2,stock-image,homesite-insurance,ROC-AUC,3,3,0.958802,0.958095,0.959643,0.8791
@@ -68,7 +68,7 @@ terminus-2,model-gemma-4-26b-a4b-it,ecom-offers,ROC-AUC,3,1,0.567430,0.567430,0.
 terminus-2,model-gemma-4-26b-a4b-it,homecredit-default,ROC-AUC,3,3,0.854153,0.847966,0.858838,0.8944
 terminus-2,model-gemma-4-26b-a4b-it,sberbank-housing,RMSE,3,3,0.254195,0.247136,0.267746,0.6626
 terminus-2,model-gemma-4-26b-a4b-it,cooking-time,RMSE,3,1,0.483812,0.483812,0.483812,0.5882
-terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,RMSE,3,2,0.547614,0.547611,0.547617,0.9774
+terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,RMSE,3,3,0.547686,0.547611,0.547829,0.9760
 terminus-2,model-gemma-4-26b-a4b-it,maps-routing,RMSE,3,3,0.162790,0.162741,0.162827,0.8361
 terminus-2,model-gemma-4-26b-a4b-it,weather,RMSE,3,2,1.617088,1.523593,1.710583,0.4938
 terminus-2,model-glm-4.7,homesite-insurance,ROC-AUC,3,3,0.954624,0.943246,0.960759,0.7559

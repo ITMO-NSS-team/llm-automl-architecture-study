@@ -171,7 +171,6 @@ terminus-2,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__CTBdPfS,no submis
 terminus-2,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__HH4DsuE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__tXseUdV,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__KPMC5jV,scored,yes,0,1,0,0,0,0,0,1,0,1,0
-terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__X4B4h9P,error,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__f9B9NpN,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__RvreDxu,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__YFxtAmJ,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
@@ -191,6 +190,7 @@ terminus-2,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__wMqvteQ,s
 terminus-2,model-gemma-4-26b-a4b-it,weather,weather__49aLoVL,scored,yes,0,1,0,0,1,0,0,0,0,1,0
 terminus-2,model-gemma-4-26b-a4b-it,weather,weather__VDbifR5,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-gemma-4-26b-a4b-it,weather,weather__q7ySSXa,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__eJHsC9g,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,model-glm-4.7,cooking-time,cooking-time__7YdSHJK,scored,yes,0,1,0,0,0,0,0,1,0,0,0
 terminus-2,model-glm-4.7,cooking-time,cooking-time__EjrMtvk,scored,yes,0,0,0,0,0,1,0,0,0,0,0
 terminus-2,model-glm-4.7,cooking-time,cooking-time__LCijpYE,scored,yes,0,0,0,0,0,1,0,0,0,0,0
