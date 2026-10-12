@@ -17,7 +17,7 @@ terminus-2,stock-image,homesite-insurance,homesite-insurance__Xxp2EGc,scored,yes
 terminus-2,stock-image,maps-routing,maps-routing__RhPzavc,scored,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,stock-image,maps-routing,maps-routing__Tr9bAJC,scored,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,stock-image,maps-routing,maps-routing__j8RhzGD,scored,yes,0,0,1,0,0,1,0,1,1,1,0
-terminus-2,stock-image,sberbank-housing,sberbank-housing__5FnFb6N,scored,yes,0,1,0,0,0,1,0,1,1,1,0
+terminus-2,stock-image,sberbank-housing,sberbank-housing__5FnFb6N,scored,yes,0,1,0,0,0,1,0,0,1,1,0
 terminus-2,stock-image,sberbank-housing,sberbank-housing__8sFS9cF,scored,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,stock-image,sberbank-housing,sberbank-housing__XZ3eNKN,scored,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,stock-image,weather,weather__cfFnf4k,scored,yes,0,1,0,0,0,1,0,1,1,1,0
@@ -41,7 +41,7 @@ terminus-2,enriched-image,homesite-insurance,homesite-insurance__TAZ88rw,scored,
 terminus-2,enriched-image,maps-routing,maps-routing__RXRXxkE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,enriched-image,maps-routing,maps-routing__d8DHthy,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,enriched-image,maps-routing,maps-routing__kUDWbWk,scored,yes,0,1,0,0,0,0,0,1,1,1,0
-terminus-2,enriched-image,sberbank-housing,sberbank-housing__5Dx7S5T,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,sberbank-housing,sberbank-housing__5Dx7S5T,scored,yes,0,1,0,0,0,0,0,0,1,1,1
 terminus-2,enriched-image,sberbank-housing,sberbank-housing__NYC3QEv,scored,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,enriched-image,sberbank-housing,sberbank-housing__x28HWSX,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,enriched-image,weather,weather__6Gs9Lqx,scored,yes,0,1,0,0,0,0,0,1,1,1,0
@@ -110,7 +110,7 @@ terminus-2,file-discipline,homecredit-default,homecredit-default__yLPNHer,no sub
 terminus-2,file-discipline,homesite-insurance,homesite-insurance__D9QQ7pm,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,file-discipline,homesite-insurance,homesite-insurance__GotvNZF,scored,yes,0,1,0,0,0,0,0,1,0,1,1
 terminus-2,file-discipline,homesite-insurance,homesite-insurance__hMWSZtu,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
-terminus-2,file-discipline,maps-routing,maps-routing__KFWGEk5,no submission,yes,0,0,0,0,0,0,0,1,0,0,0
+terminus-2,file-discipline,maps-routing,maps-routing__KFWGEk5,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
 terminus-2,file-discipline,maps-routing,maps-routing__jLfHbHg,scored,yes,0,1,0,0,0,0,0,1,0,1,0
 terminus-2,file-discipline,maps-routing,maps-routing__kHXj7yT,scored,yes,0,1,0,0,0,0,0,1,0,1,0
 terminus-2,file-discipline,sberbank-housing,sberbank-housing__GLB4aCA,no submission,yes,0,0,0,1,0,0,0,1,1,1,0
@@ -120,7 +120,7 @@ terminus-2,file-discipline,weather,weather__FBKbTBr,no submission,yes,0,0,0,0,0,
 terminus-2,file-discipline,weather,weather__PP7mBur,no submission,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,file-discipline,weather,weather__awGBqWD,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
 terminus-2,file-discipline-trimmed,cooking-time,cooking-time__7VoM3Zv,scored,yes,0,1,0,0,0,0,0,1,1,1,0
-terminus-2,file-discipline-trimmed,cooking-time,cooking-time__7efLKER,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,cooking-time,cooking-time__7efLKER,scored,yes,0,1,0,0,0,0,0,0,1,1,0
 terminus-2,file-discipline-trimmed,cooking-time,cooking-time__YcpfUDx,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,file-discipline-trimmed,delivery-eta,delivery-eta__MMMoGfG,scored,yes,0,1,0,0,0,0,0,0,1,1,0
 terminus-2,file-discipline-trimmed,delivery-eta,delivery-eta__dH35ERM,scored,yes,0,1,1,0,0,0,0,1,1,1,1
@@ -133,7 +133,7 @@ terminus-2,file-discipline-trimmed,homecredit-default,homecredit-default__bvqXGx
 terminus-2,file-discipline-trimmed,homecredit-default,homecredit-default__mBa9bZm,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__ZqGAJjv,scored,yes,0,1,0,0,0,0,0,1,1,1,1
 terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__czFummk,scored,yes,0,1,0,0,0,0,0,1,1,1,0
-terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__eLLSGky,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__eLLSGky,scored,yes,0,1,0,0,0,0,0,0,1,1,0
 terminus-2,file-discipline-trimmed,maps-routing,maps-routing__Abg4qQ4,scored,yes,0,0,0,1,0,0,0,1,1,1,0
 terminus-2,file-discipline-trimmed,maps-routing,maps-routing__KWmYyrE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
 terminus-2,file-discipline-trimmed,maps-routing,maps-routing__WQ4YktH,scored,yes,0,1,0,0,0,0,0,1,1,1,0
@@ -205,7 +205,7 @@ terminus-2,model-glm-4.7,homecredit-default,homecredit-default__WDYjGq9,scored,y
 terminus-2,model-glm-4.7,homecredit-default,homecredit-default__j3Ktwt9,scored,yes,0,1,0,0,0,0,0,0,0,1,0
 terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__5oe6NgB,scored,yes,0,0,0,0,1,0,0,0,0,0,0
 terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__67ghqyW,scored,yes,0,1,1,0,0,0,0,1,0,0,0
-terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__WpYE5Nu,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__WpYE5Nu,scored,yes,0,1,0,0,0,0,0,0,1,1,0
 terminus-2,model-glm-4.7,maps-routing,maps-routing__AooSji5,scored,yes,0,0,0,0,0,1,0,0,0,0,0
 terminus-2,model-glm-4.7,maps-routing,maps-routing__JCEQKuQ,scored,yes,0,1,1,0,1,0,0,1,0,0,0
 terminus-2,model-glm-4.7,maps-routing,maps-routing__xus43WC,scored,yes,0,1,0,0,0,0,0,1,0,1,0
@@ -231,7 +231,7 @@ autods-tools,file-none,homesite-insurance,homesite-insurance__Q2CWEKS,scored,yes
 autods-tools,file-none,homesite-insurance,homesite-insurance__RLAoSvA,scored,yes,1,1,0,0,0,0,0,1,1,1,0
 autods-tools,file-none,homesite-insurance,homesite-insurance__ndSayVP,scored,yes,0,0,1,0,0,0,0,1,1,1,0
 autods-tools,file-none,maps-routing,maps-routing__BJc3JnS,scored,yes,0,0,0,1,0,0,0,1,1,1,0
-autods-tools,file-none,maps-routing,maps-routing__cvojeyS,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,maps-routing,maps-routing__cvojeyS,scored,yes,0,1,0,0,0,0,0,0,1,1,0
 autods-tools,file-none,maps-routing,maps-routing__xwPHaSP,scored,yes,0,1,0,0,0,0,0,0,1,1,0
 autods-tools,file-none,sberbank-housing,sberbank-housing__TWVSWKF,scored,yes,0,0,0,1,0,0,0,1,0,1,0
 autods-tools,file-none,sberbank-housing,sberbank-housing__fZZfskD,scored,yes,0,0,0,1,0,0,0,1,0,1,0
@@ -342,7 +342,7 @@ autods-tools,model-glm-4.7,homecredit-default,homecredit-default__oYKb5Eq,scored
 autods-tools,model-glm-4.7,homesite-insurance,homesite-insurance__8LG9inZ,scored,no,,,,,,,,,,,
 autods-tools,model-glm-4.7,maps-routing,maps-routing__8Rz2Mnn,no submission,no,,,,,,,,,,,
 autods-tools,model-glm-4.7,sberbank-housing,sberbank-housing__kTGeMzg,scored,no,,,,,,,,,,,
-autods-tools,model-glm-4.7,weather,weather__mLa5raQ,scored,yes,1,0,0,0,0,0,0,1,0,0,0
+autods-tools,model-glm-4.7,weather,weather__mLa5raQ,scored,yes,1,0,0,0,0,0,0,0,0,0,0
 autods-tools,model-glm-4.7,delivery-eta,delivery-eta__Thf62eQ,scored,yes,1,0,0,0,1,0,0,0,0,0,0
 autods-tools,model-glm-4.7,ecom-offers,ecom-offers__uboCZQz,scored,yes,1,0,0,1,0,0,0,0,0,0,0
 autods-tools,model-glm-4.7,homesite-insurance,homesite-insurance__gMcgvGP,scored,yes,1,0,0,0,0,0,0,0,0,0,0
