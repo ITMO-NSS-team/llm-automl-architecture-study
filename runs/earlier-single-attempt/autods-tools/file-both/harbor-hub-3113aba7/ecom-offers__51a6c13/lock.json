@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task": {
+    "name": "ecom-offers",
+    "type": "local",
+    "digest": "sha256:a74f89683c64fb195600b4f004f27a828738a649526bec82d287e2013676da68",
+    "source": "tabred-real",
+    "path": "harbor-datasets-tabred/datasets/tabred-real/ecom-offers",
+    "git_url": null,
+    "git_commit_id": null
+  },
+  "install_only": false,
+  "timeout_multiplier": 1.0,
+  "agent": {
+    "name": "autods",
+    "model_name": "openrouter/google/gemma-4-31b-it",
+    "skills": [],
+    "extra_allowed_hosts": [],
+    "kwargs": {
+      "temperature": 0.2
+    },
+    "mcp_servers": []
+  },
+  "skills": [],
+  "environment": {
+    "type": null,
+    "import_path": null,
+    "force_build": false,
+    "delete": true,
+    "extra_docker_compose": [],
+    "kwargs": {},
+    "extra_allowed_hosts": []
+  },
+  "verifier": {
+    "disable": false
+  }
+}

@@ -1,0 +1,7 @@
+>> LOCAL house-price from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/house-price
+>> RUN house-price/base (family=tabular)  20:03:22
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 31 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/house-price-base/trace.json
+>> SCORE house-price/base (answer: answer.csv)
+{"reward": 0.9049566153029354, "r2": 0.9049566153029354, "mae": 15671.490873214005, "rmse": 25433.20777545129, "n": 292}

@@ -1,0 +1,7 @@
+>> LOCAL amp-parkinsons from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/amp-parkinsons
+>> RUN amp-parkinsons/base (family=tabular)  20:29:53
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 31 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/amp-parkinsons-base/trace.json
+>> SCORE amp-parkinsons/base (answer: answer.csv)
+{'reward': 0.5086873275702504, 'smape': 96.58441360757091}

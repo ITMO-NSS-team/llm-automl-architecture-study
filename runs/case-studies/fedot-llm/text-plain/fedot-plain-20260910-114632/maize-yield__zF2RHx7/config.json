@@ -1,0 +1,13 @@
+{
+    "task": {
+        "path": "datasets/cases-fedot-plain/maize-yield",
+        "source": "cases-fedot-plain"
+    },
+    "trial_name": "maize-yield__zF2RHx7",
+    "trials_dir": "../jobs/fedot-plain-20260910-114632",
+    "agent": {
+        "name": "fedot_harbor.agent:FedotLLMAgent",
+        "model_name": "openrouter/google/gemma-4-31b-it"
+    },
+    "job_id": "e1a811e8-b46e-47fd-bf85-89dfe063d4f4"
+}

@@ -1,0 +1,7 @@
+>> LOCAL sberbank-housing from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/sberbank-housing
+>> RUN sberbank-housing/c1 (family=tabular)  02:08:14
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 24 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/sberbank-housing-c1/trace.json
+>> SCORE sberbank-housing/c1 (answer: answer.csv)
+{"reward": 0.5517459907840536, "r2": 0.5517459907840536, "rmse": 0.2561192925200456, "n": 4647}

@@ -1,0 +1,228 @@
+{
+    "id": "32e9239d-d093-425b-a99f-f904ef123785",
+    "started_at": "2026-09-03T23:48:27.932965",
+    "updated_at": "2026-09-04T09:07:13.264544",
+    "finished_at": "2026-09-04T09:07:13.264544",
+    "n_total_trials": 30,
+    "stats": {
+        "n_completed_trials": 30,
+        "n_errored_trials": 15,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "autods__gemma-4-31b-it__mlab-c1": {
+                "n_trials": 30,
+                "n_errors": 15,
+                "metrics": [
+                    {
+                        "accuracy": 0.13177419838523644,
+                        "dice": 0.00478309261599894,
+                        "mae": 1643.3430375570777,
+                        "matched_ids": 3.2,
+                        "n": 1205.8,
+                        "r2": 0.08748450067668308,
+                        "reward": 0.27769029182960697,
+                        "rmse": 2917.469818196417,
+                        "smape": 8.646373375948912
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.5501251208304291": [
+                            "amp-parkinsons__tN4jpZe"
+                        ],
+                        "0.014907576739911995": [
+                            "identify-contrails__L77xK7Y"
+                        ],
+                        "0.4334": [
+                            "ogbn-arxiv__XKD3Hqe"
+                        ],
+                        "0.0": [
+                            "feedback__WiAABGY",
+                            "imdb__LzeUvNo",
+                            "fathomnet__BMGJ66i",
+                            "clrs__FfawR7f",
+                            "cifar10__Ef3kjio",
+                            "feedback__xFk4Jqq",
+                            "imdb__qiMXdc2",
+                            "fathomnet__m5TDPEU",
+                            "clrs__pW4oFBD",
+                            "cifar10__jUiVDpV",
+                            "feedback__R9JPjn5",
+                            "imdb__yw6v3V4",
+                            "fathomnet__pFC8CrC",
+                            "clrs__NUqYNAY",
+                            "cifar10__krenvAU"
+                        ],
+                        "0.8131487889273357": [
+                            "spaceship-titanic__XnH2Qc7"
+                        ],
+                        "0.8724887520128953": [
+                            "house-price__Dk8rk8Y"
+                        ],
+                        "0.5260933066441426": [
+                            "amp-parkinsons__FgcKskJ"
+                        ],
+                        "0.11371507045617388": [
+                            "identify-contrails__t68kHeb"
+                        ],
+                        "0.5573": [
+                            "ogbn-arxiv__5Wo8rA2"
+                        ],
+                        "0.8114186851211073": [
+                            "spaceship-titanic__vYSQNkq"
+                        ],
+                        "0.8680731614630355": [
+                            "house-price__J4u7y6S"
+                        ],
+                        "0.5332365770760832": [
+                            "amp-parkinsons__LRJW3PY"
+                        ],
+                        "0.014870131283882345": [
+                            "identify-contrails__MWzRScZ"
+                        ],
+                        "0.53": [
+                            "ogbn-arxiv__ehVh9M9"
+                        ],
+                        "0.8079584775086506": [
+                            "spaceship-titanic__P2eBgNw"
+                        ],
+                        "0.8839731068245613": [
+                            "house-price__WQjSUYq"
+                        ]
+                    },
+                    "smape": {
+                        "81.77682896764874": [
+                            "amp-parkinsons__tN4jpZe"
+                        ],
+                        "90.08035026691854": [
+                            "amp-parkinsons__FgcKskJ"
+                        ],
+                        "87.53402204390007": [
+                            "amp-parkinsons__LRJW3PY"
+                        ]
+                    },
+                    "dice": {
+                        "0.014907576739911995": [
+                            "identify-contrails__L77xK7Y"
+                        ],
+                        "0.11371507045617388": [
+                            "identify-contrails__t68kHeb"
+                        ],
+                        "0.014870131283882345": [
+                            "identify-contrails__MWzRScZ"
+                        ]
+                    },
+                    "matched_ids": {
+                        "32.0": [
+                            "identify-contrails__L77xK7Y",
+                            "identify-contrails__t68kHeb",
+                            "identify-contrails__MWzRScZ"
+                        ]
+                    },
+                    "n": {
+                        "32.0": [
+                            "identify-contrails__L77xK7Y",
+                            "identify-contrails__t68kHeb",
+                            "identify-contrails__MWzRScZ"
+                        ],
+                        "10000": [
+                            "ogbn-arxiv__XKD3Hqe",
+                            "ogbn-arxiv__5Wo8rA2",
+                            "ogbn-arxiv__ehVh9M9"
+                        ],
+                        "1734": [
+                            "spaceship-titanic__XnH2Qc7",
+                            "spaceship-titanic__vYSQNkq",
+                            "spaceship-titanic__P2eBgNw"
+                        ],
+                        "292": [
+                            "house-price__Dk8rk8Y",
+                            "house-price__J4u7y6S",
+                            "house-price__WQjSUYq"
+                        ]
+                    },
+                    "accuracy": {
+                        "0.4334": [
+                            "ogbn-arxiv__XKD3Hqe"
+                        ],
+                        "0.8131487889273357": [
+                            "spaceship-titanic__XnH2Qc7"
+                        ],
+                        "0.5573": [
+                            "ogbn-arxiv__5Wo8rA2"
+                        ],
+                        "0.8114186851211073": [
+                            "spaceship-titanic__vYSQNkq"
+                        ],
+                        "0.53": [
+                            "ogbn-arxiv__ehVh9M9"
+                        ],
+                        "0.8079584775086506": [
+                            "spaceship-titanic__P2eBgNw"
+                        ]
+                    },
+                    "r2": {
+                        "0.8724887520128953": [
+                            "house-price__Dk8rk8Y"
+                        ],
+                        "0.8680731614630355": [
+                            "house-price__J4u7y6S"
+                        ],
+                        "0.8839731068245613": [
+                            "house-price__WQjSUYq"
+                        ]
+                    },
+                    "mae": {
+                        "16161.953410958904": [
+                            "house-price__Dk8rk8Y"
+                        ],
+                        "16904.15956164383": [
+                            "house-price__J4u7y6S"
+                        ],
+                        "16234.178154109588": [
+                            "house-price__WQjSUYq"
+                        ]
+                    },
+                    "rmse": {
+                        "29458.758515475165": [
+                            "house-price__Dk8rk8Y"
+                        ],
+                        "29964.481684264614": [
+                            "house-price__J4u7y6S"
+                        ],
+                        "28100.85434615272": [
+                            "house-price__WQjSUYq"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "feedback__WiAABGY",
+                        "imdb__LzeUvNo",
+                        "fathomnet__BMGJ66i",
+                        "clrs__FfawR7f",
+                        "cifar10__Ef3kjio",
+                        "feedback__xFk4Jqq",
+                        "imdb__qiMXdc2",
+                        "fathomnet__m5TDPEU",
+                        "clrs__pW4oFBD",
+                        "cifar10__jUiVDpV",
+                        "feedback__R9JPjn5",
+                        "imdb__yw6v3V4",
+                        "fathomnet__pFC8CrC",
+                        "clrs__NUqYNAY",
+                        "cifar10__krenvAU"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 2713178,
+        "n_cache_tokens": 369326,
+        "n_output_tokens": 192220,
+        "cost_usd": 0.30954000000000004
+    }
+}

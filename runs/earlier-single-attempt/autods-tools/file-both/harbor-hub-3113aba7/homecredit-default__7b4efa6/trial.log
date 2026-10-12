@@ -1,0 +1,7 @@
+>> LOCAL homecredit-default from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/homecredit-default
+>> RUN homecredit-default/c1 (family=tabular)  14:10:19
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 23 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/homecredit-default-c1/trace.json
+>> SCORE homecredit-default/c1 (answer: answer.csv)
+{"reward": 0.8641313575268111, "auc": 0.8641313575268111, "n": 10000}

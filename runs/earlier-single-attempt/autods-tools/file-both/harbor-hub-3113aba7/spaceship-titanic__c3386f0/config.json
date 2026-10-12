@@ -1,0 +1,47 @@
+{
+  "task": {
+    "path": "harbor-datasets-mlab/datasets/mlab-protocol/spaceship-titanic",
+    "git_url": null,
+    "git_commit_id": null,
+    "name": null,
+    "ref": null,
+    "overwrite": false,
+    "download_dir": null,
+    "source": "mlab-protocol"
+  },
+  "trial_name": "spaceship-titanic__c3386f0",
+  "trials_dir": "jobs/autods-c1-gemma-4-31b-it",
+  "install_only": false,
+  "timeout_multiplier": 1.0,
+  "agent_timeout_multiplier": null,
+  "verifier_timeout_multiplier": null,
+  "agent_setup_timeout_multiplier": null,
+  "environment_build_timeout_multiplier": null,
+  "agent": {
+    "name": "autods",
+    "import_path": "autods_harbor.agent:AutoDSAgent",
+    "model_name": "openrouter/google/gemma-4-31b-it",
+    "n_concurrent": null,
+    "concurrency_group": null,
+    "skills": [],
+    "override_timeout_sec": null,
+    "override_setup_timeout_sec": null,
+    "max_timeout_sec": null,
+    "extra_allowed_hosts": [],
+    "kwargs": {
+      "temperature": 0.2
+    },
+    "env": {},
+    "mcp_servers": []
+  },
+  "environment": {
+    "type": null,
+    "import_path": null,
+    "force_build": false,
+    "delete": true,
+    "extra_docker_compose": [],
+    "kwargs": {},
+    "extra_allowed_hosts": []
+  },
+  "job_id": "3113aba7-1a4b-5319-9777-2c6717635bc3"
+}

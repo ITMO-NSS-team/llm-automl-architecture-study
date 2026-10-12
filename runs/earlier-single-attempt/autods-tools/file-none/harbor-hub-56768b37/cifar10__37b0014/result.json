@@ -1,0 +1,92 @@
+{
+  "id": "52088e7c-6e82-5587-b7c6-176909c9fdde",
+  "task_name": "mlab/cifar10",
+  "trial_name": "cifar10__37b0014",
+  "trial_uri": "file:///jobs/autods-base-gemma-4-31b-it/cifar10__37b0014",
+  "task_id": {
+    "path": "harbor-datasets-mlab/datasets/mlab-protocol/cifar10"
+  },
+  "source": "mlab-protocol",
+  "task_checksum": "8833578a406fea4b1054a3524ada755de16e6567f612cf698c73c02374059b6f",
+  "config": {
+    "task": {
+      "path": "harbor-datasets-mlab/datasets/mlab-protocol/cifar10",
+      "git_url": null,
+      "git_commit_id": null,
+      "name": null,
+      "ref": null,
+      "overwrite": false,
+      "download_dir": null,
+      "source": "mlab-protocol"
+    },
+    "trial_name": "cifar10__37b0014",
+    "trials_dir": "jobs/autods-base-gemma-4-31b-it",
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent_timeout_multiplier": null,
+    "verifier_timeout_multiplier": null,
+    "agent_setup_timeout_multiplier": null,
+    "environment_build_timeout_multiplier": null,
+    "agent": {
+      "name": "autods",
+      "import_path": "autods_harbor.agent:AutoDSAgent",
+      "model_name": "openrouter/google/gemma-4-31b-it",
+      "n_concurrent": null,
+      "concurrency_group": null,
+      "skills": [],
+      "override_timeout_sec": null,
+      "override_setup_timeout_sec": null,
+      "max_timeout_sec": null,
+      "extra_allowed_hosts": [],
+      "kwargs": {
+        "temperature": 0.2
+      },
+      "env": {
+        "AUTODS_C1_DISABLED": "1"
+      },
+      "mcp_servers": []
+    },
+    "environment": {
+      "type": null,
+      "import_path": null,
+      "force_build": false,
+      "delete": true,
+      "extra_docker_compose": [],
+      "kwargs": {},
+      "extra_allowed_hosts": []
+    },
+    "job_id": "56768b37-f841-5678-8fc8-c2af1a45af7d"
+  },
+  "agent_info": {
+    "name": "autods",
+    "version": "0.1.0",
+    "model_info": {
+      "name": "google/gemma-4-31b-it",
+      "provider": "openrouter"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 55081,
+    "n_cache_tokens": 1056,
+    "n_output_tokens": 7327,
+    "cost_usd": 0.007999,
+    "rollout_details": [],
+    "metadata": {
+      "n_steps": 22
+    }
+  },
+  "verifier_result": {
+    "rewards": {
+      "reward": 0.8849,
+      "accuracy": 0.8849
+    }
+  },
+  "exception_info": null,
+  "started_at": "2026-08-09T16:18:41.088251Z",
+  "finished_at": "2026-08-09T16:20:35.851130Z",
+  "environment_setup": null,
+  "agent_setup": null,
+  "agent_execution": null,
+  "verifier": null,
+  "step_results": null
+}

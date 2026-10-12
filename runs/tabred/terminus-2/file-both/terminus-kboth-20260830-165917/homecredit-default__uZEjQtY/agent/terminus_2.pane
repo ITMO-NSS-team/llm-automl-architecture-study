@@ -1,0 +1,1168 @@
+[?2004hroot@ac1e119daf73:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@ac1e119daf73:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@ac1e119daf73:/workspace# ls -la /app/data
+[?2004ltotal 1019368
+drwxr-xr-x 2 root root      4096 Aug 28 15:18 .
+drwxr-xr-x 3 root root      4096 Aug 28 15:18 ..
+-rw-rw-r-- 1 root root     10603 Aug 27 21:18 schema.json
+-rw-rw-r-- 1 root root 157194676 Aug 27 21:18 test.csv
+-rw-rw-r-- 1 root root 725242065 Aug 27 21:18 train.csv
+-rw-rw-r-- 1 root root 161355034 Aug 27 21:18 val.csv
+[?2004hroot@ac1e119daf73:/workspace# cat /app/data/schema.json
+[?2004l{
+  "dataset": "homecredit-default",
+  "source_split": "default",
+  "task_type": "binclass",
+  "score": "roc-auc",
+  "target_column": "target",
+  "feature_columns": [
+    "num_0",
+    "num_1",
+    "num_2",
+    "num_3",
+    "num_4",
+    "num_5",
+    "num_6",
+    "num_7",
+    "num_8",
+    "num_9",
+    "num_10",
+    "num_11",
+    "num_12",
+    "num_13",
+    "num_14",
+    "num_15",
+    "num_16",
+    "num_17",
+    "num_18",
+    "num_19",
+    "num_20",
+    "num_21",
+    "num_22",
+    "num_23",
+    "num_24",
+    "num_25",
+    "num_26",
+    "num_27",
+    "num_28",
+    "num_29",
+    "num_30",
+    "num_31",
+    "num_32",
+    "num_33",
+    "num_34",
+    "num_35",
+    "num_36",
+    "num_37",
+    "num_38",
+    "num_39",
+    "num_40",
+    "num_41",
+    "num_42",
+    "num_43",
+    "num_44",
+    "num_45",
+    "num_46",
+    "num_47",
+    "num_48",
+    "num_49",
+    "num_50",
+    "num_51",
+    "num_52",
+    "num_53",
+    "num_54",
+    "num_55",
+    "num_56",
+    "num_57",
+    "num_58",
+    "num_59",
+    "num_60",
+    "num_61",
+    "num_62",
+    "num_63",
+    "num_64",
+    "num_65",
+    "num_66",
+    "num_67",
+    "num_68",
+    "num_69",
+    "num_70",
+    "num_71",
+    "num_72",
+    "num_73",
+    "num_74",
+    "num_75",
+    "num_76",
+    "num_77",
+    "num_78",
+    "num_79",
+    "num_80",
+    "num_81",
+    "num_82",
+    "num_83",
+    "num_84",
+    "num_85",
+    "num_86",
+    "num_87",
+    "num_88",
+    "num_89",
+    "num_90",
+    "num_91",
+    "num_92",
+    "num_93",
+    "num_94",
+    "num_95",
+    "num_96",
+    "num_97",
+    "num_98",
+    "num_99",
+    "num_100",
+    "num_101",
+    "num_102",
+    "num_103",
+    "num_104",
+    "num_105",
+    "num_106",
+    "num_107",
+    "num_108",
+    "num_109",
+    "num_110",
+    "num_111",
+    "num_112",
+    "num_113",
+    "num_114",
+    "num_115",
+    "num_116",
+    "num_117",
+    "num_118",
+    "num_119",
+    "num_120",
+    "num_121",
+    "num_122",
+    "num_123",
+    "num_124",
+    "num_125",
+    "num_126",
+    "num_127",
+    "num_128",
+    "num_129",
+    "num_130",
+    "num_131",
+    "num_132",
+    "num_133",
+    "num_134",
+    "num_135",
+    "num_136",
+    "num_137",
+    "num_138",
+    "num_139",
+    "num_140",
+    "num_141",
+    "num_142",
+    "num_143",
+    "num_144",
+    "num_145",
+    "num_146",
+    "num_147",
+    "num_148",
+    "num_149",
+    "num_150",
+    "num_151",
+    "num_152",
+    "num_153",
+    "num_154",
+    "num_155",
+    "num_156",
+    "num_157",
+    "num_158",
+    "num_159",
+    "num_160",
+    "num_161",
+    "num_162",
+    "num_163",
+    "num_164",
+    "num_165",
+    "num_166",
+    "num_167",
+    "num_168",
+    "num_169",
+    "num_170",
+    "num_171",
+    "num_172",
+    "num_173",
+    "num_174",
+    "num_175",
+    "num_176",
+    "num_177",
+    "num_178",
+    "num_179",
+    "num_180",
+    "num_181",
+    "num_182",
+    "num_183",
+    "num_184",
+    "num_185",
+    "num_186",
+    "num_187",
+    "num_188",
+    "num_189",
+    "num_190",
+    "num_191",
+    "num_192",
+    "num_193",
+    "num_194",
+    "num_195",
+    "num_196",
+    "num_197",
+    "num_198",
+    "num_199",
+    "num_200",
+    "num_201",
+    "num_202",
+    "num_203",
+    "num_204",
+    "num_205",
+    "num_206",
+    "num_207",
+    "num_208",
+    "num_209",
+    "num_210",
+    "num_211",
+    "num_212",
+    "num_213",
+    "num_214",
+    "num_215",
+    "num_216",
+    "num_217",
+    "num_218",
+    "num_219",
+    "num_220",
+    "num_221",
+    "num_222",
+    "num_223",
+    "num_224",
+    "num_225",
+    "num_226",
+    "num_227",
+    "num_228",
+    "num_229",
+    "num_230",
+    "num_231",
+    "num_232",
+    "num_233",
+    "num_234",
+    "num_235",
+    "num_236",
+    "num_237",
+    "num_238",
+    "num_239",
+    "num_240",
+    "num_241",
+    "num_242",
+    "num_243",
+    "num_244",
+    "num_245",
+    "num_246",
+    "num_247",
+    "num_248",
+    "num_249",
+    "num_250",
+    "num_251",
+    "num_252",
+    "num_253",
+    "num_254",
+    "num_255",
+    "num_256",
+    "num_257",
+    "num_258",
+    "num_259",
+    "num_260",
+    "num_261",
+    "num_262",
+    "num_263",
+    "num_264",
+    "num_265",
+    "num_266",
+    "num_267",
+    "num_268",
+    "num_269",
+    "num_270",
+    "num_271",
+    "num_272",
+    "num_273",
+    "num_274",
+    "num_275",
+    "num_276",
+    "num_277",
+    "num_278",
+    "num_279",
+    "num_280",
+    "num_281",
+    "num_282",
+    "num_283",
+    "num_284",
+    "num_285",
+    "num_286",
+    "num_287",
+    "num_288",
+    "num_289",
+    "num_290",
+    "num_291",
+    "num_292",
+    "num_293",
+    "num_294",
+    "num_295",
+    "num_296",
+    "num_297",
+    "num_298",
+    "num_299",
+    "num_300",
+    "num_301",
+    "num_302",
+    "num_303",
+    "num_304",
+    "num_305",
+    "num_306",
+    "num_307",
+    "num_308",
+    "num_309",
+    "num_310",
+    "num_311",
+    "num_312",
+    "num_313",
+    "num_314",
+    "num_315",
+    "num_316",
+    "num_317",
+    "num_318",
+    "num_319",
+    "num_320",
+    "num_321",
+    "num_322",
+    "num_323",
+    "num_324",
+    "num_325",
+    "num_326",
+    "num_327",
+    "num_328",
+    "num_329",
+    "num_330",
+    "num_331",
+    "num_332",
+    "num_333",
+    "num_334",
+    "num_335",
+    "num_336",
+    "num_337",
+    "num_338",
+    "num_339",
+    "num_340",
+    "num_341",
+    "num_342",
+    "num_343",
+    "num_344",
+    "num_345",
+    "num_346",
+    "num_347",
+    "num_348",
+    "num_349",
+    "num_350",
+    "num_351",
+    "num_352",
+    "num_353",
+    "num_354",
+    "num_355",
+    "num_356",
+    "num_357",
+    "num_358",
+    "num_359",
+    "num_360",
+    "num_361",
+    "num_362",
+    "num_363",
+    "num_364",
+    "num_365",
+    "num_366",
+    "num_367",
+    "num_368",
+    "num_369",
+    "num_370",
+    "num_371",
+    "num_372",
+    "num_373",
+    "num_374",
+    "num_375",
+    "num_376",
+    "num_377",
+    "num_378",
+    "num_379",
+    "num_380",
+    "num_381",
+    "num_382",
+    "num_383",
+    "num_384",
+    "num_385",
+    "num_386",
+    "num_387",
+    "num_388",
+    "num_389",
+    "num_390",
+    "num_391",
+    "num_392",
+    "num_393",
+    "num_394",
+    "num_395",
+    "num_396",
+    "num_397",
+    "num_398",
+    "num_399",
+    "num_400",
+    "num_401",
+    "num_402",
+    "num_403",
+    "num_404",
+    "num_405",
+    "num_406",
+    "num_407",
+    "num_408",
+    "num_409",
+    "num_410",
+    "num_411",
+    "num_412",
+    "num_413",
+    "num_414",
+    "num_415",
+    "num_416",
+    "num_417",
+    "num_418",
+    "num_419",
+    "num_420",
+    "num_421",
+    "num_422",
+    "num_423",
+    "num_424",
+    "num_425",
+    "num_426",
+    "num_427",
+    "num_428",
+    "num_429",
+    "num_430",
+    "num_431",
+    "num_432",
+    "num_433",
+    "num_434",
+    "num_435",
+    "num_436",
+    "num_437",
+    "num_438",
+    "num_439",
+    "num_440",
+    "num_441",
+    "num_442",
+    "num_443",
+    "num_444",
+    "num_445",
+    "num_446",
+    "num_447",
+    "num_448",
+    "num_449",
+    "num_450",
+    "num_451",
+    "num_452",
+    "num_453",
+    "num_454",
+    "num_455",
+    "num_456",
+    "num_457",
+    "num_458",
+    "num_459",
+    "num_460",
+    "num_461",
+    "num_462",
+    "num_463",
+    "num_464",
+    "num_465",
+    "num_466",
+    "num_467",
+    "num_468",
+    "num_469",
+    "num_470",
+    "num_471",
+    "num_472",
+    "num_473",
+    "num_474",
+    "num_475",
+    "num_476",
+    "num_477",
+    "num_478",
+    "num_479",
+    "num_480",
+    "num_481",
+    "num_482",
+    "num_483",
+    "num_484",
+    "num_485",
+    "num_486",
+    "num_487",
+    "num_488",
+    "num_489",
+    "num_490",
+    "num_491",
+    "num_492",
+    "num_493",
+    "num_494",
+    "num_495",
+    "num_496",
+    "num_497",
+    "num_498",
+    "num_499",
+    "num_500",
+    "num_501",
+    "num_502",
+    "num_503",
+    "num_504",
+    "num_505",
+    "num_506",
+    "num_507",
+    "num_508",
+    "num_509",
+    "num_510",
+    "num_511",
+    "num_512",
+    "num_513",
+    "num_514",
+    "num_515",
+    "num_516",
+    "num_517",
+    "num_518",
+    "num_519",
+    "num_520",
+    "num_521",
+    "num_522",
+    "num_523",
+    "num_524",
+    "num_525",
+    "num_526",
+    "num_527",
+    "num_528",
+    "num_529",
+    "num_530",
+    "num_531",
+    "num_532",
+    "num_533",
+    "num_534",
+    "num_535",
+    "num_536",
+    "num_537",
+    "num_538",
+    "num_539",
+    "num_540",
+    "num_541",
+    "num_542",
+    "num_543",
+    "num_544",
+    "num_545",
+    "num_546",
+    "num_547",
+    "num_548",
+    "num_549",
+    "num_550",
+    "num_551",
+    "num_552",
+    "num_553",
+    "num_554",
+    "num_555",
+    "num_556",
+    "num_557",
+    "num_558",
+    "num_559",
+    "num_560",
+    "num_561",
+    "num_562",
+    "num_563",
+    "num_564",
+    "num_565",
+    "num_566",
+    "num_567",
+    "num_568",
+    "num_569",
+    "num_570",
+    "num_571",
+    "num_572",
+    "num_573",
+    "num_574",
+    "num_575",
+    "num_576",
+    "num_577",
+    "num_578",
+    "num_579",
+    "num_580",
+    "num_581",
+    "num_582",
+    "num_583",
+    "num_584",
+    "num_585",
+    "num_586",
+    "num_587",
+    "num_588",
+    "num_589",
+    "num_590",
+    "num_591",
+    "num_592",
+    "num_593",
+    "num_594",
+    "num_595",
+    "num_596",
+    "num_597",
+    "num_598",
+    "num_599",
+    "num_600",
+    "num_601",
+    "num_602",
+    "num_603",
+    "num_604",
+    "num_605",
+    "num_606",
+    "num_607",
+    "num_608",
+    "num_609",
+    "num_610",
+    "num_611",
+    "bin_0",
+    "bin_1",
+    "cat_0",
+    "cat_1",
+    "cat_2",
+    "cat_3",
+    "cat_4",
+    "cat_5",
+    "cat_6",
+    "cat_7",
+    "cat_8",
+    "cat_9",
+    "cat_10",
+    "cat_11",
+    "cat_12",
+    "cat_13",
+    "cat_14",
+    "cat_15",
+    "cat_16",
+    "cat_17",
+    "cat_18",
+    "cat_19",
+    "cat_20",
+    "cat_21",
+    "cat_22",
+    "cat_23",
+    "cat_24",
+    "cat_25",
+    "cat_26",
+    "cat_27",
+    "cat_28",
+    "cat_29",
+    "cat_30",
+    "cat_31",
+    "cat_32",
+    "cat_33",
+    "cat_34",
+    "cat_35",
+    "cat_36",
+    "cat_37",
+    "cat_38",
+    "cat_39",
+    "cat_40",
+    "cat_41",
+    "cat_42",
+    "cat_43",
+    "cat_44",
+    "cat_45",
+    "cat_46",
+    "cat_47",
+    "cat_48",
+    "cat_49",
+    "cat_50",
+    "cat_51",
+    "cat_52",
+    "cat_53",
+    "cat_54",
+    "cat_55",
+    "cat_56",
+    "cat_57",
+    "cat_58",
+    "cat_59",
+    "cat_60",
+    "cat_61",
+    "cat_62",
+    "cat_63",
+    "cat_64",
+    "cat_65",
+    "cat_66",
+    "cat_67",
+    "cat_68",
+    "cat_69",
+    "cat_70",
+    "cat_71",
+    "cat_72",
+    "cat_73",
+    "cat_74",
+    "cat_75",
+    "cat_76",
+    "cat_77",
+    "cat_78",
+    "cat_79",
+    "cat_80",
+    "cat_81"
+  ],
+  "feature_counts": {
+    "num": 612,
+    "bin": 2,
+    "cat": 82
+  },
+  "split_sizes": {
+    "train": 267645,
+    "val": 58018,
+    "test": 56001
+  },
+  "excluded_arrays": [
+    "x_meta.npy"
+  ]
+}
+[?2004hroot@ac1e119daf73:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> from lightautoml.automl.presets.tabular_presets import TabularAutoML
+[?2004l[?2004h> from lightautoml.tasks import Task
+[?2004l[?2004h> import time
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Budget Allocation
+[?2004l[?2004h> print('BUDGET_ALLOCATION: Exploration: 10m, Training: 2h, Finalization: 30m')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load Data
+[?2004l[?2004h> print('Loading data...')
+[?2004l[?2004h> train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> TARGET_COLUMN = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline
+[?2004l[?2004h> print('Calculating trivial baseline...')
+[?2004l[?2004h> trivial_pred = np.full(len(val_df), train_df[TARGET_COLUMN].mean())
+[?2004l[?2004h> baseline_score = roc_auc_score(val_df[TARGET_COLUMN], trivial_pred)
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_SCORE={baseline_score}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # LightAutoML Setup
+[?2004l[?2004h> task = Task('binary')
+[?2004l[?2004h> roles = {'target': TARGET_COLUMN}
+[?2004l[?2004h> 
+[?2004l[?2004h> # Increase timeout for convergence
+[?2004l[?2004h> TIME_BUDGET_SECONDS = 3600 * 2 # 2 hours
+[?2004l[?2004h> automl = TabularAutoML(task=task, timeout=TIME_BUDGET_SECONDS)
+[?2004l[?2004h> 
+[?2004l[?2004h> print('Training LightAutoML...')
+[?2004l[?2004h> start_time = time.time()
+[?2004l[?2004h> # fit_predict handles internal validation
+[?2004l[?2004h> # We provide train_df and the roles mapping
+[?2004l[?2004h> # LightAutoML usually manages its own internal split if not provided,
+[?2004l[?2004h> # but we should use our provided val_df for the final check.
+[?2004l[?2004h> 
+[?2004l[?2004h> # Fit the model on train_df
+[?2004l[?2004h> automl.fit(train_df, roles=roles)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict on validation set
+[?2004l[?2004h> val_preds = automl.predict(val_df).data.reshape(-1)
+[?2004l[?2004h> val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+[?2004l[?2004h> print(f'VALIDATION_SCORE={val_score}')
+[?2004l[?2004h> print('MODEL_USED=', type(automl).__name__)
+[?2004l[?2004h> 
+[?2004l[?2004h> if val_score <= baseline_score:
+[?2004l[?2004h>     print('Model did not beat baseline. Using trivial baseline for submission.')
+[?2004l[?2004h>     test_preds = np.full(len(test_df), train_df[TARGET_COLUMN].mean())
+[?2004l[?2004h> else:
+[?2004l[?2004h>     print('Model beat baseline. Generating test predictions...')
+[?2004l[?2004h>     test_preds = automl.predict(test_df).data.reshape(-1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Final submission
+[?2004l[?2004h> submission = pd.DataFrame({'target': test_preds})
+[?2004l[?2004h> submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> print('Submission saved to /app/predictions.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f'Total training time: {time.time() - start_time:.2f} seconds')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@ac1e119daf73:/workspace# python3 solution.py
+[?2004l'nlp' extra dependency package 'fasttext-numpy2' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'nltk' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'transformers' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+/usr/local/lib/python3.12/site-packages/lightautoml/ml_algo/dl_model.py:40: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/embed.py:24: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/dl_transformers.py:25: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+DEVICE= cpu
+BUDGET_ALLOCATION: Exploration: 10m, Training: 2h, Finalization: 30m
+Loading data...
+Calculating trivial baseline...
+TRIVIAL_BASELINE_SCORE=0.5
+Training LightAutoML...
+Traceback (most recent call last):
+  File "/workspace/solution.py", line 47, in <module>
+    automl.fit(train_df, roles=roles)
+    ^^^^^^^^^^
+AttributeError: 'TabularAutoML' object has no attribute 'fit'
+[?2004hroot@ac1e119daf73:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> from lightautoml.automl.presets.tabular_presets import TabularAutoML
+[?2004l[?2004h> from lightautoml.tasks import Task
+[?2004l[?2004h> import time
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Budget Allocation
+[?2004l[?2004h> print('BUDGET_ALLOCATION: Exploration: 10m, Training: 2h, Finalization: 30m')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load Data
+[?2004l[?2004h> print('Loading data...')
+[?2004l[?2004h> train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> TARGET_COLUMN = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline
+[?2004l[?2004h> print('Calculating trivial baseline...')
+[?2004l[?2004h> train_mean = train_df[TARGET_COLUMN].mean()
+[?2004l[?2004h> trivial_pred = np.full(len(val_df), train_mean)
+[?2004l[?2004h> baseline_score = roc_auc_score(val_df[TARGET_COLUMN], trivial_pred)
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_SCORE={baseline_score}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # LightAutoML Setup
+[?2004l[?2004h> task = Task('binary')
+[?2004l[?2004h> roles = {'target': TARGET_COLUMN}
+[?2004l[?2004h> 
+[?2004l[?2004h> # Budget
+[?2004l[?2004h> TIME_BUDGET_SECONDS = 3600 * 2
+[?2004l[?2004h> automl = TabularAutoML(task=task, timeout=TIME_BUDGET_SECONDS)
+[?2004l[?2004h> 
+[?2004l[?2004h> print('Training LightAutoML...')
+[?2004l[?2004h> start_time = time.time()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Per skeleton: oof = automl.fit_predict(train_df, roles=roles)
+[?2004l[?2004h> # This method fits the model and returns OOF predictions
+[?2004l[?2004h> automl.fit_predict(train_df, roles=roles)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict on validation set
+[?2004l[?2004h> val_preds_obj = automl.predict(val_df)
+[?2004l[?2004h> val_preds = val_preds_obj.data.reshape(-1)
+[?2004l[?2004h> val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+[?2004l[?2004h> print(f'VALIDATION_SCORE={val_score}')
+[?2004l[?2004h> print('MODEL_USED=', type(automl).__name__)
+[?2004l[?2004h> 
+[?2004l[?2004h> if val_score <= baseline_score:
+[?2004l[?2004h>     print('Model did not beat baseline. Using trivial baseline for submission.')
+[?2004l[?2004h>     test_preds = np.full(len(test_df), train_mean)
+[?2004l[?2004h> else:
+[?2004l[?2004h>     print('Model beat baseline. Generating test predictions...')
+[?2004l[?2004h>     test_preds_obj = automl.predict(test_df)
+[?2004l[?2004h>     test_preds = test_preds_obj.data.reshape(-1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Final submission
+[?2004l[?2004h> submission = pd.DataFrame({'target': test_preds})
+[?2004l[?2004h> submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> print('Submission saved to /app/predictions.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f'Total training time: {time.time() - start_time:.2f} seconds')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@ac1e119daf73:/workspace# python3 solution.py
+[?2004l'nlp' extra dependency package 'fasttext-numpy2' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'nltk' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'transformers' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+/usr/local/lib/python3.12/site-packages/lightautoml/ml_algo/dl_model.py:40: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/embed.py:24: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/dl_transformers.py:25: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+DEVICE= cpu
+BUDGET_ALLOCATION: Exploration: 10m, Training: 2h, Finalization: 30m
+Loading data...
+Calculating trivial baseline...
+TRIVIAL_BASELINE_SCORE=0.5
+Training LightAutoML...
+ls -l /app/predictions.csv
+ps aux | grep python3
+C-c
+ls -l /app/predictions.csv
+cat << 'EOF' > solution.py
+import pandas as pd
+import numpy as np
+import torch
+from sklearn.metrics import roc_auc_score
+from lightautoml.automl.presets.tabular_presets import TabularAutoML
+from lightautoml.tasks import Task
+import time
+import sys
+
+# Hardware Resolution
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print(f'DEVICE={DEVICE}', flush=True)
+
+# Budget Allocation
+print('BUDGET_ALLOCATION: Exploration: 5m, Training: 1h, Finalization: 15m', flush=True)
+
+# Load Data
+print('Loading data...', flush=True)
+train_df = pd.read_csv('/app/data/train.csv')
+val_df = pd.read_csv('/app/data/val.csv')
+test_df = pd.read_csv('/app/data/test.csv')
+
+TARGET_COLUMN = 'target'
+
+# Trivial Baseline
+print('Calculating trivial baseline...', flush=True)
+train_mean = train_df[TARGET_COLUMN].mean()
+trivial_pred = np.full(len(val_df), train_mean)
+baseline_score = roc_auc_score(val_df[TARGET_COLUMN], trivial_pred)
+print(f'TRIVIAL_BASELINE_SCORE={baseline_score}', flush=True)
+
+# LightAutoML Setup
+task = Task('binary')
+roles = {'target': TARGET_COLUMN}
+
+# Budget: 1 hour to ensure convergence and completion
+TIME_BUDGET_SECONDS = 3600
+automl = TabularAutoML(task=task, timeout=TIME_BUDGET_SECONDS)
+
+print('Training LightAutoML...', flush=True)
+start_time = time.time()
+
+# Per skeleton
+automl.fit_predict(train_df, roles=roles)
+
+# Predict on validation set
+val_preds_obj = automl.predict(val_df)
+val_preds = val_preds_obj.data.reshape(-1)
+val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+print(f'VALIDATION_SCORE={val_score}', flush=True)
+print(f'MODEL_USED={type(automl).__name__}', flush=True)
+
+if val_score <= baseline_score:
+    print('Model did not beat baseline. Using trivial baseline for submission.', flush=True)
+    test_preds = np.full(len(test_df), train_mean)
+else:
+    print('Model beat baseline. Generating test predictions...', flush=True)
+    test_preds_obj = automl.predict(test_df)
+    test_preds = test_preds_obj.data.reshape(-1)
+
+# Final submission
+submission = pd.DataFrame({'target': test_preds})
+submission.to_csv('/app/predictions.csv', index=False)
+print('Submission saved to /app/predictions.csv', flush=True)
+
+print(f'Total training time: {time.time() - start_time:.2f} seconds', flush=True)
+EOF
+python3 solution.py
+C-c
+ps aux | grep python3
+cat << 'EOF' > solution.py
+import pandas as pd
+import numpy as np
+import torch
+from sklearn.metrics import roc_auc_score
+from lightautoml.automl.presets.tabular_presets import TabularAutoML
+from lightautoml.tasks import Task
+import time
+import sys
+
+# Hardware Resolution
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print(f'DEVICE={DEVICE}', flush=True)
+
+# Budget Allocation
+print('BUDGET_ALLOCATION: Quick Test: 15m', flush=True)
+
+# Load Data
+print('Loading data...', flush=True)
+train_df = pd.read_csv('/app/data/train.csv')
+val_df = pd.read_csv('/app/data/val.csv')
+test_df = pd.read_csv('/app/data/test.csv')
+print('Data loaded successfully', flush=True)
+
+TARGET_COLUMN = 'target'
+
+# Trivial Baseline
+print('Calculating trivial baseline...', flush=True)
+train_mean = train_df[TARGET_COLUMN].mean()
+trivial_pred = np.full(len(val_df), train_mean)
+baseline_score = roc_auc_score(val_df[TARGET_COLUMN], trivial_pred)
+print(f'TRIVIAL_BASELINE_SCORE={baseline_score}', flush=True)
+
+# LightAutoML Setup
+task = Task('binary')
+roles = {'target': TARGET_COLUMN}
+
+# Short timeout for sanity check
+TIME_BUDGET_SECONDS = 900
+automl = TabularAutoML(task=task, timeout=TIME_BUDGET_SECONDS)
+
+print('Training LightAutoML...', flush=True)
+start_time = time.time()
+
+automl.fit_predict(train_df, roles=roles)
+
+# Predict on validation set
+val_preds_obj = automl.predict(val_df)
+val_preds = val_preds_obj.data.reshape(-1)
+val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+print(f'VALIDATION_SCORE={val_score}', flush=True)
+print(f'MODEL_USED={type(automl).__name__}', flush=True)
+
+if val_score <= baseline_scoVALIDATION_SCORE=0.8407889122898655
+MODEL_USED= TabularAutoML
+Model beat baseline. Generating test predictions...
+Submission saved to /app/predictions.csv
+Total training time: 2868.09 seconds
+[?2004hroot@ac1e119daf73:/workspace# ls -l /app/predictions.csv
+[?2004l-rw-r--r-- 1 root root 672976 Aug 30 19:10 /app/predictions.csv
+[?2004hroot@ac1e119daf73:/workspace# ps aux | grep python3
+[?2004lbash: ps: command not found
+[?2004hroot@ac1e119daf73:/workspace# C-c
+[?2004lbash: C-c: command not found
+[?2004hroot@ac1e119daf73:/workspace# ls -l /app/predictions.csv
+[?2004l-rw-r--r-- 1 root root 672976 Aug 30 19:10 /app/predictions.csv
+[?2004hroot@ac1e119daf73:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> from lightautoml.automl.presets.tabular_presets import TabularAutoML
+[?2004l[?2004h> from lightautoml.tasks import Task
+[?2004l[?2004h> import time
+[?2004l[?2004h> import sys
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print(f'DEVICE={DEVICE}', flush=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Budget Allocation
+[?2004l[?2004h> print('BUDGET_ALLOCATION: Exploration: 5m, Training: 1h, Finalization: 15m', flush=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load Data
+[?2004l[?2004h> print('Loading data...', flush=True)
+[?2004l[?2004h> train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> TARGET_COLUMN = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline
+[?2004l[?2004h> print('Calculating trivial baseline...', flush=True)
+[?2004l[?2004h> train_mean = train_df[TARGET_COLUMN].mean()
+[?2004l[?2004h> trivial_pred = np.full(len(val_df), train_mean)
+[?2004l[?2004h> baseline_score = roc_auc_score(val_df[TARGET_COLUMN], trivial_pred)
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_SCORE={baseline_score}', flush=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> # LightAutoML Setup
+[?2004l[?2004h> task = Task('binary')
+[?2004l[?2004h> roles = {'target': TARGET_COLUMN}
+[?2004l[?2004h> 
+[?2004l[?2004h> # Budget: 1 hour to ensure convergence and completion
+[?2004l[?2004h> TIME_BUDGET_SECONDS = 3600
+[?2004l[?2004h> automl = TabularAutoML(task=task, timeout=TIME_BUDGET_SECONDS)
+[?2004l[?2004h> 
+[?2004l[?2004h> print('Training LightAutoML...', flush=True)
+[?2004l[?2004h> start_time = time.time()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Per skeleton
+[?2004l[?2004h> automl.fit_predict(train_df, roles=roles)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict on validation set
+[?2004l[?2004h> val_preds_obj = automl.predict(val_df)
+[?2004l[?2004h> val_preds = val_preds_obj.data.reshape(-1)
+[?2004l[?2004h> val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+[?2004l[?2004h> print(f'VALIDATION_SCORE={val_score}', flush=True)
+[?2004l[?2004h> print(f'MODEL_USED={type(automl).__name__}', flush=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> if val_score <= baseline_score:
+[?2004l[?2004h>     print('Model did not beat baseline. Using trivial baseline for submission.', flush=True)
+[?2004l[?2004h>     test_preds = np.full(len(test_df), train_mean)
+[?2004l[?2004h> else:
+[?2004l[?2004h>     print('Model beat baseline. Generating test predictions...', flush=True)
+[?2004l[?2004h>     test_preds_obj = automl.predict(test_df)
+[?2004l[?2004h>     test_preds = test_preds_obj.data.reshape(-1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Final submission
+[?2004l[?2004h> submission = pd.DataFrame({'target': test_preds})
+[?2004l[?2004h> submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> print('Submission saved to /app/predictions.csv', flush=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f'Total training time: {time.time() - start_time:.2f} seconds', flush=True)
+[?2004l[?2004h> EOF
+[?2004l[TARGET_COLUMN], trivial_pred)
+print(f'TRIVIAL_BASELINE_SCORE={baseline_score}', flush=True)
+
+task = Task('binary')
+roles = {'target': TARGET_COLUMN}
+automl = TabularAutoML(task=task, timeout=600)
+
+print('Training...', flush=True)
+automl.fit_predict(train_df, roles=roles)
+
+val_preds = automl.predict(val_df).data.reshape(-1)
+val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+print(f'VALIDATION_SCORE={val_score}', flush=True)
+print(f'MODEL_USED={type(automl).__name__}', flush=True)
+
+if val_score <= baseline_score:
+    test_preds = np.full(len(test_df), train_mean)
+else:
+    test_preds = automl.predict(test_df).data.reshape(-1)
+
+submission = pd.DataFrame({'target': test_preds})
+submission.to_csv('/app/predictions.csv', index=False)
+print('Saved predictions.csv', flush=True)
+EOF
+python3 solution.py
+
+
+
+C-c
+cat << 'EOF' > solution.py
+import pandas as pd
+import numpy as np
+import torch
+from sklearn.metrics import roc_auc_score
+from lightautoml.automl.presets.tabular_pr[?2004hroot@ac1e119daf73:/workspace# python3 solution.py
+[?2004l'nlp' extra dependency package 'fasttext-numpy2' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'nltk' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'transformers' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+/usr/local/lib/python3.12/site-packages/lightautoml/ml_algo/dl_model.py:40: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/embed.py:24: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/dl_transformers.py:25: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+DEVICE=cpu
+BUDGET_ALLOCATION: Exploration: 5m, Training: 1h, Finalization: 15m
+Loading data...
+Calculating trivial baseline...
+TRIVIAL_BASELINE_SCORE=0.5
+Training LightAutoML...

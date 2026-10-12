@@ -1,0 +1,86 @@
+{
+    "id": "83f73a38-c8cc-4cd5-904d-160356eb8afe",
+    "started_at": "2026-08-30T19:27:10.743326",
+    "updated_at": "2026-08-30T20:52:30.117748",
+    "finished_at": "2026-08-30T20:52:30.117748",
+    "n_total_trials": 24,
+    "stats": {
+        "n_completed_trials": 24,
+        "n_errored_trials": 2,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "terminus-2__google/gemma-4-31b-it__tabred-ktool": {
+                "n_trials": 22,
+                "n_errors": 2,
+                "metrics": [
+                    {
+                        "reward": 0.08812891304815003,
+                        "rmse": 0.026856878288287995,
+                        "roc_auc": 0.02416556077766825
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "homecredit-default__w3akbkQ",
+                            "weather__iGj2X9A",
+                            "ecom-offers__Kyeyywm",
+                            "delivery-eta__SHxNFb4",
+                            "maps-routing__UAbZ9vc",
+                            "sberbank-housing__rXDNNdi",
+                            "homesite-insurance__hyEe48c",
+                            "homecredit-default__6JAsPwF",
+                            "cooking-time__vnACr58",
+                            "ecom-offers__m6ZARZg",
+                            "sberbank-housing__4s87zJY",
+                            "homesite-insurance__7yooP2t",
+                            "homecredit-default__R57i2Zy",
+                            "cooking-time__jLHivUH",
+                            "weather__ELqivE4",
+                            "delivery-eta__CWF8Wo4",
+                            "maps-routing__DoXBQrb",
+                            "sberbank-housing__VRaUUtb",
+                            "homesite-insurance__pr7gSYH"
+                        ],
+                        "0.6744610972965276": [
+                            "cooking-time__KmbKvJ6"
+                        ],
+                        "0.8606593571950351": [
+                            "maps-routing__WzBDCng"
+                        ],
+                        "0.5799734586640379": [
+                            "ecom-offers__oePmEyr"
+                        ]
+                    },
+                    "rmse": {
+                        "0.482665203387333": [
+                            "cooking-time__KmbKvJ6"
+                        ],
+                        "0.16189987553157897": [
+                            "maps-routing__WzBDCng"
+                        ]
+                    },
+                    "roc_auc": {
+                        "0.5799734586640379": [
+                            "ecom-offers__oePmEyr"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "APIError": [
+                        "weather__odrgKac",
+                        "delivery-eta__Fn9G24m"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 3996179,
+        "n_cache_tokens": 3593184,
+        "n_output_tokens": 122497,
+        "cost_usd": 0.25757772999999995
+    }
+}

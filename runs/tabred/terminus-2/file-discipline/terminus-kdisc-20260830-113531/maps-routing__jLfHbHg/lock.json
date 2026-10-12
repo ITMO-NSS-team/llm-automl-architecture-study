@@ -1,0 +1,37 @@
+{
+    "schema_version": 2,
+    "task": {
+        "name": "maps-routing",
+        "type": "local",
+        "digest": "sha256:443cf217f1fefa3dd2fd6b6ad6c61b26c05bd1384b7c7c57526547fad879034f",
+        "source": "tabred-kdisc",
+        "path": "datasets/tabred-kdisc/maps-routing"
+    },
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent": {
+        "name": "terminus-2",
+        "model_name": "openrouter/google/gemma-4-31b-it",
+        "skills": [],
+        "resume_trajectory": false,
+        "extra_allowed_hosts": [],
+        "kwargs": {},
+        "mcp_servers": []
+    },
+    "bridge_inputs": {},
+    "skills": [],
+    "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "cpu_enforcement_policy": "auto",
+        "memory_enforcement_policy": "auto",
+        "extra_docker_compose": [],
+        "kwargs": {},
+        "extra_allowed_hosts": []
+    },
+    "verifier": {
+        "disable": false,
+        "environment_mode": "shared"
+    }
+}

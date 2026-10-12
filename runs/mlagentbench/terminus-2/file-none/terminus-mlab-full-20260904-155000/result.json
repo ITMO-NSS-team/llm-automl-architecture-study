@@ -1,0 +1,235 @@
+{
+    "id": "aabb088d-3a31-48e9-a36f-ea4ccf41a406",
+    "started_at": "2026-09-04T15:50:01.406891",
+    "updated_at": "2026-09-04T18:03:56.096865",
+    "finished_at": "2026-09-04T18:03:56.096865",
+    "n_total_trials": 24,
+    "stats": {
+        "n_completed_trials": 24,
+        "n_errored_trials": 1,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "terminus-2__google/gemma-4-31b-it__mlab": {
+                "n_trials": 24,
+                "n_errors": 1,
+                "metrics": [
+                    {
+                        "accuracy": 0.10245133121876203,
+                        "coverage": 0.08333333333333333,
+                        "dice": 0.0,
+                        "graphs": 83.33333333333333,
+                        "mae": 1799.5645992675036,
+                        "matched_ids": 2.6666666666666665,
+                        "mcrmse": 0.043991639357961354,
+                        "micro_f1": 0.0304961163812657,
+                        "n": 1499.0833333333333,
+                        "pointer_accuracy": 0.011643076578776041,
+                        "r2": 0.06877983276298964,
+                        "reward": 0.29389409821123996,
+                        "rmse": 2853.4878104511536,
+                        "smape": 2.520828012349632
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.6230534552409641": [
+                            "amp-parkinsons__YBoFr9N"
+                        ],
+                        "0.0": [
+                            "identify-contrails__rzv8fRD",
+                            "clrs__McxNpYC",
+                            "amp-parkinsons__jg8pYPh",
+                            "identify-contrails__AyJKioe",
+                            "feedback__6krJTmR",
+                            "amp-parkinsons__uyiS6XP",
+                            "identify-contrails__JY948Lw",
+                            "house-price__SRTXsiX"
+                        ],
+                        "0.0597": [
+                            "ogbn-arxiv__YRk5NCZ"
+                        ],
+                        "0.6415875001297412": [
+                            "feedback__mQjePAm"
+                        ],
+                        "0.5859284890426759": [
+                            "spaceship-titanic__Th7c7gp"
+                        ],
+                        "0.7850107734288729": [
+                            "house-price__thU3waa"
+                        ],
+                        "0.26291079812206575": [
+                            "fathomnet__vnfKZEm"
+                        ],
+                        "0.2655": [
+                            "ogbn-arxiv__6xJ7bzg"
+                        ],
+                        "0.6851211072664359": [
+                            "spaceship-titanic__wTXAno6"
+                        ],
+                        "0.8657052128828784": [
+                            "house-price__dFGuCe7"
+                        ],
+                        "0.38461538461538464": [
+                            "fathomnet__pgxXzhX"
+                        ],
+                        "0.146431884765625": [
+                            "clrs__WGv2YS7"
+                        ],
+                        "0.1567": [
+                            "ogbn-arxiv__2LCCtmS"
+                        ],
+                        "0.6679288350960126": [
+                            "feedback__eHUaGDQ"
+                        ],
+                        "0.7058823529411765": [
+                            "spaceship-titanic__G5tb9Ew"
+                        ],
+                        "0.0843806104129264": [
+                            "fathomnet__nx4CgbJ"
+                        ],
+                        "0.133001953125": [
+                            "clrs__7f7n4kb"
+                        ]
+                    },
+                    "smape": {
+                        "60.49987229639116": [
+                            "amp-parkinsons__YBoFr9N"
+                        ]
+                    },
+                    "dice": {
+                        "0.0": [
+                            "identify-contrails__rzv8fRD",
+                            "identify-contrails__JY948Lw"
+                        ]
+                    },
+                    "matched_ids": {
+                        "32.0": [
+                            "identify-contrails__rzv8fRD",
+                            "identify-contrails__JY948Lw"
+                        ]
+                    },
+                    "n": {
+                        "32.0": [
+                            "identify-contrails__rzv8fRD",
+                            "identify-contrails__JY948Lw"
+                        ],
+                        "10000": [
+                            "ogbn-arxiv__YRk5NCZ",
+                            "ogbn-arxiv__6xJ7bzg",
+                            "ogbn-arxiv__2LCCtmS"
+                        ],
+                        "1734": [
+                            "spaceship-titanic__Th7c7gp",
+                            "spaceship-titanic__wTXAno6",
+                            "spaceship-titanic__G5tb9Ew"
+                        ],
+                        "292": [
+                            "house-price__thU3waa",
+                            "house-price__dFGuCe7"
+                        ],
+                        "64.0": [
+                            "clrs__WGv2YS7",
+                            "clrs__7f7n4kb"
+                        ]
+                    },
+                    "accuracy": {
+                        "0.0597": [
+                            "ogbn-arxiv__YRk5NCZ"
+                        ],
+                        "0.5859284890426759": [
+                            "spaceship-titanic__Th7c7gp"
+                        ],
+                        "0.2655": [
+                            "ogbn-arxiv__6xJ7bzg"
+                        ],
+                        "0.6851211072664359": [
+                            "spaceship-titanic__wTXAno6"
+                        ],
+                        "0.1567": [
+                            "ogbn-arxiv__2LCCtmS"
+                        ],
+                        "0.7058823529411765": [
+                            "spaceship-titanic__G5tb9Ew"
+                        ]
+                    },
+                    "mcrmse": {
+                        "0.5586338571087824": [
+                            "feedback__mQjePAm"
+                        ],
+                        "0.49716548748229017": [
+                            "feedback__eHUaGDQ"
+                        ]
+                    },
+                    "r2": {
+                        "0.7850107734288729": [
+                            "house-price__thU3waa"
+                        ],
+                        "0.8657052128828784": [
+                            "house-price__dFGuCe7"
+                        ]
+                    },
+                    "mae": {
+                        "23767.41795205479": [
+                            "house-price__thU3waa"
+                        ],
+                        "19422.132430365295": [
+                            "house-price__dFGuCe7"
+                        ]
+                    },
+                    "rmse": {
+                        "38251.50621349356": [
+                            "house-price__thU3waa"
+                        ],
+                        "30232.201237334124": [
+                            "house-price__dFGuCe7"
+                        ]
+                    },
+                    "micro_f1": {
+                        "0.26291079812206575": [
+                            "fathomnet__vnfKZEm"
+                        ],
+                        "0.38461538461538464": [
+                            "fathomnet__pgxXzhX"
+                        ],
+                        "0.0843806104129264": [
+                            "fathomnet__nx4CgbJ"
+                        ]
+                    },
+                    "pointer_accuracy": {
+                        "0.146431884765625": [
+                            "clrs__WGv2YS7"
+                        ],
+                        "0.133001953125": [
+                            "clrs__7f7n4kb"
+                        ]
+                    },
+                    "coverage": {
+                        "1.0": [
+                            "clrs__WGv2YS7",
+                            "clrs__7f7n4kb"
+                        ]
+                    },
+                    "graphs": {
+                        "1000.0": [
+                            "clrs__WGv2YS7",
+                            "clrs__7f7n4kb"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "fathomnet__vnfKZEm"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 47746639,
+        "n_cache_tokens": 33923264,
+        "n_output_tokens": 284960,
+        "cost_usd": 10.359974570000006
+    }
+}

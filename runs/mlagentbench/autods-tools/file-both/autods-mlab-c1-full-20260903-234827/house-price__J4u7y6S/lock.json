@@ -1,0 +1,40 @@
+{
+    "schema_version": 2,
+    "task": {
+        "name": "house-price",
+        "type": "local",
+        "digest": "sha256:898b35555fc1037ac2ba3c618fa9541f45d1c5b0eceb42cb318fcc860cfab1c8",
+        "source": "mlab-c1",
+        "path": "datasets/mlab-c1/house-price"
+    },
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent": {
+        "name": "autods_harbor.agent:AutoDSAgent",
+        "model_name": "google/gemma-4-31b-it",
+        "skills": [],
+        "resume_trajectory": false,
+        "extra_allowed_hosts": [],
+        "kwargs": {
+            "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+            "workspace": "/workspace"
+        },
+        "mcp_servers": []
+    },
+    "bridge_inputs": {},
+    "skills": [],
+    "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "cpu_enforcement_policy": "auto",
+        "memory_enforcement_policy": "auto",
+        "extra_docker_compose": [],
+        "kwargs": {},
+        "extra_allowed_hosts": []
+    },
+    "verifier": {
+        "disable": false,
+        "environment_mode": "shared"
+    }
+}

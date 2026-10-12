@@ -1,0 +1,16 @@
+harness,cell,instruction_file,trials,trials_with_trace,compare_with_trivial_predictor,allocate_time_budget,keep_best_variant,inspect_submission,early_stopping
+terminus-2,stock-image,none,24,24,0,0,1,0,24
+terminus-2,enriched-image,none,24,24,0,0,0,0,24
+terminus-2,file-none,none,24,24,0,0,0,0,22
+terminus-2,file-library,library,24,24,0,0,3,0,0
+terminus-2,file-discipline,discipline,24,24,24,24,24,24,24
+terminus-2,file-discipline-trimmed,discipline trimmed,24,24,24,0,24,24,22
+terminus-2,file-both,both,24,24,24,24,24,24,0
+terminus-2,model-gemma-4-26b-a4b-it,none,24,24,0,0,0,0,20
+terminus-2,model-glm-4.7,none,24,24,0,0,1,6,10
+autods-tools,file-none,none,24,24,0,0,0,22,24
+autods-tools,file-library,library,24,24,0,0,2,22,0
+autods-tools,file-discipline,discipline,24,24,24,24,24,24,24
+autods-tools,file-both,both,24,20,20,20,20,20,10
+autods-tools,model-gemma-4-26b-a4b-it,both,24,17,17,17,17,17,11
+autods-tools,model-glm-4.7,both,24,12,12,12,12,12,8

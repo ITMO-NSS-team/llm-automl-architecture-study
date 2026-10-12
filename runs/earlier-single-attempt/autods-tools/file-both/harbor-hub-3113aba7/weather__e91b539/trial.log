@@ -1,0 +1,7 @@
+>> LOCAL weather from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/weather
+>> RUN weather/c1 (family=tabular)  02:34:45
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 22 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/weather-c1/trace.json
+>> SCORE weather/c1 (answer: answer.csv)
+{"reward": 0.8389145092742554, "r2": 0.8389145092742554, "rmse": 1.5258437242097382, "n": 10000}

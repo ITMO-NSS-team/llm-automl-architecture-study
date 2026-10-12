@@ -1,0 +1,1327 @@
+[?2004hroot@863dbe401cd3:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@863dbe401cd3:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@863dbe401cd3:/workspace# ls -la
+[?2004ltotal 668
+drwxr-xr-x 2 root root   4096 Sep  3 15:43 .
+drwxr-xr-x 1 root root   4096 Sep  4 16:34 ..
+-rw-rw-r-- 1 root root 125993 Sep  3 15:43 test.csv
+-rw-rw-r-- 1 root root 543385 Sep  3 15:43 train.csv
+-rw-rw-r-- 1 root root   1938 Sep  3 15:43 train.py
+[?2004hroot@863dbe401cd3:/workspace# cat task_descriptor.txt
+[?2004lcat: task_descriptor.txt: No such file or directory
+[?2004hroot@863dbe401cd3:/workspace# cat train.py
+[?2004limport pandas as pd
+from sklearn.linear_model import LogisticRegression
+
+
+def create_new_dataframe(data, column_names):
+    new_data = {}
+    for column in column_names:
+        if column in data.columns:
+            new_data[column] = data[column]
+        else:
+            new_data[column] = pd.Series(0, index=data.index)
+    return pd.DataFrame(new_data)
+
+
+df = pd.read_csv("train.csv")
+num_examples = df.shape[0]
+df = df.sample(frac=1, random_state=1)
+train_data = df[0:int(0.8 * num_examples)]
+val_data = df[int(0.8 * num_examples) + 1:]
+
+for part in (train_data, val_data):
+    part[["Deck", "Cabin_num", "Side"]] = part["Cabin"].str.split("/", expand=True)
+train_data = train_data.drop('Cabin', axis=1)
+val_data = val_data.drop('Cabin', axis=1)
+
+TargetY = train_data["Transported"]
+TargetY_test = val_data["Transported"]
+
+selectColumns = ["Deck", "Cabin_num", "Side"]
+ResourceX = pd.get_dummies(train_data[selectColumns])
+ResourceX_test = pd.get_dummies(val_data[selectColumns])
+
+# ***********************************************
+# In this part of the code, write and train the model on the above dataset to perform the task.
+# This part should populate the variable train_accuracy and val_accuracy
+# ***********************************************
+
+
+# ***********************************************
+# End of the main training module
+# ***********************************************
+
+print(f"Train Accuracy: {train_accuracy}")
+print(f"Validation Accuracy: {val_accuracy}")
+
+test_data = pd.read_csv('test.csv')
+test_data[["Deck", "Cabin_num", "Side"]] = test_data["Cabin"].str.split("/", expand=True)
+test_data = test_data.drop('Cabin', axis=1)
+
+test_X = pd.get_dummies(test_data[selectColumns])
+test_X = test_X.reindex(columns=ResourceX.columns, fill_value=0)
+
+test_preds = model.predict(test_X)
+pd.DataFrame({'PassengerId': test_data.PassengerId,
+              'Transported': test_preds}).to_csv('submission.csv', index=False)
+[?2004hroot@863dbe401cd3:/workspace# head -n 5 train.csv
+[?2004lPassengerId,HomePlanet,CryoSleep,Cabin,Destination,Age,VIP,RoomService,FoodCourt,ShoppingMall,Spa,VRDeck,Transported
+5397_03,Mars,True,D/162/S,55 Cancri e,30.0,False,0.0,0.0,0.0,0.0,0.0,True
+2941_01,Earth,False,G/477/P,TRAPPIST-1e,16.0,,24.0,0.0,13.0,717.0,0.0,False
+3081_01,Europa,False,C/118/S,55 Cancri e,50.0,False,0.0,1547.0,0.0,1784.0,1.0,True
+8941_01,Mars,False,E/575/P,TRAPPIST-1e,26.0,True,1.0,445.0,170.0,614.0,68.0,False
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler, LabelEncoder
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> # Required device snippet
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     # Split Cabin
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Fill missing values
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     
+[?2004l[?2004h>     # One-hot encoding
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     
+[?2004l[?2004h>     if is_test:
+[?2004l[?2004h>         if train_cols is not None:
+[?2004l[?2004h>             df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>             
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> # Split train/val
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Target extraction
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> 
+[?2004l[?2004h> # Preprocessing
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Scale
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Model
+[?2004l[?2004h> class SimpleMLP(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(SimpleMLP, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(64, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SimpleMLP(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(100):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Evaluation
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> # Prediction for test set
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> 
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'PassengerId': full_test['PassengerId'],
+[?2004l[?2004h>     'Transported': (test_preds == 1)
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+ls -l submission.csv
+ls -la
+cat << 'EOF' > train.py
+import pandas as pd
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+def preprocess_data(df, is_test=False, train_cols=None):
+    df = df.copy()
+    df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+    df = df.drop('Cabin', axis=1)
+    
+    num_cols = df.select_dtypes(include=[np.number]).columns
+    cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+    
+    for col in num_cols:
+        df[col] = df[col].fillna(df[col].median())
+    for col in cat_cols:
+        df[col] = df[col].fillna('Unknown')
+    
+    df = pd.get_dummies(df)
+    
+    if is_test and train_cols is not None:
+        df = df.reindex(columns=train_cols, fill_value=0)
+            
+    return df
+
+full_train = pd.read_csv("train.csv")
+full_test = pd.read_csv("test.csv")
+
+train_df = full_train.sample(frac=1, random_state=1)
+num_examples = len(train_df)
+train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+val_data_raw = train_df[int(0.8 * num_examples):].copy()
+
+TargetY_train = train_data_raw['Transported'].astype(int).values
+TargetY_val = val_data_raw['Transported'].astype(int).values
+
+train_data_raw = train_data_raw.drop('Transported', axis=1)
+val_data_raw = val_data_raw.drop('Transported', axis=1)
+
+X_train_df = preprocess_data(train_data_raw)
+columns = X_train_df.columns
+X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+
+scaler = StandardScaler()
+X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+class SimpleMLP(nn.Module):
+    def __init__(self, input_dim):
+        super(SimpleMLP, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.Linear(64, 32),
+            nn.ReLU(),
+            nn.Linear(32, 1),
+            nn.Sigmoid()
+        )
+    def forward(self, x):
+        return self.net(x)
+
+model = SimpleMLP(X_train.shape[1]).to(DEVICE)
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+model.train()
+for epoch in range(50):
+    optimizer.zero_grad()
+    outputs = model(X_train)
+    loss = criterion(outputs, Y_train)
+    loss.backward()
+    optimizer.step()
+    if (epoch + 1) % 10 == 0:
+        print(f"Epoch {epoch+1}/50, Loss: {loss.item():.4f}")
+
+model.eval()
+with torch.no_grad():
+    train_preds = (model(X_train) > 0.5).float()
+    val_preds = (model(X_val) > 0.5).float()
+    train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+    val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+
+print(f"Train Accuracy: {train_accuracy}")
+print(f"Validation Accuracy: {val_accuracy}")
+
+X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+
+model.eval()
+with torch.no_grad():
+    test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+
+submission = pd.DataFrame({
+    'PassengerId': full_test['PassengerId'],
+    'Transported': (test_preds == 1)
+})
+submission.to_csv('submission.csv', index=False)
+EOF
+python3 train.py
+Train Accuracy: 1.0
+Validation Accuracy: 0.6362329259525521
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# ls -l submission.csv
+[?2004l-rw-r--r-- 1 root root 23453 Sep  4 16:35 submission.csv
+[?2004hroot@863dbe401cd3:/workspace# ls -la
+[?2004ltotal 696
+drwxr-xr-x 1 root root   4096 Sep  4 16:35 .
+drwxr-xr-x 1 root root   4096 Sep  4 16:34 ..
+-rw-r--r-- 1 root root  23453 Sep  4 16:35 submission.csv
+-rw-rw-r-- 1 root root 125993 Sep  3 15:43 test.csv
+-rw-rw-r-- 1 root root 543385 Sep  3 15:43 train.csv
+-rw-rw-r-- 1 root root   3701 Sep  4 16:35 train.py
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     
+[?2004l[?2004h>     if is_test and train_cols is not None:
+[?2004l[?2004h>         df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>             
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> 
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> 
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> 
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class SimpleMLP(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(SimpleMLP, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(64, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SimpleMLP(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(50):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     if (epoch + 1) % 10 == 0:
+[?2004l[?2004h>         print(f"Epoch {epoch+1}/50, Loss: {loss.item():.4f}")
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> 
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'PassengerId': full_test['PassengerId'],
+[?2004l[?2004h>     'Transported': (test_preds == 1)
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+Epoch 10/50, Loss: 0.3939
+cat << 'EOF' > train.py
+import pandas as pd
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+def preprocess_data(df, is_test=False, train_cols=None):
+    df = df.copy()
+    df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+    df = df.drop('Cabin', axis=1)
+    
+    num_cols = df.select_dtypes(include=[np.number]).columns
+    cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+    
+    for col in num_cols:
+        df[col] = df[col].fillna(df[col].median())
+    for col in cat_cols:
+        df[col] = df[col].fillna('Unknown')
+    
+    df = pd.get_dummies(df)
+    
+    if is_test and train_cols is not None:
+        df = df.reindex(columns=train_cols, fill_value=0)
+            
+    return df
+
+full_train = pd.read_csv("train.csv")
+full_test = pd.read_csv("test.csv")
+
+train_df = full_train.sample(frac=1, random_state=1)
+num_examples = len(train_df)
+train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+val_data_raw = train_df[int(0.8 * num_examples):].copy()
+
+TargetY_train = train_data_raw['Transported'].astype(int).values
+TargetY_val = val_data_raw['Transported'].astype(int).values
+
+train_data_raw = train_data_raw.drop('Transported', axis=1)
+val_data_raw = val_data_raw.drop('Transported', axis=1)
+
+X_train_df = preprocess_data(train_data_raw)
+columns = X_train_df.columns
+X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+
+scaler = StandardScaler()
+X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+class RegularizedMLP(nn.Module):
+    def __init__(self, input_dim):
+        super(RegularizedMLP, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, 32),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(32, 1),
+            nn.Sigmoid()
+        )
+    def forward(self, x):
+        return self.net(x)
+
+model = RegularizedMLP(X_train.shape[1]).to(DEVICE)
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+
+model.train()
+for epoch in range(100):
+    optimizer.zero_grad()
+    outputs = model(X_train)
+    loss = criterion(outputs, Y_train)
+    loss.backward()
+    optimizer.step()
+    if (epoch + 1) % 20 == 0:
+        model.eval()
+        with torch.no_grad():
+            val_out = model(X_val)
+            val_loss = criterion(val_out, Y_val)
+        print(f"Epoch {epoch+1}/100, Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+        model.train()
+
+model.eval()
+with torch.no_grad():
+    train_preds = (model(X_train) > 0.5).float()
+    val_preds = (model(X_val) > 0.5).float()
+    train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+    val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+
+print(f"Train Accuracy: {train_accuracy}")
+print(f"Validation Accuracy: {val_accuracy}")
+
+X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+
+model.eval()
+with torch.no_grad():
+    test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+
+submission = pd.DataFrame({
+    'PassengerId': full_test['PassengerId'],
+    'Transported': (test_preds == 1)
+})
+submission.to_csv('submission.csv', index=False)
+EOF
+python3 train.py
+Epoch 20/50, Loss: 0.1271
+Epoch 30/50, Loss: 0.0254
+Epoch 40/50, Loss: 0.0058
+Epoch 50/50, Loss: 0.0022
+Train Accuracy: 1.0
+Validation Accuracy: 0.6254493170381021
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     
+[?2004l[?2004h>     if is_test and train_cols is not None:
+[?2004l[?2004h>         df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>             
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> 
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> 
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> 
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class RegularizedMLP(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(RegularizedMLP, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.3),
+[?2004l[?2004h>             nn.Linear(64, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.3),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = RegularizedMLP(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(100):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     if (epoch + 1) % 20 == 0:
+[?2004l[?2004h>         model.eval()
+[?2004l[?2004h>         with torch.no_grad():
+[?2004l[?2004h>             val_out = model(X_val)
+[?2004l[?2004h>             val_loss = criterion(val_out, Y_val)
+[?2004l[?2004h>         print(f"Epoch {epoch+1}/100, Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+[?2004l[?2004h>         model.train()
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> 
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'PassengerId': full_test['PassengerId'],
+[?2004l[?2004h>     'Transported': (test_preds == 1)
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+cat << 'EOF' > train.py
+import pandas as pd
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+def preprocess_data(df, is_test=False, train_cols=None):
+    df = df.copy()
+    df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+    df = df.drop('Cabin', axis=1)
+    
+    num_cols = df.select_dtypes(include=[np.number]).columns
+    cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+    
+    for col in num_cols:
+        df[col] = df[col].fillna(df[col].median())
+    for col in cat_cols:
+        df[col] = df[col].fillna('Unknown')
+    
+    df = pd.get_dummies(df)
+    
+    if is_test and train_cols is not None:
+        df = df.reindex(columns=train_cols, fill_value=0)
+            
+    return df
+
+full_train = pd.read_csv("train.csv")
+full_test = pd.read_csv("test.csv")
+
+train_df = full_train.sample(frac=1, random_state=1)
+num_examples = len(train_df)
+train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+val_data_raw = train_df[int(0.8 * num_examples):].copy()
+
+TargetY_train = train_data_raw['Transported'].astype(int).values
+TargetY_val = val_data_raw['Transported'].astype(int).values
+
+train_data_raw = train_data_raw.drop('Transported', axis=1)
+val_data_raw = val_data_raw.drop('Transported', axis=1)
+
+X_train_df = preprocess_data(train_data_raw)
+columns = X_train_df.columns
+X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+
+scaler = StandardScaler()
+X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+class RegularizedMLP(nn.Module):
+    def __init__(self, input_dim):
+        super(RegularizedMLP, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, 32),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(32, 1),
+            nn.Sigmoid()
+        )
+    def forward(self, x):
+        return self.net(x)
+
+model = RegularizedMLP(X_train.shape[1]).to(DEVICE)
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+
+model.train()
+for epoch in range(100):
+    optimizer.zero_grad()
+    outputs = model(X_train)
+    loss = criterion(outputs, Y_train)
+    loss.backward()
+    optimizer.step()
+    if (epoch + 1) % 20 == 0:
+        model.eval()
+        with torch.no_grad():
+            val_out = model(X_val)
+            val_loss = criterion(val_out, Y_val)
+        print(f"Epoch {epoch+1}/100, Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+        model.train()
+
+model.eval()
+with torch.no_grad():
+    train_preds = (model(X_train) > 0.5).float()
+    val_preds = (model(X_val) > 0.5).float()
+    train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+    val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+
+print(f"Train Accuracy: {train_accuracy}")
+print(f"Validation Accuracy: {val_accuracy}")
+
+X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+
+model.eval()
+with torch.no_grad():
+    test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+
+submission = pd.DataFrame({
+    'PassengerId': full_test['PassengerId'],
+    'Transported': (test_preds == 1)
+})
+submission.to_csv('submission.csv', index=False)
+EOF
+python3 train.py
+Epoch 20/100, Train Loss: 0.1902, Val Loss: 0.7415
+Epoch 40/100, Train Loss: 0.0178, Val Loss: 1.0771
+Epoch 60/100, Train Loss: 0.0050, Val Loss: 1.2614
+Epoch 80/100, Train Loss: 0.0036, Val Loss: 1.2543
+cat << 'EOF' > train.py
+import pandas as pd
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accEpoch 100/100, Train Loss: 0.0031, Val Loss: 1.2134
+Train Accuracy: 1.0
+Validation Accuracy: 0.6369518332135155
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     
+[?2004l[?2004h>     if is_test and train_cols is not None:
+[?2004l[?2004h>         df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>             
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> 
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> 
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> 
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class RegularizedMLP(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(RegularizedMLP, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.3),
+[?2004l[?2004h>             nn.Linear(64, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.3),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = RegularizedMLP(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(100):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     if (epoch + 1) % 20 == 0:
+[?2004l[?2004h>         model.eval()
+[?2004l[?2004h>         with torch.no_grad():
+[?2004l[?2004h>             val_out = model(X_val)
+[?2004l[?2004h>             val_loss = criterion(val_out, Y_val)
+[?2004l[?2004h>         print(f"Epoch {epoch+1}/100, Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+[?2004l[?2004h>         model.train()
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> 
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'PassengerId': full_test['PassengerId'],
+[?2004l[?2004h>     'Transported': (test_preds == 1)
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+Epoch 20/100, Train Loss: 0.2503, Val Loss: 0.6731
+Epoch 40/100, Train Loss: 0.0267, Val Loss: 1.0050
+cat << 'EOF' > train.py
+import pandas as pd
+import numpy as np
+imporEpoch 60/100, Train Loss: 0.0071, Val Loss: 1.3084
+Epoch 80/100, Train Loss: 0.0044, Val Loss: 1.3549
+Epoch 100/100, Train Loss: 0.0038, Val Loss: 1.3263
+Train Accuracy: 1.0
+Validation Accuracy: 0.5895039539899353
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> import copy
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     
+[?2004l[?2004h>     if is_test and train_cols is not None:
+[?2004l[?2004h>         df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>             
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> 
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> 
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> 
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class SimpleNet(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(SimpleNet, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.5),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SimpleNet(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=1e-3)
+[?2004l[?2004h> 
+[?2004l[?2004h> best_val_loss = float('inf')
+[?2004l[?2004h> best_model_state = None
+[?2004l[?2004h> 
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(100):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         val_out = model(X_val)
+[?2004l[?2004h>         val_loss = criterion(val_out, Y_val)
+[?2004l[?2004h>         if val_loss < best_val_loss:
+[?2004l[?2004h>             best_val_loss = val_loss
+[?2004l[?2004h>             best_model_state = copy.deepcopy(model.state_dict())
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     
+[?2004l[?2004h>     if (epoch + 1) % 20 == 0:
+[?2004l[?2004h>         print(f"Epoch {epoch+1}/100, Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+[?2004l[?2004h> 
+[?2004l[?2004h> model.load_state_dict(best_model_state)
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> 
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'PassengerId': full_test['PassengerId'],
+[?2004l[?2004h>     'Transported': (test_preds == 1)
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:20: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:20: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+Epoch 20/100, Train Loss: 0.4076, Val Loss: 0.6754
+Epoch 40/100, Train Loss: 0.2365, Val Loss: 0.6790
+Epoch 60/100, Train Loss: 0.1557, Val Loss: 0.6921
+Epoch 80/100, Train Loss: 0.1161, Val Loss: 0.7001
+Epoch 100/100, Train Loss: 0.0933, Val Loss: 0.7038
+Train Accuracy: 0.9996404817544491
+Validation Accuracy: 0.5916606757728253
+/workspace/train.py:20: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     
+[?2004l[?2004h>     if is_test and train_cols is not None:
+[?2004l[?2004h>         df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>             
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> 
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> 
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> 
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Use a simple Linear model to avoid overfitting
+[?2004l[?2004h> model = nn.Linear(X_train.shape[1], 1).to(DEVICE)
+[?2004l[?2004h> # Activation added during forward pass for binary classification
+[?2004l[?2004h> 
+[?2004l[?2004h> criterion = nn.BCEWithLogitsLoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.01)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(200):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_logits = model(X_train)
+[?2004l[?2004h>     train_preds = (torch.sigmoid(train_logits) > 0.5).float()
+[?2004l[?2004h>     
+[?2004l[?2004h>     val_logits = model(X_val)
+[?2004l[?2004h>     val_preds = (torch.sigmoid(val_logits) > 0.5).float()
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_logits = model(X_test)
+[?2004l[?2004h>     test_preds = (torch.sigmoid(test_logits) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> 
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'PassengerId': full_test['PassengerId'],
+[?2004l[?2004h>     'Transported': (test_preds == 1)
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004l:
+        df[col]DEVICE= cpu
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+Train Accuracy: 1.0
+Validation Accuracy: 0.732566498921639
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+Train Accuracy: 1.0
+Validation Accuracy: 0.732566498921639
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004hroot@863dbe401cd3:/workspace# ls -l submission.csv
+[?2004l-rw-r--r-- 1 root root 23483 Sep  4 16:40 submission.csv
+[?2004hroot@863dbe401cd3:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> print('--- RUNNING LINEAR MODEL VERSION ---')
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df, is_test=False, train_cols=None):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=[np.number]).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>     df = pd.get_dummies(df)
+[?2004l[?2004h>     if is_test and train_cols is not None:
+[?2004l[?2004h>         df = df.reindex(columns=train_cols, fill_value=0)
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> full_train = pd.read_csv("train.csv")
+[?2004l[?2004h> full_test = pd.read_csv("test.csv")
+[?2004l[?2004h> train_df = full_train.sample(frac=1, random_state=1)
+[?2004l[?2004h> num_examples = len(train_df)
+[?2004l[?2004h> train_data_raw = train_df[0:int(0.8 * num_examples)].copy()
+[?2004l[?2004h> val_data_raw = train_df[int(0.8 * num_examples):].copy()
+[?2004l[?2004h> TargetY_train = train_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> TargetY_val = val_data_raw['Transported'].astype(int).values
+[?2004l[?2004h> train_data_raw = train_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> val_data_raw = val_data_raw.drop('Transported', axis=1)
+[?2004l[?2004h> X_train_df = preprocess_data(train_data_raw)
+[?2004l[?2004h> columns = X_train_df.columns
+[?2004l[?2004h> X_val_df = preprocess_data(val_data_raw, is_test=True, train_cols=columns)
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train = torch.tensor(scaler.fit_transform(X_train_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_train = torch.tensor(TargetY_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> X_val = torch.tensor(scaler.transform(X_val_df), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> Y_val = torch.tensor(TargetY_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> model = nn.Linear(X_train.shape[1], 1).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCEWithLogitsLoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.01, weight_decay=0.01)
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(200):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_logits = model(X_train)
+[?2004l[?2004h>     train_preds = (torch.sigmoid(train_logits) > 0.5).float()
+[?2004l[?2004h>     val_logits = model(X_val)
+[?2004l[?2004h>     val_preds = (torch.sigmoid(val_logits) > 0.5).float()
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> X_test_raw = preprocess_data(full_test, is_test=True, train_cols=columns)
+[?2004l[?2004h> X_test = torch.tensor(scaler.transform(X_test_raw), dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_logits = model(X_test)
+[?2004l[?2004h>     test_preds = (torch.sigmoid(test_logits) > 0.5).float().cpu().numpy().flatten()
+[?2004l[?2004h> submission = pd.DataFrame({'PassengerId': full_test['PassengerId'], 'Transported': (test_preds == 1)})
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@863dbe401cd3:/workspace# python3 train.py
+[?2004l--- RUNNING LINEAR MODEL VERSION ---
+DEVICE= cpu
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+/workspace/train.py:19: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns

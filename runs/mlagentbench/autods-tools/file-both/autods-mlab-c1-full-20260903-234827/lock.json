@@ -1,0 +1,1228 @@
+{
+    "schema_version": 3,
+    "created_at": "2026-09-03T23:49:02.489988Z",
+    "harbor": {
+        "version": "0.22.0",
+        "is_editable": false
+    },
+    "n_concurrent_trials": 4,
+    "retry": {
+        "max_retries": 0,
+        "exclude_exceptions": [
+            "RewardFileEmptyError",
+            "ApiUsageLimitError",
+            "AgentTimeoutError",
+            "RewardFileNotFoundError",
+            "AgentAuthenticationError",
+            "VerifierOutputParseError",
+            "AgentSafetyRefusalError",
+            "VerifierTimeoutError",
+            "ModelNotFoundError"
+        ],
+        "wait_multiplier": 1.0,
+        "min_wait_sec": 1.0,
+        "max_wait_sec": 60.0
+    },
+    "trials": [
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "amp-parkinsons",
+                "type": "local",
+                "digest": "sha256:b730d02c13a103c6c1d67b36f50e385cb1b67d0e11b3f3db0bd98d33bea4f320",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/amp-parkinsons"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "identify-contrails",
+                "type": "local",
+                "digest": "sha256:11dc8f95bc4baa8ccb9b72b6808fd0aab53e05b7b05c935c317e7b1cd602935f",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/identify-contrails"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "ogbn-arxiv",
+                "type": "local",
+                "digest": "sha256:03f1d5848c4a079102a831f7d60136d724bea338456412eb1f6b71b9c6eca42c",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/ogbn-arxiv"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "feedback",
+                "type": "local",
+                "digest": "sha256:c4086fab590b84a7704801c5873867c475b0e05908443d07b5838d832104887e",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/feedback"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "imdb",
+                "type": "local",
+                "digest": "sha256:45078d05c4470dae01883f734f162959e1019f2363f3bca32be7ff23fd514a52",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/imdb"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "spaceship-titanic",
+                "type": "local",
+                "digest": "sha256:ad3160a6370fa5337c0a25706c80191f1b8365b3bbb694b6c63b4fb85471cbb1",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/spaceship-titanic"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "house-price",
+                "type": "local",
+                "digest": "sha256:898b35555fc1037ac2ba3c618fa9541f45d1c5b0eceb42cb318fcc860cfab1c8",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/house-price"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "fathomnet",
+                "type": "local",
+                "digest": "sha256:9d8e007c63f0f10a07c38ead10e67e0094c76df0c5da1f2a30a9105d3d6d866a",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/fathomnet"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "clrs",
+                "type": "local",
+                "digest": "sha256:ed5025fd9325ac4737484bbaa08f7a28d2a159b50082a995e0904a784e97f6d0",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/clrs"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "cifar10",
+                "type": "local",
+                "digest": "sha256:7112cb3ad6c77cfae1000516918967ac0cf689e88091d92d79baf0da847e05c3",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/cifar10"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "amp-parkinsons",
+                "type": "local",
+                "digest": "sha256:b730d02c13a103c6c1d67b36f50e385cb1b67d0e11b3f3db0bd98d33bea4f320",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/amp-parkinsons"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "identify-contrails",
+                "type": "local",
+                "digest": "sha256:11dc8f95bc4baa8ccb9b72b6808fd0aab53e05b7b05c935c317e7b1cd602935f",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/identify-contrails"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "ogbn-arxiv",
+                "type": "local",
+                "digest": "sha256:03f1d5848c4a079102a831f7d60136d724bea338456412eb1f6b71b9c6eca42c",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/ogbn-arxiv"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "feedback",
+                "type": "local",
+                "digest": "sha256:c4086fab590b84a7704801c5873867c475b0e05908443d07b5838d832104887e",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/feedback"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "imdb",
+                "type": "local",
+                "digest": "sha256:45078d05c4470dae01883f734f162959e1019f2363f3bca32be7ff23fd514a52",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/imdb"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "spaceship-titanic",
+                "type": "local",
+                "digest": "sha256:ad3160a6370fa5337c0a25706c80191f1b8365b3bbb694b6c63b4fb85471cbb1",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/spaceship-titanic"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "house-price",
+                "type": "local",
+                "digest": "sha256:898b35555fc1037ac2ba3c618fa9541f45d1c5b0eceb42cb318fcc860cfab1c8",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/house-price"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "fathomnet",
+                "type": "local",
+                "digest": "sha256:9d8e007c63f0f10a07c38ead10e67e0094c76df0c5da1f2a30a9105d3d6d866a",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/fathomnet"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "clrs",
+                "type": "local",
+                "digest": "sha256:ed5025fd9325ac4737484bbaa08f7a28d2a159b50082a995e0904a784e97f6d0",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/clrs"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "cifar10",
+                "type": "local",
+                "digest": "sha256:7112cb3ad6c77cfae1000516918967ac0cf689e88091d92d79baf0da847e05c3",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/cifar10"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "amp-parkinsons",
+                "type": "local",
+                "digest": "sha256:b730d02c13a103c6c1d67b36f50e385cb1b67d0e11b3f3db0bd98d33bea4f320",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/amp-parkinsons"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "identify-contrails",
+                "type": "local",
+                "digest": "sha256:11dc8f95bc4baa8ccb9b72b6808fd0aab53e05b7b05c935c317e7b1cd602935f",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/identify-contrails"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "ogbn-arxiv",
+                "type": "local",
+                "digest": "sha256:03f1d5848c4a079102a831f7d60136d724bea338456412eb1f6b71b9c6eca42c",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/ogbn-arxiv"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "feedback",
+                "type": "local",
+                "digest": "sha256:c4086fab590b84a7704801c5873867c475b0e05908443d07b5838d832104887e",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/feedback"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "imdb",
+                "type": "local",
+                "digest": "sha256:45078d05c4470dae01883f734f162959e1019f2363f3bca32be7ff23fd514a52",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/imdb"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "spaceship-titanic",
+                "type": "local",
+                "digest": "sha256:ad3160a6370fa5337c0a25706c80191f1b8365b3bbb694b6c63b4fb85471cbb1",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/spaceship-titanic"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "house-price",
+                "type": "local",
+                "digest": "sha256:898b35555fc1037ac2ba3c618fa9541f45d1c5b0eceb42cb318fcc860cfab1c8",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/house-price"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "fathomnet",
+                "type": "local",
+                "digest": "sha256:9d8e007c63f0f10a07c38ead10e67e0094c76df0c5da1f2a30a9105d3d6d866a",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/fathomnet"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "clrs",
+                "type": "local",
+                "digest": "sha256:ed5025fd9325ac4737484bbaa08f7a28d2a159b50082a995e0904a784e97f6d0",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/clrs"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        },
+        {
+            "schema_version": 2,
+            "task": {
+                "name": "cifar10",
+                "type": "local",
+                "digest": "sha256:7112cb3ad6c77cfae1000516918967ac0cf689e88091d92d79baf0da847e05c3",
+                "source": "mlab-c1",
+                "path": "datasets/mlab-c1/cifar10"
+            },
+            "install_only": false,
+            "timeout_multiplier": 1.0,
+            "agent": {
+                "name": "autods_harbor.agent:AutoDSAgent",
+                "model_name": "google/gemma-4-31b-it",
+                "skills": [],
+                "resume_trajectory": false,
+                "extra_allowed_hosts": [],
+                "kwargs": {
+                    "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                    "workspace": "/workspace"
+                },
+                "mcp_servers": []
+            },
+            "bridge_inputs": {},
+            "skills": [],
+            "environment": {
+                "type": "docker",
+                "force_build": false,
+                "delete": true,
+                "cpu_enforcement_policy": "auto",
+                "memory_enforcement_policy": "auto",
+                "extra_docker_compose": [],
+                "kwargs": {},
+                "extra_allowed_hosts": []
+            },
+            "verifier": {
+                "disable": false,
+                "environment_mode": "shared"
+            }
+        }
+    ]
+}

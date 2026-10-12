@@ -1,0 +1,20 @@
+{
+    "job_name": "fedot-plain-20260910-114632",
+    "jobs_dir": "../jobs",
+    "n_attempts": 3,
+    "agents": [
+        {
+            "name": "fedot_harbor.agent:FedotLLMAgent",
+            "model_name": "openrouter/google/gemma-4-31b-it"
+        }
+    ],
+    "datasets": [
+        {
+            "path": "datasets/cases-fedot-plain",
+            "task_names": [
+                "maize-yield",
+                "fdata-exit"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+    "task": {
+        "path": "datasets/tabred-kdisc/delivery-eta",
+        "source": "tabred-kdisc"
+    },
+    "trial_name": "delivery-eta__kqavNgJ",
+    "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-kdisc-20260830-113531",
+    "agent": {
+        "name": "terminus-2",
+        "model_name": "openrouter/google/gemma-4-31b-it"
+    },
+    "job_id": "2d094a70-ac20-4ce8-9672-3e9678bd803c"
+}

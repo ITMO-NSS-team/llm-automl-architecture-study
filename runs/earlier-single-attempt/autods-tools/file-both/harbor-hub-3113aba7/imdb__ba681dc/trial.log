@@ -1,0 +1,7 @@
+>> LOCAL imdb from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/imdb
+>> RUN imdb/c1 (family=nlp)  20:42:02
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 31 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/imdb-c1/trace.json
+>> SCORE imdb/c1 (answer: answer.csv)
+{"reward": 0.8397314788760702, "accuracy": 0.8397314788760702, "n": 24877}

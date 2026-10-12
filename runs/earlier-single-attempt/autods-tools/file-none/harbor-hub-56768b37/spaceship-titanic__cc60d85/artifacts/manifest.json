@@ -1,0 +1,9 @@
+[
+  {
+    "source": "/workspace/submission.csv",
+    "destination": "artifacts/workspace/submission.csv",
+    "type": "file",
+    "status": "ok",
+    "service": null
+  }
+]

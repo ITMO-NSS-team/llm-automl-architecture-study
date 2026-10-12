@@ -1,0 +1,16 @@
+Skipping image OS validation for hb__fb72c42187975cdb0df9d4eb40b048e9: docker inspect returned 1
+Running command: command -v fedotllm >/dev/null 2>&1
+Command outputs captured
+Running command: cd /workspace && python - <<'PY'
+import sys, pandas as pd
+sys.path.insert(0, '/opt/mlab')
+import prepare
+t = pd.read_csv('/workspace/test.csv')
+pd.DataFrame({prepare.ID: t[prepare.ID], prepare.TARGET: 0}).to_csv('/workspace/sample_submission.csv', index=False)
+print('sample_submission.csv', prepare.ID, prepare.TARGET, len(t))
+PY
+Command outputs captured
+fedotllm: model=google/gemma-4-31b-it base_url=https://openrouter.ai/api/v1 time_limit=2400
+Running command: cd /workspace && fedotllm /workspace -o llm.provider=openai -o llm.base_url=https://openrouter.ai/api/v1 -o llm.model=google/gemma-4-31b-it -o automl.enabled=fedot -o time_limit=2400 -o save_artifacts.enabled=False --output-filename /workspace/submission.csv 2>&1 | tee /logs/agent/fedotllm.log
+Command outputs captured
+Collecting main service artifacts

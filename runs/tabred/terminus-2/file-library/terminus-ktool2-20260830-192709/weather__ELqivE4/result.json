@@ -1,0 +1,132 @@
+{
+    "id": "68c63f82-537b-4fb8-a124-65740be8b337",
+    "task_name": "yandex-research/tabred__weather",
+    "trial_name": "weather__ELqivE4",
+    "trial_uri": "file:///var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__ELqivE4",
+    "task_id": {
+        "path": "datasets/tabred-ktool/weather"
+    },
+    "source": "tabred-ktool",
+    "task_checksum": "25808374fa8844ca7048a3737af565a707143320251ec06ee6d312560ba7f284",
+    "config": {
+        "task": {
+            "path": "datasets/tabred-ktool/weather",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tabred-ktool"
+        },
+        "trial_name": "weather__ELqivE4",
+        "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openrouter/google/gemma-4-31b-it",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "83f73a38-c8cc-4cd5-904d-160356eb8afe",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "google/gemma-4-31b-it",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 76522,
+        "n_cache_tokens": 65696,
+        "n_output_tokens": 3645,
+        "cost_usd": 0.00549844,
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 10,
+            "api_request_times_msec": [
+                11655.704975128174,
+                6929.49652671814,
+                7310.56022644043,
+                7984.885692596436,
+                6232.8174114227295,
+                8969.573497772217,
+                13900.079727172852,
+                14314.697742462158,
+                3914.747714996338,
+                4670.618772506714
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-08-30T20:20:42.626748Z",
+    "finished_at": "2026-08-30T20:25:53.917692Z",
+    "environment_setup": {
+        "started_at": "2026-08-30T20:20:42.907984Z",
+        "finished_at": "2026-08-30T20:20:52.470416Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-08-30T20:20:52.470470Z",
+        "finished_at": "2026-08-30T20:21:04.372022Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-08-30T20:21:04.372295Z",
+        "finished_at": "2026-08-30T20:25:40.726781Z"
+    },
+    "verifier": {
+        "started_at": "2026-08-30T20:25:41.089611Z",
+        "finished_at": "2026-08-30T20:25:42.632214Z"
+    },
+    "step_results": null
+}

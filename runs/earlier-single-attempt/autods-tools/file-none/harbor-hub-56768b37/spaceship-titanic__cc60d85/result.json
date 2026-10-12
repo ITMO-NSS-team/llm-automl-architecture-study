@@ -1,0 +1,92 @@
+{
+  "id": "bf69cafc-cfea-5f38-bd01-c8eaa8498807",
+  "task_name": "mlab/spaceship-titanic",
+  "trial_name": "spaceship-titanic__cc60d85",
+  "trial_uri": "file:///jobs/autods-base-gemma-4-31b-it/spaceship-titanic__cc60d85",
+  "task_id": {
+    "path": "harbor-datasets-mlab/datasets/mlab-protocol/spaceship-titanic"
+  },
+  "source": "mlab-protocol",
+  "task_checksum": "a907dfe120822965e6fafbbb691ddcf30ecef4604a9796961b6b82b61c0c0bbd",
+  "config": {
+    "task": {
+      "path": "harbor-datasets-mlab/datasets/mlab-protocol/spaceship-titanic",
+      "git_url": null,
+      "git_commit_id": null,
+      "name": null,
+      "ref": null,
+      "overwrite": false,
+      "download_dir": null,
+      "source": "mlab-protocol"
+    },
+    "trial_name": "spaceship-titanic__cc60d85",
+    "trials_dir": "jobs/autods-base-gemma-4-31b-it",
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent_timeout_multiplier": null,
+    "verifier_timeout_multiplier": null,
+    "agent_setup_timeout_multiplier": null,
+    "environment_build_timeout_multiplier": null,
+    "agent": {
+      "name": "autods",
+      "import_path": "autods_harbor.agent:AutoDSAgent",
+      "model_name": "openrouter/google/gemma-4-31b-it",
+      "n_concurrent": null,
+      "concurrency_group": null,
+      "skills": [],
+      "override_timeout_sec": null,
+      "override_setup_timeout_sec": null,
+      "max_timeout_sec": null,
+      "extra_allowed_hosts": [],
+      "kwargs": {
+        "temperature": 0.2
+      },
+      "env": {
+        "AUTODS_C1_DISABLED": "1"
+      },
+      "mcp_servers": []
+    },
+    "environment": {
+      "type": null,
+      "import_path": null,
+      "force_build": false,
+      "delete": true,
+      "extra_docker_compose": [],
+      "kwargs": {},
+      "extra_allowed_hosts": []
+    },
+    "job_id": "56768b37-f841-5678-8fc8-c2af1a45af7d"
+  },
+  "agent_info": {
+    "name": "autods",
+    "version": "0.1.0",
+    "model_info": {
+      "name": "google/gemma-4-31b-it",
+      "provider": "openrouter"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 131588,
+    "n_cache_tokens": 24992,
+    "n_output_tokens": 13178,
+    "cost_usd": 0.017639,
+    "rollout_details": [],
+    "metadata": {
+      "n_steps": 27
+    }
+  },
+  "verifier_result": {
+    "rewards": {
+      "reward": 0.8102652825836217,
+      "accuracy": 0.8102652825836217
+    }
+  },
+  "exception_info": null,
+  "started_at": "2026-08-09T22:18:15.944933Z",
+  "finished_at": "2026-08-09T22:30:31.250100Z",
+  "environment_setup": null,
+  "agent_setup": null,
+  "agent_execution": null,
+  "verifier": null,
+  "step_results": null
+}

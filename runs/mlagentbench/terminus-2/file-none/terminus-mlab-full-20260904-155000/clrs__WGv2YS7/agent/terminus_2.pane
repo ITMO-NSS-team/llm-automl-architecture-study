@@ -1,0 +1,276 @@
+[?2004hroot@1dfe05b0d0de:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@1dfe05b0d0de:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@1dfe05b0d0de:/workspace# ls -R
+[?2004l.:
+test.npz  train.npz  train.py
+[?2004hroot@1dfe05b0d0de:/workspace# cat train.py
+[?2004limport numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+
+device = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', device)
+
+tr = np.load('train.npz')
+te = np.load('test.npz')
+A_tr, Pi_tr = tr['A'].astype(np.float32), tr['Pi'].astype(np.int64)
+A_te = te['A'].astype(np.float32)
+N_tr, N_te = A_tr.shape[1], A_te.shape[1]
+
+epochs = 5      # weak baseline: scores each candidate from two edge weights only
+
+
+class Baseline(nn.Module):
+    """For pair (i, j) and candidate k, score it from A[i, k] and A[k, j] alone."""
+
+    def __init__(self, hidden=32):
+        super().__init__()
+        self.net = nn.Sequential(nn.Linear(2, hidden), nn.ReLU(), nn.Linear(hidden, 1))
+
+    def forward(self, A):                            # A: (B, N, N)
+        B, N, _ = A.shape
+        ik = A.unsqueeze(2).expand(B, N, N, N)       # A[b, i, k] over (i, j, k)
+        kj = A.unsqueeze(1).transpose(2, 3).expand(B, N, N, N)   # A[b, k, j]
+        feat = torch.stack([ik, kj], dim=-1)         # (B, N, N, N, 2)
+        return self.net(feat).squeeze(-1)            # (B, N, N, N) logits over k
+
+
+model = Baseline().to(device)
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+lossf = nn.CrossEntropyLoss()
+
+X, Y = torch.tensor(A_tr), torch.tensor(Pi_tr)
+for epoch in range(epochs):
+    model.train()
+    perm = torch.randperm(len(X))
+    total, nb = 0.0, 0
+    for i in range(0, len(X), 32):
+        idx = perm[i:i + 32]
+        xb, yb = X[idx].to(device), Y[idx].to(device)
+        opt.zero_grad()
+        logits = model(xb)                            # (B, N, N, N)
+        loss = lossf(logits.reshape(-1, N_tr), yb.reshape(-1))
+        loss.backward()
+        opt.step()
+        total += loss.item(); nb += 1
+    print(f'epoch {epoch} loss {total / max(nb, 1):.4f}')
+
+model.eval()
+rows = []
+with torch.no_grad():
+    for g in range(len(A_te)):
+        pred = model(torch.tensor(A_te[g:g + 1]).to(device)).argmax(-1)[0].cpu().numpy()
+        for r in range(N_te):
+            rows.append({'graph_id': g, 'row': r,
+                         'pointers': ' '.join(str(int(v)) for v in pred[r])})
+pd.DataFrame(rows).to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+[?2004hroot@1dfe05b0d0de:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+python3 train.py
+python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+python3 train.py
+python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+C-c
+python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+epoch 0 loss 2.5288
+C-c
+C-c
+ls
+python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+clear
+python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+"
+'
+`
+C-c
+C-c
+ls
+python3 -c "import numpy as np; tr=np.load('train.npz'); print(tr['A'].shape, tr['Pi'].shape)"
+
+
+
+whoami
+ls
+cat <<EOF > inspect_data.py
+import numpy as np
+tr = np.load('train.npz')
+print('A shape:', tr['A'].shape)
+print('Pi shape:', tr['Pi'].shape)
+print('A min/max:', tr['A'].min(), tr['A'].max())
+print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())
+EOF
+python3 inspect_data.py
+ls
+"
+'
+)
+]
+}
+C-c
+C-c
+ls
+
+
+
+
+ls -la
+C-c
+C-c
+C-c
+ls
+C-c
+C-c
+C-c
+C-c
+C-c
+reset
+ls
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ls
+epoch 1 loss 2.0585
+C-l
+ls
+C-c
+C-c
+C-c
+ls
+C-c
+C-c
+C-c
+C-c
+C-c
+ls
+
+epoch 2 loss 1.7965
+
+epoch 3 loss 1.6656
+
+
+epoch 4 loss 1.5871
+
+wrote submission.csv
+[?2004hroot@1dfe05b0d0de:/workspace# python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+[?2004lA shape: (10000, 16, 16)
+Pi shape: (10000, 16, 16)
+A min/max: 0.0 1.0004946
+Pi min/max: 0 15
+[?2004hroot@1dfe05b0d0de:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+cat <<EOF > train_improved.py
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+tr = np.load('train.npz')
+te = np.load('test.npz')
+A_tr, Pi_tr = tr['A'].astype(np.float32), tr['Pi'].astype(np.int64)
+A_te = te['A'].astype(np.float32)
+N_tr, N_te = A_tr.shape[1], A_te.shape[1]
+
+class ImprovedModel(nn.Module):
+    def __init__(self, hidden=64):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(3, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, 1)
+        )
+
+    def forward(self, A):
+        B, N, _ = A.shape
+        a_ij = A.unsqueeze(-1).expand(B, N, N, N)
+        a_ik = A.unsqueeze(2).expand(B, N, N, N)
+        a_kj = A.transpose(1, 2).unsqueeze(1).expand(B, N, N, N)
+        feat = torch.stack([a_ij, a_ik, a_kj], dim=-1)
+        return self.net(feat).squeeze(-1)
+
+model = ImprovedModel().to(DEVICE)
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+lossf = nn.CrossEntropyLoss()
+
+X, Y = torch.tensor(A_tr), torch.tensor(Pi_tr)
+epochs = 20
+for epoch in range(epochs):
+    model.train()
+    perm = torch.randperm(len(X))
+    total, nb = 0.0, 0
+    for i in range(0, len(X), 32):
+        idx = perm[i:i + 32]
+        xb, yb = X[idx].to(DEVICE), Y[idx].to(DEVICE)
+        opt.zero_grad()
+        logits = model(xb)
+        loss = lossf(logits.reshape(-1, N_tr), yb.reshape(-1))
+        loss.backward()
+        opt.step()
+        total += loss.item(); nb += 1
+    print(f'epoch {epoch} loss {total / max(nb, 1):.4f}')
+
+model.eval()
+rows = []
+with torch.no_grad():
+    for g in range(len(A_te)):
+        pred = model(torch.tensor(A_te[g:g + 1]).to(DEVICE)).argmax(-1)[0].cpu().numpy()
+        for r in range(N_te):
+            rows.append({'graph_id': g, 'row': r, 'pointers': ' '.join(str(int(v)) for v in pred[r])})
+pd.DataFrame(rows).to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+EOF
+python3 train_improved.py
+epoch 0 loss 2.5487
+
+epoch 1 loss 2.2512
+
+epoch 2 loss 2.0443
+
+
+epoch 3 loss 1.8398
+
+epoch 4 loss 1.7021
+
+
+wrote submission.csv
+[?2004hroot@1dfe05b0d0de:/workspace# python3 -c "import numpy as np; tr = np.load('train.npz'); print('A shape:', tr['A'].shape); print('Pi shape:', tr['Pi'].shape); print('A min/max:', tr['A'].min(), tr['A'].max()); print('Pi min/max:', tr['Pi'].min(), tr['Pi'].max())"
+[?2004lA shape: (10000, 16, 16)
+Pi shape: (10000, 16, 16)
+A min/max: 0.0 1.0004946
+Pi min/max: 0 15
+[?2004hroot@1dfe05b0d0de:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+C-c
+ls -lh submission.csv
+ls -lh submission.csv
+ls -l submission.csv
+epoch 0 loss 2.5727

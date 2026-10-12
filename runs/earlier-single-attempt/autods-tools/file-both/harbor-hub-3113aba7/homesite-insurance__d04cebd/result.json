@@ -1,0 +1,90 @@
+{
+  "id": "cb19f843-0505-5835-8abe-d646429fedf9",
+  "task_name": "tabred/homesite-insurance",
+  "trial_name": "homesite-insurance__d04cebd",
+  "trial_uri": "file:///jobs/autods-c1-gemma-4-31b-it/homesite-insurance__d04cebd",
+  "task_id": {
+    "path": "harbor-datasets-tabred/datasets/tabred-real/homesite-insurance"
+  },
+  "source": "tabred-real",
+  "task_checksum": "3752ccf73d3ff07f2276c050aa5604eb7185540a2257449e2de85d49307ff637",
+  "config": {
+    "task": {
+      "path": "harbor-datasets-tabred/datasets/tabred-real/homesite-insurance",
+      "git_url": null,
+      "git_commit_id": null,
+      "name": null,
+      "ref": null,
+      "overwrite": false,
+      "download_dir": null,
+      "source": "tabred-real"
+    },
+    "trial_name": "homesite-insurance__d04cebd",
+    "trials_dir": "jobs/autods-c1-gemma-4-31b-it",
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent_timeout_multiplier": null,
+    "verifier_timeout_multiplier": null,
+    "agent_setup_timeout_multiplier": null,
+    "environment_build_timeout_multiplier": null,
+    "agent": {
+      "name": "autods",
+      "import_path": "autods_harbor.agent:AutoDSAgent",
+      "model_name": "openrouter/google/gemma-4-31b-it",
+      "n_concurrent": null,
+      "concurrency_group": null,
+      "skills": [],
+      "override_timeout_sec": null,
+      "override_setup_timeout_sec": null,
+      "max_timeout_sec": null,
+      "extra_allowed_hosts": [],
+      "kwargs": {
+        "temperature": 0.2
+      },
+      "env": {},
+      "mcp_servers": []
+    },
+    "environment": {
+      "type": null,
+      "import_path": null,
+      "force_build": false,
+      "delete": true,
+      "extra_docker_compose": [],
+      "kwargs": {},
+      "extra_allowed_hosts": []
+    },
+    "job_id": "3113aba7-1a4b-5319-9777-2c6717635bc3"
+  },
+  "agent_info": {
+    "name": "autods",
+    "version": "0.1.0",
+    "model_info": {
+      "name": "google/gemma-4-31b-it",
+      "provider": "openrouter"
+    }
+  },
+  "agent_result": {
+    "n_input_tokens": 84251,
+    "n_cache_tokens": 7296,
+    "n_output_tokens": 5362,
+    "cost_usd": 0.010248,
+    "rollout_details": [],
+    "metadata": {
+      "n_steps": 22
+    }
+  },
+  "verifier_result": {
+    "rewards": {
+      "reward": 0.9616389974089579,
+      "auc": 0.9616389974089579
+    }
+  },
+  "exception_info": null,
+  "started_at": "2026-08-09T12:15:43.400033Z",
+  "finished_at": "2026-08-09T12:17:07.083418Z",
+  "environment_setup": null,
+  "agent_setup": null,
+  "agent_execution": null,
+  "verifier": null,
+  "step_results": null
+}

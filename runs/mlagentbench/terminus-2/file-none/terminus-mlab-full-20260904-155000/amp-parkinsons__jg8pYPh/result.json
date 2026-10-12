@@ -1,0 +1,133 @@
+{
+    "id": "4b651ad9-5e95-4633-a254-fc6ed37d51a7",
+    "task_name": "mlab/amp-parkinsons",
+    "trial_name": "amp-parkinsons__jg8pYPh",
+    "trial_uri": "file:///var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-mlab-full-20260904-155000/amp-parkinsons__jg8pYPh",
+    "task_id": {
+        "path": "datasets/mlab/amp-parkinsons"
+    },
+    "source": "mlab",
+    "task_checksum": "922a4a3ad34b13865ddce0d980ad15de3485464d023e42bbfbd7a4532be84f3a",
+    "config": {
+        "task": {
+            "path": "datasets/mlab/amp-parkinsons",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "mlab"
+        },
+        "trial_name": "amp-parkinsons__jg8pYPh",
+        "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-mlab-full-20260904-155000",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openrouter/google/gemma-4-31b-it",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "aabb088d-3a31-48e9-a36f-ea4ccf41a406",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "google/gemma-4-31b-it",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 83660,
+        "n_cache_tokens": 6496,
+        "n_output_tokens": 5612,
+        "cost_usd": 0.037982339999999996,
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 11,
+            "api_request_times_msec": [
+                2101.377010345459,
+                9950.113296508789,
+                22923.26593399048,
+                7180.460453033447,
+                5459.611415863037,
+                7548.666477203369,
+                8990.828037261963,
+                2303.8740158081055,
+                3320.497751235962,
+                2167.5803661346436,
+                9454.054832458496
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-09-04T15:58:58.399467Z",
+    "finished_at": "2026-09-04T16:02:41.295235Z",
+    "environment_setup": {
+        "started_at": "2026-09-04T15:58:58.483735Z",
+        "finished_at": "2026-09-04T15:59:03.759451Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-04T15:59:03.759483Z",
+        "finished_at": "2026-09-04T15:59:05.465402Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-04T15:59:05.465531Z",
+        "finished_at": "2026-09-04T16:02:24.865647Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-04T16:02:25.675395Z",
+        "finished_at": "2026-09-04T16:02:27.645342Z"
+    },
+    "step_results": null
+}

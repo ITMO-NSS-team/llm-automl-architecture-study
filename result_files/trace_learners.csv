@@ -1,0 +1,361 @@
+harness,cell,task,trial,outcome,trace,lightautoml,lightgbm,xgboost,catboost,random_forest,hist_gradient_boosting,hyperparameter_search,early_stopping,n_estimators_1000,learning_rate_0.05,pip_install_lightgbm
+terminus-2,stock-image,cooking-time,cooking-time__Aejgn9K,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,cooking-time,cooking-time__VVHpfi3,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,stock-image,cooking-time,cooking-time__kDLHD3A,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,delivery-eta,delivery-eta__6xkBDop,scored,yes,0,1,0,0,0,1,0,1,0,1,1
+terminus-2,stock-image,delivery-eta,delivery-eta__bwytFUW,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,delivery-eta,delivery-eta__hABDTFH,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,ecom-offers,ecom-offers__D5S5KA3,scored,yes,0,1,0,0,0,1,0,1,1,1,1
+terminus-2,stock-image,ecom-offers,ecom-offers__KN3XWPr,scored,yes,0,1,0,0,0,1,0,1,1,1,0
+terminus-2,stock-image,ecom-offers,ecom-offers__sqyJRTN,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,homecredit-default,homecredit-default__DvMUR26,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,homecredit-default,homecredit-default__Kbpt4BE,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,homecredit-default,homecredit-default__eroSGzk,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,homesite-insurance,homesite-insurance__EYW26ra,scored,yes,0,1,0,0,0,1,0,1,1,1,0
+terminus-2,stock-image,homesite-insurance,homesite-insurance__MaPWQ7H,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,homesite-insurance,homesite-insurance__Xxp2EGc,scored,yes,0,1,0,0,0,1,0,1,1,1,1
+terminus-2,stock-image,maps-routing,maps-routing__RhPzavc,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,maps-routing,maps-routing__Tr9bAJC,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,maps-routing,maps-routing__j8RhzGD,scored,yes,0,0,1,0,0,1,0,1,1,1,0
+terminus-2,stock-image,sberbank-housing,sberbank-housing__5FnFb6N,scored,yes,0,1,0,0,0,1,0,1,1,1,0
+terminus-2,stock-image,sberbank-housing,sberbank-housing__8sFS9cF,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,sberbank-housing,sberbank-housing__XZ3eNKN,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,weather,weather__cfFnf4k,scored,yes,0,1,0,0,0,1,0,1,1,1,0
+terminus-2,stock-image,weather,weather__jwmgAim,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,stock-image,weather,weather__xNdSf5i,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,cooking-time,cooking-time__BLWnb6X,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,cooking-time,cooking-time__BxFoZBk,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,cooking-time,cooking-time__vwphu4k,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,delivery-eta,delivery-eta__A38nq8J,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,delivery-eta,delivery-eta__CqJZxdf,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,delivery-eta,delivery-eta__KeZUjrj,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,ecom-offers,ecom-offers__NVPLUTQ,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,ecom-offers,ecom-offers__R65jRuR,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,ecom-offers,ecom-offers__oi6qKbQ,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,homecredit-default,homecredit-default__4u3kqDn,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,homecredit-default,homecredit-default__825HQDF,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,homecredit-default,homecredit-default__nDtY5Aa,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,homesite-insurance,homesite-insurance__3AH32jg,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,homesite-insurance,homesite-insurance__FQ9t9Bw,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,homesite-insurance,homesite-insurance__TAZ88rw,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,maps-routing,maps-routing__RXRXxkE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,maps-routing,maps-routing__d8DHthy,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,maps-routing,maps-routing__kUDWbWk,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,sberbank-housing,sberbank-housing__5Dx7S5T,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,sberbank-housing,sberbank-housing__NYC3QEv,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,sberbank-housing,sberbank-housing__x28HWSX,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,weather,weather__6Gs9Lqx,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,enriched-image,weather,weather__PhPfoTs,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,enriched-image,weather,weather__hWi4hmU,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,cooking-time,cooking-time__7cDmNYB,scored,yes,0,0,1,0,0,0,0,0,0,0,0
+terminus-2,file-none,cooking-time,cooking-time__iCAfTm6,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,cooking-time,cooking-time__ihCJa4Z,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-none,delivery-eta,delivery-eta__KLFxfkh,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,delivery-eta,delivery-eta__dMj3P68,scored,yes,0,1,0,0,0,0,0,0,1,1,1
+terminus-2,file-none,delivery-eta,delivery-eta__uiSAydK,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,file-none,ecom-offers,ecom-offers__3y2cCzf,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,ecom-offers,ecom-offers__AzykMxm,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,file-none,ecom-offers,ecom-offers__tfiKbB5,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,file-none,homecredit-default,homecredit-default__RD8ZmXD,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-none,homecredit-default,homecredit-default__UKJoM4Q,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,homecredit-default,homecredit-default__yC6G5BG,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,homesite-insurance,homesite-insurance__BXQ2X47,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-none,homesite-insurance,homesite-insurance__e2bCihD,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,file-none,homesite-insurance,homesite-insurance__sAMsNrm,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,maps-routing,maps-routing__5tqT8fA,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-none,maps-routing,maps-routing__b3ygCmX,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,maps-routing,maps-routing__xxF7ELi,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,sberbank-housing,sberbank-housing__BaZHfLe,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-none,sberbank-housing,sberbank-housing__UkQtgp8,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+terminus-2,file-none,sberbank-housing,sberbank-housing__qaL4AEA,scored,yes,0,0,0,1,0,0,0,1,1,1,0
+terminus-2,file-none,weather,weather__4WufQT2,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,weather,weather__8w2DgV8,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-none,weather,weather__HanqYfg,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-library,cooking-time,cooking-time__KmbKvJ6,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,cooking-time,cooking-time__jLHivUH,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,cooking-time,cooking-time__vnACr58,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,delivery-eta,delivery-eta__CWF8Wo4,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,delivery-eta,delivery-eta__SHxNFb4,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,ecom-offers,ecom-offers__Kyeyywm,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,ecom-offers,ecom-offers__m6ZARZg,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,ecom-offers,ecom-offers__oePmEyr,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,homecredit-default,homecredit-default__6JAsPwF,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,homecredit-default,homecredit-default__R57i2Zy,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,homecredit-default,homecredit-default__w3akbkQ,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,homesite-insurance,homesite-insurance__7yooP2t,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,homesite-insurance,homesite-insurance__hyEe48c,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,homesite-insurance,homesite-insurance__pr7gSYH,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,maps-routing,maps-routing__DoXBQrb,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,maps-routing,maps-routing__UAbZ9vc,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,maps-routing,maps-routing__WzBDCng,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,sberbank-housing,sberbank-housing__4s87zJY,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,sberbank-housing,sberbank-housing__VRaUUtb,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,sberbank-housing,sberbank-housing__rXDNNdi,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,weather,weather__ELqivE4,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,weather,weather__iGj2X9A,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,delivery-eta,delivery-eta__U3vskWs,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-library,weather,weather__BP5qZyh,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-discipline,cooking-time,cooking-time__3gXCK88,no submission,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,cooking-time,cooking-time__QtHMRsx,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,cooking-time,cooking-time__iroUsPY,no submission,yes,0,1,0,0,0,0,0,1,0,1,1
+terminus-2,file-discipline,delivery-eta,delivery-eta__CuhBZRF,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,delivery-eta,delivery-eta__bbF5YAn,no submission,yes,0,1,1,1,0,0,0,1,1,1,0
+terminus-2,file-discipline,delivery-eta,delivery-eta__kqavNgJ,no submission,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,ecom-offers,ecom-offers__NCzCFgo,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,ecom-offers,ecom-offers__ko5U6XW,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline,ecom-offers,ecom-offers__xxtL45F,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+terminus-2,file-discipline,homecredit-default,homecredit-default__Vj2WjeZ,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+terminus-2,file-discipline,homecredit-default,homecredit-default__sB5izqU,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline,homecredit-default,homecredit-default__yLPNHer,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-discipline,homesite-insurance,homesite-insurance__D9QQ7pm,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline,homesite-insurance,homesite-insurance__GotvNZF,scored,yes,0,1,0,0,0,0,0,1,0,1,1
+terminus-2,file-discipline,homesite-insurance,homesite-insurance__hMWSZtu,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-discipline,maps-routing,maps-routing__KFWGEk5,no submission,yes,0,0,0,0,0,0,0,1,0,0,0
+terminus-2,file-discipline,maps-routing,maps-routing__jLfHbHg,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,maps-routing,maps-routing__kHXj7yT,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,file-discipline,sberbank-housing,sberbank-housing__GLB4aCA,no submission,yes,0,0,0,1,0,0,0,1,1,1,0
+terminus-2,file-discipline,sberbank-housing,sberbank-housing__KBU83dB,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+terminus-2,file-discipline,sberbank-housing,sberbank-housing__eD2SkEG,no submission,yes,0,0,0,1,0,0,0,1,1,1,0
+terminus-2,file-discipline,weather,weather__FBKbTBr,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-discipline,weather,weather__PP7mBur,no submission,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-discipline,weather,weather__awGBqWD,no submission,yes,0,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-discipline-trimmed,cooking-time,cooking-time__7VoM3Zv,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,cooking-time,cooking-time__7efLKER,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,cooking-time,cooking-time__YcpfUDx,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,delivery-eta,delivery-eta__MMMoGfG,scored,yes,0,1,0,0,0,0,0,0,1,1,0
+terminus-2,file-discipline-trimmed,delivery-eta,delivery-eta__dH35ERM,scored,yes,0,1,1,0,0,0,0,1,1,1,1
+terminus-2,file-discipline-trimmed,delivery-eta,delivery-eta__euk8RW4,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,ecom-offers,ecom-offers__BtHd7hA,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,ecom-offers,ecom-offers__Gbri8S4,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,ecom-offers,ecom-offers__Q95Bxrz,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,homecredit-default,homecredit-default__NPTWVsM,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,homecredit-default,homecredit-default__bvqXGxu,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,homecredit-default,homecredit-default__mBa9bZm,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__ZqGAJjv,scored,yes,0,1,0,0,0,0,0,1,1,1,1
+terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__czFummk,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,homesite-insurance,homesite-insurance__eLLSGky,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,maps-routing,maps-routing__Abg4qQ4,scored,yes,0,0,0,1,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,maps-routing,maps-routing__KWmYyrE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,maps-routing,maps-routing__WQ4YktH,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,sberbank-housing,sberbank-housing__975ypaD,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+terminus-2,file-discipline-trimmed,sberbank-housing,sberbank-housing__WRn2rEH,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+terminus-2,file-discipline-trimmed,sberbank-housing,sberbank-housing__rih7ciU,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,weather,weather__aNYYtY2,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-discipline-trimmed,weather,weather__abbxjBE,scored,yes,0,1,0,0,0,0,0,0,1,1,0
+terminus-2,file-discipline-trimmed,weather,weather__iBMq7xv,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,file-both,cooking-time,cooking-time__WSMQzd5,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,cooking-time,cooking-time__pTzgieF,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,cooking-time,cooking-time__zfXNdQK,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,delivery-eta,delivery-eta__QEmiuoW,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,delivery-eta,delivery-eta__puoF5nm,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,delivery-eta,delivery-eta__xahGiGo,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,ecom-offers,ecom-offers__CFNgSA4,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,ecom-offers,ecom-offers__iW497Ah,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,ecom-offers,ecom-offers__wtStWHt,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,homecredit-default,homecredit-default__J9G9nKw,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,homecredit-default,homecredit-default__iNeaij6,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,homecredit-default,homecredit-default__uZEjQtY,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,homesite-insurance,homesite-insurance__7acsefp,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,homesite-insurance,homesite-insurance__9mjfjof,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,homesite-insurance,homesite-insurance__RiTnNDD,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,maps-routing,maps-routing__AssksYu,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,maps-routing,maps-routing__iTaSr2b,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,maps-routing,maps-routing__z3pDqRU,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,sberbank-housing,sberbank-housing__ALqmgi3,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,sberbank-housing,sberbank-housing__EDTVGFH,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,sberbank-housing,sberbank-housing__QcQstnx,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,weather,weather__EZ5o3gs,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,weather,weather__MNtZ24U,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,file-both,weather,weather__RpUsFwD,no submission,yes,1,0,0,0,0,0,0,0,0,0,0
+terminus-2,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__CTBdPfS,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__HH4DsuE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__tXseUdV,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__KPMC5jV,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__X4B4h9P,error,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__f9B9NpN,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__RvreDxu,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__YFxtAmJ,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__yAJRV4H,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,homecredit-default,homecredit-default__AY6RvUF,scored,yes,0,1,1,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,homecredit-default,homecredit-default__eNv265u,scored,yes,0,1,1,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,homecredit-default,homecredit-default__tFzLtDL,scored,yes,0,1,1,1,0,0,0,0,0,0,0
+terminus-2,model-gemma-4-26b-a4b-it,homesite-insurance,homesite-insurance__b9bk2jE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,homesite-insurance,homesite-insurance__vafWbBm,scored,yes,0,1,0,0,0,0,0,0,0,1,0
+terminus-2,model-gemma-4-26b-a4b-it,homesite-insurance,homesite-insurance__wtnTg5H,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,maps-routing,maps-routing__KdWHUJa,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,model-gemma-4-26b-a4b-it,maps-routing,maps-routing__pS9LTfD,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,maps-routing,maps-routing__xhsyiK2,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__rPHknDA,scored,yes,0,0,0,1,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__t5qwowN,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__wMqvteQ,scored,yes,0,1,0,0,0,0,0,0,0,1,0
+terminus-2,model-gemma-4-26b-a4b-it,weather,weather__49aLoVL,scored,yes,0,1,0,0,1,0,0,0,0,1,0
+terminus-2,model-gemma-4-26b-a4b-it,weather,weather__VDbifR5,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-gemma-4-26b-a4b-it,weather,weather__q7ySSXa,no submission,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-glm-4.7,cooking-time,cooking-time__7YdSHJK,scored,yes,0,1,0,0,0,0,0,1,0,0,0
+terminus-2,model-glm-4.7,cooking-time,cooking-time__EjrMtvk,scored,yes,0,0,0,0,0,1,0,0,0,0,0
+terminus-2,model-glm-4.7,cooking-time,cooking-time__LCijpYE,scored,yes,0,0,0,0,0,1,0,0,0,0,0
+terminus-2,model-glm-4.7,delivery-eta,delivery-eta__JWwEHLx,scored,yes,0,0,0,0,0,1,0,0,0,0,0
+terminus-2,model-glm-4.7,delivery-eta,delivery-eta__ZVPsMUa,scored,yes,0,1,0,0,0,0,0,1,0,0,0
+terminus-2,model-glm-4.7,delivery-eta,delivery-eta__rt5M9af,scored,yes,0,1,0,0,1,0,0,1,1,1,0
+terminus-2,model-glm-4.7,ecom-offers,ecom-offers__A4CPeDp,scored,yes,0,1,1,0,0,0,0,0,1,1,0
+terminus-2,model-glm-4.7,ecom-offers,ecom-offers__EV4ftty,scored,yes,0,1,1,1,0,0,1,0,1,1,0
+terminus-2,model-glm-4.7,ecom-offers,ecom-offers__T5ARA8Y,scored,yes,0,0,0,0,1,0,0,0,0,0,0
+terminus-2,model-glm-4.7,homecredit-default,homecredit-default__HZMb8qX,scored,yes,0,0,0,0,1,1,0,0,0,0,0
+terminus-2,model-glm-4.7,homecredit-default,homecredit-default__WDYjGq9,scored,yes,0,1,1,0,0,1,0,1,0,0,0
+terminus-2,model-glm-4.7,homecredit-default,homecredit-default__j3Ktwt9,scored,yes,0,1,0,0,0,0,0,0,0,1,0
+terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__5oe6NgB,scored,yes,0,0,0,0,1,0,0,0,0,0,0
+terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__67ghqyW,scored,yes,0,1,1,0,0,0,0,1,0,0,0
+terminus-2,model-glm-4.7,homesite-insurance,homesite-insurance__WpYE5Nu,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+terminus-2,model-glm-4.7,maps-routing,maps-routing__AooSji5,scored,yes,0,0,0,0,0,1,0,0,0,0,0
+terminus-2,model-glm-4.7,maps-routing,maps-routing__JCEQKuQ,scored,yes,0,1,1,0,1,0,0,1,0,0,0
+terminus-2,model-glm-4.7,maps-routing,maps-routing__xus43WC,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+terminus-2,model-glm-4.7,sberbank-housing,sberbank-housing__7oXDgQj,scored,yes,0,0,0,0,1,0,0,0,0,0,0
+terminus-2,model-glm-4.7,sberbank-housing,sberbank-housing__MNXbEvh,scored,yes,0,0,0,0,1,0,0,0,0,0,0
+terminus-2,model-glm-4.7,sberbank-housing,sberbank-housing__NBdDswP,scored,yes,0,0,0,0,0,0,0,0,0,0,0
+terminus-2,model-glm-4.7,weather,weather__RiquZrE,scored,yes,0,1,1,0,0,0,0,1,0,1,0
+terminus-2,model-glm-4.7,weather,weather__htZvG39,scored,yes,0,0,0,0,0,1,0,0,0,0,0
+terminus-2,model-glm-4.7,weather,weather__i5ueugA,scored,yes,0,0,0,0,0,1,0,0,0,0,0
+autods-tools,file-none,cooking-time,cooking-time__SJrvstL,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,cooking-time,cooking-time__mnUHkEV,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,cooking-time,cooking-time__vW6DbcE,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,delivery-eta,delivery-eta__25UMYaf,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,delivery-eta,delivery-eta__jPSCBWr,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,delivery-eta,delivery-eta__rWu7P2r,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,ecom-offers,ecom-offers__8r3xuAV,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,ecom-offers,ecom-offers__svoyiPS,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,ecom-offers,ecom-offers__yEdg9Ua,scored,yes,0,1,1,1,0,0,0,1,1,1,0
+autods-tools,file-none,homecredit-default,homecredit-default__8xFAtN7,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,homecredit-default,homecredit-default__ckpRK9o,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,homecredit-default,homecredit-default__j7CPNew,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-none,homesite-insurance,homesite-insurance__Q2CWEKS,scored,yes,0,1,1,1,0,0,0,1,1,1,1
+autods-tools,file-none,homesite-insurance,homesite-insurance__RLAoSvA,scored,yes,1,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,homesite-insurance,homesite-insurance__ndSayVP,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+autods-tools,file-none,maps-routing,maps-routing__BJc3JnS,scored,yes,0,0,0,1,0,0,0,1,1,1,0
+autods-tools,file-none,maps-routing,maps-routing__cvojeyS,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,maps-routing,maps-routing__xwPHaSP,scored,yes,0,1,0,0,0,0,0,0,1,1,0
+autods-tools,file-none,sberbank-housing,sberbank-housing__TWVSWKF,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-none,sberbank-housing,sberbank-housing__fZZfskD,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-none,sberbank-housing,sberbank-housing__xJAyUzx,scored,yes,0,0,0,1,0,0,0,1,1,1,0
+autods-tools,file-none,weather,weather__UhSeT7y,scored,yes,0,0,1,0,1,0,0,1,1,1,0
+autods-tools,file-none,weather,weather__ZcE9ie8,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-none,weather,weather__ytWtb3G,scored,yes,0,1,0,0,0,0,0,1,1,1,0
+autods-tools,file-library,cooking-time,cooking-time__Cnai5XB,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,cooking-time,cooking-time__RZUPRNg,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,cooking-time,cooking-time__UpjPNsh,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,delivery-eta,delivery-eta__Hh4enNp,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,delivery-eta,delivery-eta__LBNJZF2,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,delivery-eta,delivery-eta__qDrrrjx,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,ecom-offers,ecom-offers__7TG9G2E,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,ecom-offers,ecom-offers__CGJLhGo,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,ecom-offers,ecom-offers__cDgQxgU,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,homecredit-default,homecredit-default__MihNpkw,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,homecredit-default,homecredit-default__eT5mNd3,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,homecredit-default,homecredit-default__kgu6qcp,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,homesite-insurance,homesite-insurance__27BJ8fx,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,homesite-insurance,homesite-insurance__7B8nMwK,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,homesite-insurance,homesite-insurance__NpdAns8,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,maps-routing,maps-routing__U2JjdnT,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,maps-routing,maps-routing__ePaPiPt,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,maps-routing,maps-routing__iAoxxLe,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,sberbank-housing,sberbank-housing__Bf3p2NY,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,sberbank-housing,sberbank-housing__HzM2f6c,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,sberbank-housing,sberbank-housing__UCNhiNf,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,weather,weather__HqVBgVA,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,weather,weather__KeRMvXy,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-library,weather,weather__UpuUtCv,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-discipline,cooking-time,cooking-time__BpsXMxH,scored,yes,0,1,0,0,0,0,0,1,0,1,1
+autods-tools,file-discipline,cooking-time,cooking-time__N3KveWc,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,cooking-time,cooking-time__tMeFByx,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,delivery-eta,delivery-eta__4svvJTC,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,delivery-eta,delivery-eta__APLCDu7,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,delivery-eta,delivery-eta__osiwycj,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,ecom-offers,ecom-offers__KnXjXLX,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+autods-tools,file-discipline,ecom-offers,ecom-offers__n3pXDD7,scored,yes,0,1,0,1,0,0,0,1,0,1,0
+autods-tools,file-discipline,ecom-offers,ecom-offers__tWwDTeJ,scored,yes,0,1,0,1,0,0,0,1,1,1,0
+autods-tools,file-discipline,homecredit-default,homecredit-default__7xXprDp,scored,yes,0,1,0,0,0,0,0,1,0,1,1
+autods-tools,file-discipline,homecredit-default,homecredit-default__RgXfCRj,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,homecredit-default,homecredit-default__rM5dejG,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,homesite-insurance,homesite-insurance__GUtRjWC,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,homesite-insurance,homesite-insurance__b7in3Ee,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,homesite-insurance,homesite-insurance__qV3idr3,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-discipline,maps-routing,maps-routing__2AgKh8X,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,maps-routing,maps-routing__CxvjCAA,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-discipline,maps-routing,maps-routing__mknMFqw,scored,yes,0,1,0,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,sberbank-housing,sberbank-housing__JEHRu8e,scored,yes,0,1,0,1,0,0,0,1,0,1,1
+autods-tools,file-discipline,sberbank-housing,sberbank-housing__KvgDtk3,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-discipline,sberbank-housing,sberbank-housing__Q97Jtc6,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-discipline,weather,weather__dPapX8P,scored,yes,0,0,1,0,0,0,0,1,1,1,0
+autods-tools,file-discipline,weather,weather__gGuudse,scored,yes,0,0,1,0,0,0,0,1,0,1,0
+autods-tools,file-discipline,weather,weather__rvjFD5T,scored,yes,0,0,0,1,0,0,0,1,0,1,0
+autods-tools,file-both,cooking-time,cooking-time__3mdVEU6,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,cooking-time,cooking-time__GVbfPfc,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,cooking-time,cooking-time__VV3TKAH,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,delivery-eta,delivery-eta__UUe329e,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,delivery-eta,delivery-eta__ZxBU7TS,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,delivery-eta,delivery-eta__zuVhCxi,scored,no,,,,,,,,,,,
+autods-tools,file-both,ecom-offers,ecom-offers__mCE7MXe,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,ecom-offers,ecom-offers__upeiVyR,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,ecom-offers,ecom-offers__vYX3riF,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,homecredit-default,homecredit-default__WzzRjFh,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,homecredit-default,homecredit-default__hwCKHbs,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,homecredit-default,homecredit-default__wQHKjCV,scored,no,,,,,,,,,,,
+autods-tools,file-both,homesite-insurance,homesite-insurance__YjNdwsW,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,homesite-insurance,homesite-insurance__dGKURLd,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,homesite-insurance,homesite-insurance__y2ZxWwj,no submission,no,,,,,,,,,,,
+autods-tools,file-both,maps-routing,maps-routing__iwA4n86,scored,no,,,,,,,,,,,
+autods-tools,file-both,maps-routing,maps-routing__jM2UPra,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,maps-routing,maps-routing__vCSaS8N,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,sberbank-housing,sberbank-housing__XGTeXgr,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,sberbank-housing,sberbank-housing__ti6VyRE,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,sberbank-housing,sberbank-housing__vHpsCYi,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,weather,weather__KeBLYWc,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,weather,weather__j32o8Ke,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,file-both,weather,weather__jGB4qUF,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__awYPqq4,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__pSToQtb,no submission,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,cooking-time,cooking-time__rsrPJpb,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__94Ah6uo,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__doMogGP,no submission,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,delivery-eta,delivery-eta__vkTQH2u,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__DLhGmud,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__h2hhcA2,no submission,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,ecom-offers,ecom-offers__nmet7co,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,homecredit-default,homecredit-default__AJSpJFC,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,homecredit-default,homecredit-default__BQhP4V8,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,homecredit-default,homecredit-default__L8GayTa,no submission,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,homesite-insurance,homesite-insurance__7Y3fwme,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,homesite-insurance,homesite-insurance__YKc2gpn,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,homesite-insurance,homesite-insurance__shz3QSi,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,maps-routing,maps-routing__5BH2H3T,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,maps-routing,maps-routing__PAcXGKu,no submission,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,maps-routing,maps-routing__wbytDNb,scored,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__ZXYxN6i,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__hJirg9u,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,sberbank-housing,sberbank-housing__mATFYmz,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,weather,weather__73yB7yy,no submission,no,,,,,,,,,,,
+autods-tools,model-gemma-4-26b-a4b-it,weather,weather__SigU8Zb,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-gemma-4-26b-a4b-it,weather,weather__esHadZ2,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,cooking-time,cooking-time__ypRUkaL,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,delivery-eta,delivery-eta__GeJwrzv,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,ecom-offers,ecom-offers__7PuvmME,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,homecredit-default,homecredit-default__oYKb5Eq,scored,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,homesite-insurance,homesite-insurance__8LG9inZ,scored,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,maps-routing,maps-routing__8Rz2Mnn,no submission,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,sberbank-housing,sberbank-housing__kTGeMzg,scored,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,weather,weather__mLa5raQ,scored,yes,1,0,0,0,0,0,0,1,0,0,0
+autods-tools,model-glm-4.7,delivery-eta,delivery-eta__Thf62eQ,scored,yes,1,0,0,0,1,0,0,0,0,0,0
+autods-tools,model-glm-4.7,ecom-offers,ecom-offers__uboCZQz,scored,yes,1,0,0,1,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,homesite-insurance,homesite-insurance__gMcgvGP,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,maps-routing,maps-routing__dKwnNf4,no submission,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,weather,weather__yetDGV7,no submission,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,delivery-eta,delivery-eta__QaSQFzg,no submission,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,homesite-insurance,homesite-insurance__3yqugc2,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,maps-routing,maps-routing__UKm6QwA,no submission,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,sberbank-housing,sberbank-housing__sUzj3s4,scored,yes,1,0,0,1,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,weather,weather__HRfN3Tp,scored,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,cooking-time,cooking-time__CC3jWJX,scored,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,ecom-offers,ecom-offers__MttJKEh,scored,yes,1,0,0,1,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,homecredit-default,homecredit-default__jQgDwrZ,no submission,no,,,,,,,,,,,
+autods-tools,model-glm-4.7,sberbank-housing,sberbank-housing__qFHj7HC,scored,yes,1,0,0,0,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,cooking-time,cooking-time__uoTiXmZ,scored,yes,1,0,0,1,0,0,0,0,0,0,0
+autods-tools,model-glm-4.7,homecredit-default,homecredit-default__RAQKVJm,no submission,no,,,,,,,,,,,

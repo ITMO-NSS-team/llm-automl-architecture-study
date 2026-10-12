@@ -1,0 +1,7 @@
+>> LOCAL ogbn-arxiv from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/ogbn-arxiv
+>> RUN ogbn-arxiv/c1 (family=graph)  19:20:36
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 18 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/ogbn-arxiv-c1/trace.json
+>> SCORE ogbn-arxiv/c1 (answer: answer.csv)
+{"reward": 0.556, "accuracy": 0.556, "n": 10000}

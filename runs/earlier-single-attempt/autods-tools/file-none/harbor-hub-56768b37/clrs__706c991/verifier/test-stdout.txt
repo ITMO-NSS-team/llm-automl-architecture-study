@@ -1,0 +1,1 @@
+{'reward': 0.429791259765625, 'pointer_accuracy': 0.429791259765625, 'coverage': 1.0, 'graphs': 1000.0, 'n': 64.0}

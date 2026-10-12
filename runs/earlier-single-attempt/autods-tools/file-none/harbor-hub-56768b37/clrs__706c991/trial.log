@@ -1,0 +1,7 @@
+>> LOCAL clrs from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/clrs
+>> RUN clrs/base (family=graph)  05:31:50
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 20 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/clrs-base/trace.json
+>> SCORE clrs/base (answer: answer.npz)
+{'reward': 0.429791259765625, 'pointer_accuracy': 0.429791259765625, 'coverage': 1.0, 'graphs': 1000.0, 'n': 64.0}

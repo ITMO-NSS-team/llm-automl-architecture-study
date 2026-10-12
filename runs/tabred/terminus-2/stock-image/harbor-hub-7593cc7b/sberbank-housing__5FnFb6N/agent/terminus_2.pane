@@ -1,0 +1,187 @@
+[?2004hroot@dd9f9bcae6c6:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@dd9f9bcae6c6:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@dd9f9bcae6c6:/workspace# ls -la /app/data
+[?2004ltotal 69000
+drwxr-xr-x 2 root root     4096 Jul 23 15:16 .
+drwxr-xr-x 3 root root     4096 Jul 23 15:16 ..
+-rw-r--r-- 1 root root     6087 Jul 23 15:08 schema.json
+-rw-r--r-- 1 root root 11051955 Jul 23 15:08 test.csv
+-rw-r--r-- 1 root root 47434461 Jul 23 15:08 train.csv
+-rw-r--r-- 1 root root 12145508 Jul 23 15:08 val.csv
+[?2004hroot@dd9f9bcae6c6:/workspace# cat <<EOF > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from lightgbm import LGBMRegressor
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Identify feature types
+[?2004l[?2004h> num_cols = [c for c in train.columns if c.startswith('num_')]
+[?2004l[?2004h> bin_cols = [c for c in train.columns if c.startswith('bin_')]
+[?2004l[?2004h> cat_cols = [c for c in train.columns if c.startswith('cat_')]
+[?2004l[?2004h> 
+[?2004l[?2004h> # target column
+[?2004l[?2004h> y_train = train['target']
+[?2004l[?2004h> y_val = val['target']
+[?2004l[?2004h> 
+[?2004l[?2004h> # Prepare features
+[?2004l[?2004h> # For this baseline, we fill numerical NaNs with median and treat categories as categories
+[?2004l[?2004h> X_train = train.drop(columns=['target'])
+[?2004l[?2004h> X_val = val.drop(columns=['target'])
+[?2004l[?2004h> X_test = test
+[?2004l[?2004h> 
+[?2004l[?2004h> for col in num_cols:
+[?2004l[?2004h>     X_train[col] = X_train[col].fillna(X_train[col].median())
+[?2004l[?2004h>     X_val[col] = X_val[col].fillna(X_train[col].median())
+[?2004l[?2004h>     X_test[col] = X_test[col].fillna(X_train[col].median())
+[?2004l[?2004h> 
+[?2004l[?2004h> for col in cat_cols + bin_cols:
+[?2004l[?2004h>     X_train[col] = X_train[col].astype('category')
+[?2004l[?2004h>     X_val[col] = X_val[col].astype('category')
+[?2004l[?2004h>     X_test[col] = X_test[col].astype('category')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Train model
+[?2004l[?2004h> model = LGBMRegressor(n_estimators=1000, learning_rate=0.05, random_state=42)
+[?2004l[?2004h> model.fit(
+[?2004l[?2004h>     X_train, y_train, 
+[?2004l[?2004h>     eval_set=[(X_val, y_val)],
+[?2004l[?2004h>     eval_metric='rmse', 
+[?2004l[?2004h>     callbacks=[]) # Avoid warnings about early stopping if not implemented with a callback
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict
+[?2004l[?2004h> preds = model.predict(X_test)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Save predictions
+[?2004l[?2004h> preds_df = pd.DataFrame({'target': preds})
+[?2004l[?2004h> preds_df.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@dd9f9bcae6c6:/workspace# python3 solution.py
+[?2004lTraceback (most recent call last):
+  File [35m"/workspace/solution.py"[0m, line [35m3[0m, in [35m<module>[0m
+    from lightgbm import LGBMRegressor
+[1;35mModuleNotFoundError[0m: [35mNo module named 'lightgbm'[0m
+[?2004hroot@dd9f9bcae6c6:/workspace# pip list | grep scikit-learn
+[?2004lscikit-learn    1.9.0
+cat <<EOF > solution.py
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import HistGradientBoostingRegressor
+
+# Load data
+train = pd.read_csv('/app/data/train.csv')
+val = pd.read_csv('/app/data/val.csv')
+test = pd.read_csv('/app/data/test.csv')
+
+# Identify feature types
+num_cols = [c for c in train.columns if c.startswith('num_')]
+bin_cols = [c for c in train.columns if c.startswith('bin_')]
+cat_cols = [c for c in train.columns if c.startswith('cat_')]
+
+# target column
+y_train = train['target']
+y_val = val['target']
+
+# Prepare features
+X_train = train.drop(columns=['target'])
+X_val = val.drop(columns=['target'])
+X_test = test
+
+# HistGradientBoostingRegressor handles NaNs natively.
+# We just need to ensure categories are represented as integers for the 'categorical_features' parameter
+all_cat_cols = cat_cols + bin_cols
+
+# Convert categories to codes
+for col in all_cat_cols:
+    X_train[col] = X_train[col].astype('category').cat.codes
+    X_val[col] = X_val[col].astype('category').cat.codes
+    X_test[col] = X_test[col].astype('category').cat.codes
+
+# Identify indices of categorical features
+cat_indices = [X_train.columns.get_loc(col) for col in all_cat_cols]
+
+# Train model
+model = HistGradientBoostingRegressor(
+    max_iter=1000,
+    learning_rate=0.05,
+    categorical_features=cat_indices,
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+# Predict
+preds = model.predict(X_test)
+
+# Save predictions
+preds_df = pd.DataFrame({'target': preds})
+preds_df.to_csv('/app/predictions.csv', index=False)
+EOF
+[?2004hroot@dd9f9bcae6c6:/workspace# cat <<EOF > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from sklearn.ensemble import HistGradientBoostingRegressor
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Identify feature types
+[?2004l[?2004h> num_cols = [c for c in train.columns if c.startswith('num_')]
+[?2004l[?2004h> bin_cols = [c for c in train.columns if c.startswith('bin_')]
+[?2004l[?2004h> cat_cols = [c for c in train.columns if c.startswith('cat_')]
+[?2004l[?2004h> 
+[?2004l[?2004h> # target column
+[?2004l[?2004h> y_train = train['target']
+[?2004l[?2004h> y_val = val['target']
+[?2004l[?2004h> 
+[?2004l[?2004h> # Prepare features
+[?2004l[?2004h> X_train = train.drop(columns=['target'])
+[?2004l[?2004h> X_val = val.drop(columns=['target'])
+[?2004l[?2004h> X_test = test
+[?2004l[?2004h> 
+[?2004l[?2004h> # HistGradientBoostingRegressor handles NaNs natively.
+[?2004l[?2004h> # We just need to ensure categories are represented as integers for the 'categorical_features' parameter
+[?2004l[?2004h> all_cat_cols = cat_cols + bin_cols
+[?2004l[?2004h> 
+[?2004l[?2004h> # Convert categories to codes
+[?2004l[?2004h> for col in all_cat_cols:
+[?2004l[?2004h>     X_train[col] = X_train[col].astype('category').cat.codes
+[?2004l[?2004h>     X_val[col] = X_val[col].astype('category').cat.codes
+[?2004l[?2004h>     X_test[col] = X_test[col].astype('category').cat.codes
+[?2004l[?2004h> 
+[?2004l[?2004h> # Identify indices of categorical features
+[?2004l[?2004h> cat_indices = [X_train.columns.get_loc(col) for col in all_cat_cols]
+[?2004l[?2004h> 
+[?2004l[?2004h> # Train model
+[?2004l[?2004h> model = HistGradientBoostingRegressor(
+[?2004l[?2004h>     max_iter=1000,
+[?2004l[?2004h>     learning_rate=0.05,
+[?2004l[?2004h>     categorical_features=cat_indices,
+[?2004l[?2004h>     random_state=42
+[?2004l[?2004h> )
+[?2004l[?2004h> 
+[?2004l[?2004h> model.fit(X_train, y_train)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict
+[?2004l[?2004h> preds = model.predict(X_test)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Save predictions
+[?2004l[?2004h> preds_df = pd.DataFrame({'target': preds})
+[?2004l[?2004h> preds_df.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@dd9f9bcae6c6:/workspace# python3 solution.py
+[?2004l[?2004hroot@dd9f9bcae6c6:/workspace# head -n 5 /app/predictions.csv
+[?2004ltarget
+11.64313608378331
+11.607491907252236
+11.530190650233283
+11.652515720682613
+[?2004hroot@dd9f9bcae6c6:/workspace# wc -l /app/predictions.csv
+[?2004l4648 /app/predictions.csv
+[?2004hroot@dd9f9bcae6c6:/workspace# 

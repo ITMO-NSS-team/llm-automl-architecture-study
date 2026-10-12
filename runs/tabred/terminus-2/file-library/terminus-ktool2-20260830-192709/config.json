@@ -1,0 +1,16 @@
+{
+    "job_name": "terminus-ktool2-20260830-192709",
+    "jobs_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs",
+    "n_attempts": 3,
+    "agents": [
+        {
+            "name": "terminus-2",
+            "model_name": "openrouter/google/gemma-4-31b-it"
+        }
+    ],
+    "datasets": [
+        {
+            "path": "datasets/tabred-ktool"
+        }
+    ]
+}

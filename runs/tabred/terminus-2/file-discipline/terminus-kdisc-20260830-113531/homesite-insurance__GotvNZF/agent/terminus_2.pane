@@ -1,0 +1,576 @@
+[?2004hroot@9ce4e76fe47b:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@9ce4e76fe47b:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@9ce4e76fe47b:/workspace# ls -la /app/data
+[?2004ltotal 186156
+drwxr-xr-x 2 root root      4096 Aug 28 16:21 .
+drwxr-xr-x 3 root root      4096 Aug 28 16:21 ..
+-rw-rw-r-- 1 root root      4679 Aug 27 21:18 schema.json
+-rw-rw-r-- 1 root root  11884185 Aug 27 21:18 test.csv
+-rw-rw-r-- 1 root root 163985615 Aug 27 21:18 train.csv
+-rw-rw-r-- 1 root root  14728219 Aug 27 21:18 val.csv
+[?2004hroot@9ce4e76fe47b:/workspace# cat /app/data/schema.json
+[?2004l{
+  "dataset": "homesite-insurance",
+  "source_split": "default",
+  "task_type": "binclass",
+  "score": "roc-auc",
+  "target_column": "target",
+  "feature_columns": [
+    "num_0",
+    "num_1",
+    "num_2",
+    "num_3",
+    "num_4",
+    "num_5",
+    "num_6",
+    "num_7",
+    "num_8",
+    "num_9",
+    "num_10",
+    "num_11",
+    "num_12",
+    "num_13",
+    "num_14",
+    "num_15",
+    "num_16",
+    "num_17",
+    "num_18",
+    "num_19",
+    "num_20",
+    "num_21",
+    "num_22",
+    "num_23",
+    "num_24",
+    "num_25",
+    "num_26",
+    "num_27",
+    "num_28",
+    "num_29",
+    "num_30",
+    "num_31",
+    "num_32",
+    "num_33",
+    "num_34",
+    "num_35",
+    "num_36",
+    "num_37",
+    "num_38",
+    "num_39",
+    "num_40",
+    "num_41",
+    "num_42",
+    "num_43",
+    "num_44",
+    "num_45",
+    "num_46",
+    "num_47",
+    "num_48",
+    "num_49",
+    "num_50",
+    "num_51",
+    "num_52",
+    "num_53",
+    "num_54",
+    "num_55",
+    "num_56",
+    "num_57",
+    "num_58",
+    "num_59",
+    "num_60",
+    "num_61",
+    "num_62",
+    "num_63",
+    "num_64",
+    "num_65",
+    "num_66",
+    "num_67",
+    "num_68",
+    "num_69",
+    "num_70",
+    "num_71",
+    "num_72",
+    "num_73",
+    "num_74",
+    "num_75",
+    "num_76",
+    "num_77",
+    "num_78",
+    "num_79",
+    "num_80",
+    "num_81",
+    "num_82",
+    "num_83",
+    "num_84",
+    "num_85",
+    "num_86",
+    "num_87",
+    "num_88",
+    "num_89",
+    "num_90",
+    "num_91",
+    "num_92",
+    "num_93",
+    "num_94",
+    "num_95",
+    "num_96",
+    "num_97",
+    "num_98",
+    "num_99",
+    "num_100",
+    "num_101",
+    "num_102",
+    "num_103",
+    "num_104",
+    "num_105",
+    "num_106",
+    "num_107",
+    "num_108",
+    "num_109",
+    "num_110",
+    "num_111",
+    "num_112",
+    "num_113",
+    "num_114",
+    "num_115",
+    "num_116",
+    "num_117",
+    "num_118",
+    "num_119",
+    "num_120",
+    "num_121",
+    "num_122",
+    "num_123",
+    "num_124",
+    "num_125",
+    "num_126",
+    "num_127",
+    "num_128",
+    "num_129",
+    "num_130",
+    "num_131",
+    "num_132",
+    "num_133",
+    "num_134",
+    "num_135",
+    "num_136",
+    "num_137",
+    "num_138",
+    "num_139",
+    "num_140",
+    "num_141",
+    "num_142",
+    "num_143",
+    "num_144",
+    "num_145",
+    "num_146",
+    "num_147",
+    "num_148",
+    "num_149",
+    "num_150",
+    "num_151",
+    "num_152",
+    "num_153",
+    "num_154",
+    "num_155",
+    "num_156",
+    "num_157",
+    "num_158",
+    "num_159",
+    "num_160",
+    "num_161",
+    "num_162",
+    "num_163",
+    "num_164",
+    "num_165",
+    "num_166",
+    "num_167",
+    "num_168",
+    "num_169",
+    "num_170",
+    "num_171",
+    "num_172",
+    "num_173",
+    "num_174",
+    "num_175",
+    "num_176",
+    "num_177",
+    "num_178",
+    "num_179",
+    "num_180",
+    "num_181",
+    "num_182",
+    "num_183",
+    "num_184",
+    "num_185",
+    "num_186",
+    "num_187",
+    "num_188",
+    "num_189",
+    "num_190",
+    "num_191",
+    "num_192",
+    "num_193",
+    "num_194",
+    "num_195",
+    "num_196",
+    "num_197",
+    "num_198",
+    "num_199",
+    "num_200",
+    "num_201",
+    "num_202",
+    "num_203",
+    "num_204",
+    "num_205",
+    "num_206",
+    "num_207",
+    "num_208",
+    "num_209",
+    "num_210",
+    "num_211",
+    "num_212",
+    "num_213",
+    "num_214",
+    "num_215",
+    "num_216",
+    "num_217",
+    "num_218",
+    "num_219",
+    "num_220",
+    "num_221",
+    "num_222",
+    "num_223",
+    "num_224",
+    "num_225",
+    "num_226",
+    "num_227",
+    "num_228",
+    "num_229",
+    "num_230",
+    "num_231",
+    "num_232",
+    "num_233",
+    "num_234",
+    "num_235",
+    "num_236",
+    "num_237",
+    "num_238",
+    "num_239",
+    "num_240",
+    "num_241",
+    "num_242",
+    "num_243",
+    "num_244",
+    "num_245",
+    "num_246",
+    "num_247",
+    "num_248",
+    "num_249",
+    "num_250",
+    "num_251",
+    "num_252",
+    "bin_0",
+    "bin_1",
+    "bin_2",
+    "bin_3",
+    "bin_4",
+    "bin_5",
+    "bin_6",
+    "bin_7",
+    "bin_8",
+    "bin_9",
+    "bin_10",
+    "bin_11",
+    "bin_12",
+    "bin_13",
+    "bin_14",
+    "bin_15",
+    "bin_16",
+    "bin_17",
+    "bin_18",
+    "bin_19",
+    "bin_20",
+    "bin_21",
+    "bin_22",
+    "cat_0",
+    "cat_1",
+    "cat_2",
+    "cat_3",
+    "cat_4",
+    "cat_5",
+    "cat_6",
+    "cat_7",
+    "cat_8",
+    "cat_9",
+    "cat_10",
+    "cat_11",
+    "cat_12",
+    "cat_13",
+    "cat_14",
+    "cat_15",
+    "cat_16",
+    "cat_17",
+    "cat_18",
+    "cat_19",
+    "cat_20",
+    "cat_21",
+    "cat_22"
+  ],
+  "feature_counts": {
+    "num": 253,
+    "bin": 23,
+    "cat": 23
+  },
+  "split_sizes": {
+    "train": 224320,
+    "val": 20138,
+    "test": 16295
+  },
+  "excluded_arrays": [
+    "x_meta.npy"
+  ]
+}
+[?2004hroot@9ce4e76fe47b:/workspace# head -n 5 /app/data/train.csv
+[?2004lnum_0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9,num_10,num_11,num_12,num_13,num_14,num_15,num_16,num_17,num_18,num_19,num_20,num_21,num_22,num_23,num_24,num_25,num_26,num_27,num_28,num_29,num_30,num_31,num_32,num_33,num_34,num_35,num_36,num_37,num_38,num_39,num_40,num_41,num_42,num_43,num_44,num_45,num_46,num_47,num_48,num_49,num_50,num_51,num_52,num_53,num_54,num_55,num_56,num_57,num_58,num_59,num_60,num_61,num_62,num_63,num_64,num_65,num_66,num_67,num_68,num_69,num_70,num_71,num_72,num_73,num_74,num_75,num_76,num_77,num_78,num_79,num_80,num_81,num_82,num_83,num_84,num_85,num_86,num_87,num_88,num_89,num_90,num_91,num_92,num_93,num_94,num_95,num_96,num_97,num_98,num_99,num_100,num_101,num_102,num_103,num_104,num_105,num_106,num_107,num_108,num_109,num_110,num_111,num_112,num_113,num_114,num_115,num_116,num_117,num_118,num_119,num_120,num_121,num_122,num_123,num_124,num_125,num_126,num_127,num_128,num_129,num_130,num_131,num_132,num_133,num_134,num_135,num_136,num_137,num_138,num_139,num_140,num_141,num_142,num_143,num_144,num_145,num_146,num_147,num_148,num_149,num_150,num_151,num_152,num_153,num_154,num_155,num_156,num_157,num_158,num_159,num_160,num_161,num_162,num_163,num_164,num_165,num_166,num_167,num_168,num_169,num_170,num_171,num_172,num_173,num_174,num_175,num_176,num_177,num_178,num_179,num_180,num_181,num_182,num_183,num_184,num_185,num_186,num_187,num_188,num_189,num_190,num_191,num_192,num_193,num_194,num_195,num_196,num_197,num_198,num_199,num_200,num_201,num_202,num_203,num_204,num_205,num_206,num_207,num_208,num_209,num_210,num_211,num_212,num_213,num_214,num_215,num_216,num_217,num_218,num_219,num_220,num_221,num_222,num_223,num_224,num_225,num_226,num_227,num_228,num_229,num_230,num_231,num_232,num_233,num_234,num_235,num_236,num_237,num_238,num_239,num_240,num_241,num_242,num_243,num_244,num_245,num_246,num_247,num_248,num_249,num_250,num_251,num_252,bin_0,bin_1,bin_2,bin_3,bin_4,bin_5,bin_6,bin_7,bin_8,bin_9,bin_10,bin_11,bin_12,bin_13,bin_14,bin_15,bin_16,bin_17,bin_18,bin_19,bin_20,bin_21,bin_22,cat_0,cat_1,cat_2,cat_3,cat_4,cat_5,cat_6,cat_7,cat_8,cat_9,cat_10,cat_11,cat_12,cat_13,cat_14,cat_15,cat_16,cat_17,cat_18,cat_19,cat_20,cat_21,cat_22,target
+6,0.921899974,0.000600000028,1,8,14,8,14,7,12,8,13,1,2,1,6,3,5,3,5,2,4,5,5,23,24024,1,1,1,0,0,0,9,12,6,1,2,6,12,0,1,2,5,24,1,0,0,0,0,1,2,3,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,2,7,10,24,0,0,1,21,4,2,4,6,13,1,2,0,0,8,14,2,2,5,7,1,11,16,10,nan,2,5,4,8,17,13,12,14,16,17,19,13,2,3,4,5,2,5,2,2,2,6,3,6,2,6,7,5,5,2,5,12,22,19,2,1,2,2,4,15,4,13,8,16,15,16,20,15,11,12,19,18,24,10,19,8,11,25,25,13,20,10,10,7,12,10,14,13,23,12,19,5,7,2,1,2,2,9,10,8,7,13,14,2,3,9,4,21,23,15,13,16,11,13,9,21,23,20,22,14,8,15,16,11,19,21,13,12,12,15,13,15,14,7,8,2,1,1,1,0,1,0,1,1,1,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+23,0.921899974,0.000600000028,1,25,25,25,25,25,25,25,25,13,22,13,23,1,1,10,22,3,7,5,5,23,6191,0,0,0,0,0,0,16,21,6,1,2,8,17,0,1,2,4,24,1,0,0,0,0,1,2,3,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,2,8,11,24,0,0,1,21,2,2,4,24,25,0,2,1,0,25,25,2,9,17,22,3,6,7,4,0,2,1,1,3,6,21,22,19,21,4,2,13,2,7,2,4,2,3,2,10,1,1,2,2,1,1,7,3,4,2,4,12,22,22,12,15,20,21,9,15,6,11,5,13,10,10,14,14,8,4,4,19,24,5,5,14,21,4,4,16,22,8,7,17,24,6,6,9,20,6,7,6,12,2,2,17,15,4,3,2,2,9,7,22,24,9,5,6,5,19,18,20,20,20,20,13,12,13,13,21,21,18,19,4,7,9,12,10,1,1,25,25,22,16,17,2,1,1,1,0,1,1,1,1,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0
+23,0.955900013,0.00039999999,1.2392,21,24,21,24,19,24,20,24,13,22,13,23,1,1,18,24,7,20,5,5,23,51023,0,0,0,0,0,0,7,10,7,1,2,15,21,0,1,2,4,24,1,0,0,0,0,1,2,3,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,2,3,3,9,0,0,1,21,4,3,2,8,16,1,4,1,0,21,24,2,1,25,25,3,11,15,4,0,0,12,14,4,9,9,6,23,24,20,23,14,22,24,23,23,22,23,20,22,25,25,23,23,24,25,23,23,22,18,23,2,7,2,9,11,4,9,16,15,21,11,5,10,4,5,4,13,5,6,9,2,2,7,11,11,17,5,7,19,24,7,5,1,1,14,22,4,7,8,12,5,8,16,23,16,13,13,17,12,20,10,10,9,11,14,16,13,20,15,13,17,14,13,8,22,24,22,24,20,19,23,24,5,10,14,7,4,8,8,7,6,13,15,24,2,1,1,1,0,1,1,1,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,0,1,0
+23,0.955900013,0.00039999999,1.2392,11,18,11,18,10,17,10,18,13,22,13,23,3,3,25,25,18,24,5,5,23,4847,0,0,0,0,0,0,12,16,6,1,2,6,12,0,1,2,4,24,1,0,0,0,0,1,2,3,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,3,0,0,0,0,1,2,5,8,9,0,0,1,21,4,2,2,5,11,1,3,0,0,11,18,2,1,15,21,3,5,5,4,0,0,14,17,2,4,14,14,19,22,17,19,22,20,23,24,23,20,23,24,25,22,23,24,23,22,23,22,24,25,15,23,1,1,3,22,23,3,7,4,15,25,20,21,15,13,7,8,21,19,6,8,4,3,9,16,4,3,11,19,5,5,10,11,5,5,4,3,3,4,9,14,2,2,25,25,18,16,18,23,8,8,9,7,8,8,10,9,10,18,17,16,20,19,17,15,18,20,19,21,21,20,9,6,3,4,5,15,17,7,5,14,17,24,2,10,2,1,1,1,0,1,1,1,1,1,0,1,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,2,0,0,1,1,1,0,0,0,0,1,0
+[?2004hroot@9ce4e76fe47b:/workspace# echo "Allocation: Exploration & Baseline (30m), Training & Tuning (2h), Finalization (30m)"
+[?2004lAllocation: Exploration & Baseline (30m), Training & Tuning (2h), Finalization (30m)
+[?2004hroot@9ce4e76fe47b:/workspace# cat << 'EOF' > baseline.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> 
+[?2004l[?2004h> def run_baseline():
+[?2004l[?2004h>     val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h>     target = val['target']
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Trivial baseline: training mean (or val mean for a quick check)
+[?2004l[?2004h>     train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h>     mean_val = train['target'].mean()
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Predicting the mean for all samples
+[?2004l[?2004h>     preds = [mean_val] * len(target)
+[?2004l[?2004h>     score = roc_auc_score(target, preds)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Note: ROC-AUC for a constant predictor is usually 0.5
+[?2004l[?2004h>     # But let's check the distribution
+[?2004l[?2004h>     print(f"TRAIN_MEAN={mean_val}")
+[?2004l[?2004h>     print(f"BASELINE_ROC_AUC={score}")
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     run_baseline()
+[?2004l[?2004h> EOF
+[?2004lpython3 baseline.py
+[?2004hroot@9ce4e76fe47b:/workspace# python3 baseline.py
+[?2004lTRAIN_MEAN=0.18878833808844508
+BASELINE_ROC_AUC=0.5
+[?2004hroot@9ce4e76fe47b:/workspace# cat << 'EOF' > baseline.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> 
+[?2004l[?2004h> def run_baseline():
+[?2004l[?2004h>     try:
+[?2004l[?2004h>         val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h>         target = val['target']
+[?2004l[?2004h>         train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h>         mean_val = train['target'].mean()
+[?2004l[?2004h>         # Constant prediction
+[?2004l[?2004h>         preds = np.full(len(target), mean_val)
+[?2004l[?2004h>         # roc_auc_score might fail if only one class is present in preds
+[?2004l[?2004h>         # but conceptually it is 0.5
+[?2004l[?2004h>         try:
+[?2004l[?2004h>             score = roc_auc_score(target, preds)
+[?2004l[?2004h>         except ValueError:
+[?2004l[?2004h>             score = 0.5
+[?2004l[?2004h>         print(f"TRAIN_MEAN={mean_val}")
+[?2004l[?2004h>         print(f"BASELINE_ROC_AUC={score}")
+[?2004l[?2004h>     except Exception as e:
+[?2004l[?2004h>         print(f"Error: {e}")
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     run_baseline()
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@9ce4e76fe47b:/workspace# python3 baseline.py
+[?2004lpip install lightgbm
+TRAIN_MEAN=0.18878833808844508
+BASELINE_ROC_AUC=0.5
+[?2004hroot@9ce4e76fe47b:/workspace# pip install lightgbm
+[?2004lRequirement already satisfied: lightgbm in /usr/local/lib/python3.12/site-packages (4.7.0)
+Requirement already satisfied: narwhals>=1.15 in /usr/local/lib/python3.12/site-packages (from lightgbm) (2.25.0)
+Requirement already satisfied: numpy>=1.21.3 in /usr/local/lib/python3.12/site-packages (from lightgbm) (2.5.2)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/site-packages (from lightgbm) (1.18.1)
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m25.0.1[0m[39;49m -> [0m[32;49m26.2.1[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
+[?2004hroot@9ce4e76fe47b:/workspace# pip install lightgbm
+[?2004lRequirement already satisfied: lightgbm in /usr/local/lib/python3.12/site-packages (4.7.0)
+Requirement already satisfied: narwhals>=1.15 in /usr/local/lib/python3.12/site-packages (from lightgbm) (2.25.0)
+Requirement already satisfied: numpy>=1.21.3 in /usr/local/lib/python3.12/site-packages (from lightgbm) (2.5.2)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/site-packages (from lightgbm) (1.18.1)
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m25.0.1[0m[39;49m -> [0m[32;49m26.2.1[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
+[?2004hroot@9ce4e76fe47b:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import lightgbm as lgb
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import json
+[?2004l[?2004h> 
+[?2004l[?2004h> # REQUIRED Hardware Resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def solve():
+[?2004l[?2004h>     # Load schema
+[?2004l[?2004h>     with open('/app/data/schema.json', 'r') as f:
+[?2004l[?2004h>         schema = json.load(f)
+[?2004l[?2004h>     
+[?2004l[?2004h>     features = schema['feature_columns']
+[?2004l[?2004h>     target_col = schema['target_column']
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Load data
+[?2004l[?2004h>     train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h>     val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h>     test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h>     
+[?2004l[?2004h>     X_train = train_df[features]
+[?2004l[?2004h>     y_train = train_df[target_col]
+[?2004l[?2004h>     X_val = val_df[features]
+[?2004l[?2004h>     y_val = val_df[target_col]
+[?2004l[?2004h>     X_test = test_df[features]
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Identify categorical features
+[?2004l[?2004h>     cat_features = [col for col in features if col.startswith('cat_') or col.startswith('bin_')]
+[?2004l[?2004h>     for col in cat_features:
+[?2004l[?2004h>         X_train[col] = X_train[col].astype('category')
+[?2004l[?2004h>         X_val[col] = X_val[col].astype('category')
+[?2004l[?2004h>         X_test[col] = X_test[col].astype('category')
+[?2004l[?2004h> 
+[?2004l[?2004h>     # LightGBM Dataset
+[?2004l[?2004h>     train_data = lgb.Dataset(X_train, label=y_train)
+[?2004l[?2004h>     val_data = lgb.Dataset(X_val, label=y_val, reference=train_data)
+[?2004l[?2004h> 
+[?2004l[?2004h>     params = {
+[?2004l[?2004h>         'objective': 'binary',
+[?2004l[?2004h>         'metric': 'auc',
+[?2004l[?2004h>         'verbosity': -1,
+[?2004l[?2004h>         'boosting_type': 'gbdt',
+[?2004l[?2004h>         'random_state': 42,
+[?2004l[?2004h>         'learning_rate': 0.05,
+[?2004l[?2004h>         'num_leaves': 31,
+[?2004l[?2004h>         'feature_fraction': 0.8,
+[?2004l[?2004h>         'bagging_fraction': 0.8,
+[?2004l[?2004h>         'bagging_freq': 5,
+[?2004l[?2004h>     }
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Train with early stopping
+[?2004l[?2004h>     model = lgb.train(
+[?2004l[?2004h>         params,
+[?2004l[?2004h>         train_data,
+[?2004l[?2004h>         num_boost_round=2000,
+[?2004l[?2004h>         valid_sets=[train_data, val_data],
+[?2004l[?2004h>         valid_names=['train', 'valid'],
+[?2004l[?2004h>         callbacks=[lgb.early_stopping(stopping_rounds=100), lgb.log_evaluation(period=100)]
+[?2004l[?2004h>     )
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Predict and evaluate
+[?2004l[?2004h>     val_preds = model.predict(X_val)
+[?2004l[?2004h>     score = roc_auc_score(y_val, val_preds)
+[?2004l[?2004h>     print(f"VALIDATION_SCORE={score}")
+[?2004l[?2004h> 
+[?2004l[?2004h>     if score <= 0.5:
+[?2004l[?2004h>         print("Model failed to beat trivial baseline!")
+[?2004l[?2004h>         # In this case, we'll still proceed but the prompt warns against it.
+[?2004l[?2004h>         # For a real submission we'd try a different model.
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Generate test predictions
+[?2004l[?2004h>     test_preds = model.predict(X_test)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Sanity check
+[?2004l[?2004h>     if np.isnan(test_preds).any() or np.isinf(test_preds).any():
+[?2004l[?2004h>         print("Error: Non-finite predictions detected!")
+[?2004l[?2004h>         test_preds = np.nan_to_num(test_preds)
+[?2004l[?2004h> 
+[?2004l[?2004h>     submission = pd.DataFrame({'target': test_preds})
+[?2004l[?2004h>     submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h>     print("Predictions saved to /app/predictions.csv")
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     solve()
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@9ce4e76fe47b:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Training until validation scores don't improve for 100 rounds
+[100]	train's auc: 0.966547	valid's auc: 0.954587
+[200]	train's auc: 0.971357	valid's auc: 0.955642
+wc -l /app/predictions.csv
+head -n 5 /app/predictions.csv
+python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print('NaNs:', df.isna().sum().sum()); print('Finite:', (df['target'].notna().all())); print('Mean:', df['target'].mean()); print('Min:', df['target'].min()); print('Max:', df['target'].max())"
+wc -l /app/predictions.csv
+head -n 5 /app/predictions.csv
+python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print('NaNs:', df.isna().sum().sum()); print('Mean:', df['target'].mean()); print('Min:', df['target'].min()); print('Max:', df['target'].max())"
+[300]	train's auc: 0.974922	valid's auc: 0.955858
+wc -l /app/predictions.csv
+head -n 5 /app/predictions.csv
+python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print('NaNs:', df.isna().sum().sum()); print('Mean:', df['target'].mean()); print('Min:', df['target'].min()); print('Max:', df['target'].max())"
+Early stopping, best iteration is:
+[267]	train's auc: 0.973805	valid's auc: 0.955906
+VALIDATION_SCORE=0.9559056921115634
+Predictions saved to /app/predictions.csv
+[?2004hroot@9ce4e76fe47b:/workspace# wc -l /app/predictions.csv
+[?2004l16296 /app/predictions.csv
+[?2004hroot@9ce4e76fe47b:/workspace# head -n 5 /app/predictions.csv
+[?2004ltarget
+0.9920791131316635
+0.0009639189047532917
+7.114355855767958e-05
+0.043886348296151
+[?2004hroot@9ce4e76fe47b:/workspace# python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print('NaNs:', df.isna().sum().sum()); print('Finite:', (df['target'].notna().all())); print('Mean:', df['target'].mean()); print('Min:', df['target'].min()); print('Max:', df['target'].max())"
+[?2004lShape: (16295, 1)
+Columns: ['target']
+NaNs: 0
+Finite: True
+Mean: 0.18864029657443915
+Min: 2.649468759623894e-05
+Max: 0.9994330717070756
+[?2004hroot@9ce4e76fe47b:/workspace# wc -l /app/predictions.csv
+[?2004l16296 /app/predictions.csv
+[?2004hroot@9ce4e76fe47b:/workspace# head -n 5 /app/predictions.csv
+[?2004ltarget
+0.9920791131316635
+0.0009639189047532917
+7.114355855767958e-05
+0.043886348296151
+[?2004hroot@9ce4e76fe47b:/workspace# python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print('NaNs:', df.isna().sum().sum()); print('Mean:', df['target'].mean()); print('Min:', df['target'].min()); print('Max:', df['target'].max())"
+[?2004lShape: (16295, 1)
+Columns: ['target']
+NaNs: 0
+Mean: 0.18864029657443915
+Min: 2.649468759623894e-05
+Max: 0.9994330717070756
+[?2004hroot@9ce4e76fe47b:/workspace# wc -l /app/predictions.csv
+[?2004l16296 /app/predictions.csv
+[?2004hroot@9ce4e76fe47b:/workspace# head -n 5 /app/predictions.csv
+[?2004ltarget
+0.9920791131316635
+0.0009639189047532917
+7.114355855767958e-05
+0.043886348296151
+[?2004hroot@9ce4e76fe47b:/workspace# python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Shape:', df.shape); print('Columns:', df.columns.tolist()); print('NaNs:', df.isna().sum().sum()); print('Mean:', df['target'].mean()); print('Min:', df['target'].min()); print('Max:', df['target'].max())"
+[?2004lShape: (16295, 1)
+Columns: ['target']
+NaNs: 0
+Mean: 0.18864029657443915
+Min: 2.649468759623894e-05
+Max: 0.9994330717070756
+[?2004hroot@9ce4e76fe47b:/workspace# 

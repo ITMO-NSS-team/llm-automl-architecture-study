@@ -1,0 +1,1 @@
+{"reward": 0.2517776115989335, "r2": 0.2517776115989335, "rmse": 43.391108005464524, "norm_rmse": 0.8649984904039234, "pearson_r": 0.5792302367531627, "n": 4240, "baseline_dnn_norm_rmse": 0.948, "baseline_dnn_pearson_r": 0.426, "baseline_blup_pearson_r": 0.461}

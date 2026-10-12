@@ -1,0 +1,466 @@
+[?2004hroot@2c5c968541ec:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@2c5c968541ec:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@2c5c968541ec:/workspace# ls -la
+[?2004ltotal 32
+drwxr-xr-x   4 root root 4096 Sep  3 12:22 .
+drwxr-xr-x   1 root root 4096 Sep  4 15:51 ..
+-rw-rw-r--   1 root root 3083 Sep  3 12:22 task_descriptor.txt
+drwxrwxr-x  34 root root 4096 Sep  3 11:30 test
+-rw-rw-r--   1 root root  643 Sep  3 12:22 test.csv
+drwxrwxr-x 125 root root 4096 Sep  3 11:39 train
+-rw-rw-r--   1 root root 2458 Sep  3 12:22 train.csv
+-rw-rw-r--   1 root root 1927 Sep  3 12:22 train.py
+[?2004hroot@2c5c968541ec:/workspace# cat data_description.txt
+[?2004lcat: data_description.txt: No such file or directory
+[?2004hroot@2c5c968541ec:/workspace# cat evaluation_details.txt
+[?2004lcat: evaluation_details.txt: No such file or directory
+[?2004hroot@2c5c968541ec:/workspace# cat train.py
+[?2004limport os
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+
+device = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', device)
+
+epochs = 1                      # the original starter also trains for a single epoch
+
+
+def bands(rec_dir):
+    b11 = np.load(f'{rec_dir}/band_11.npy').astype(np.float32)
+    b14 = np.load(f'{rec_dir}/band_14.npy').astype(np.float32)
+    b15 = np.load(f'{rec_dir}/band_15.npy').astype(np.float32)
+    x = np.stack([b11[..., 1], b14[..., 1], b15[..., 1]], axis=0)
+    return (x - x.mean()) / (x.std() + 1e-6)
+
+
+train_ids = sorted(os.listdir('train'))
+test_ids = sorted(os.listdir('test'))
+
+model = nn.Conv2d(3, 2, 1).to(device)      # TODO: replace with your model
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+lossf = nn.CrossEntropyLoss()
+
+for epoch in range(epochs):
+    model.train()
+    for rid in train_ids:
+        x = torch.tensor(bands(f'train/{rid}')).unsqueeze(0).to(device)
+        m = np.load(f'train/{rid}/human_pixel_masks.npy').astype(np.int64).squeeze()
+        y = torch.tensor(m).unsqueeze(0).to(device)
+        opt.zero_grad()
+        loss = lossf(model(x), y)
+        loss.backward()
+        opt.step()
+    print(f'epoch {epoch} loss {loss.item():.4f}')
+
+
+def rle(mask):
+    flat = mask.reshape(-1)
+    if flat.sum() == 0:
+        return ''
+    d = np.diff(np.concatenate([[0], flat, [0]]))
+    starts, ends = np.where(d == 1)[0], np.where(d == -1)[0]
+    return ' '.join(f'{s} {e - s}' for s, e in zip(starts, ends))
+
+
+model.eval()
+rows = []
+with torch.no_grad():
+    for rid in test_ids:
+        x = torch.tensor(bands(f'test/{rid}')).unsqueeze(0).to(device)
+        pred = model(x).argmax(1)[0].cpu().numpy().astype(np.uint8)
+        rows.append({'record_id': rid, 'rle': rle(pred)})
+pd.DataFrame(rows).to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+[?2004hroot@2c5c968541ec:/workspace# cat task_descriptor.txt
+[?2004lDataset Description
+In this competition you will be using geostationary satellite images to identify aviation contrails. The original satellite images were obtained from the GOES-16 Advanced Baseline Imager (ABI), which is publicly available on Google Cloud Storage. The original full-disk images were reprojected using bilinear resampling to generate a local scene image. Because contrails are easier to identify with temporal context, a sequence of images at 10-minute intervals are provided. Each example (record_id) contains exactly one labeled frame.
+
+Learn more about the dataset from the preprint: OpenContrails: Benchmarking Contrail Detection on GOES-16 ABI. Labeling instructions can be found at in this supplementary material. Some key labeling guidance:
+
+Contrails must contain at least 10 pixels
+At some time in their life, Contrails must be at least 3x longer than they are wide
+Contrails must either appear suddenly or enter from the sides of the image
+Contrails should be visible in at least two image
+Ground truth was determined by (generally) 4+ different labelers annotating each image. Pixels were considered a contrail when >50% of the labelers annotated it as such. Individual annotations (human_individual_masks.npy) as well as the aggregated ground truth annotations (human_pixel_masks.npy) are included in the training data. The validation data only includes the aggregated ground truth annotations.
+
+
+
+Files
+train/ - the training set; each folder represents a record_id and contains the following data:
+band_{08-16}.npy: array with size of H x W x T, where T = n_times_before + n_times_after + 1, representing the number of images in the sequence. There are n_times_before and n_times_after images before and after the labeled frame respectively. In our dataset all examples have n_times_before=4 and n_times_after=3. Each band represents an infrared channel at different wavelengths and is converted to brightness temperatures based on the calibration parameters. The number in the filename corresponds to the GOES-16 ABI band number. Details of the ABI bands can be found here.
+human_individual_masks.npy: array with size of H x W x 1 x R. Each example is labeled by R individual human labelers. R is not the same for all samples. The labeled masks have value either 0 or 1 and correspond to the (n_times_before+1)-th image in band_{08-16}.npy. They are available only in the training set.
+human_pixel_masks.npy: array with size of H x W x 1 containing the binary ground truth. A pixel is regarded as contrail pixel in evaluation if it is labeled as contrail by more than half of the labelers.
+validation/ - the same as the training set, without the individual label annotations; it is permitted to use this as training data if desired
+test/ - the test set; your objective is to identify contrails found in these records.
+{train|validation}_metadata.json - metadata information for each record; contains the timestamps and the projection parameters to reproduce the satellite images.
+sample_submission.csv - a sample submission file in the correct format
+[?2004hroot@2c5c968541ec:/workspace# head -n 5 train.csv
+[?2004lrecord_id
+1014219735188126584
+1063242204582703831
+1029447653104848738
+1024040752866694570
+[?2004hroot@2c5c968541ec:/workspace# head -n 5 test.csv
+[?2004lrecord_id
+1010494526449412435
+1014013767105267825
+1032809161010157334
+103254557049333037
+[?2004hroot@2c5c968541ec:/workspace# ls -R train/$(ls train | head -n 1)
+[?2004ltrain/1000216489776414077:
+band_11.npy  band_14.npy  band_15.npy  human_pixel_masks.npy
+[?2004hroot@2c5c968541ec:/workspace# cat <<'EOF' > train.py
+[?2004l[?2004h> import os
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.nn.functional as F
+[?2004l[?2004h> from torch.utils.data import Dataset, DataLoader
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class ContrailDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, root_dir, ids, is_test=False):
+[?2004l[?2004h>         self.root_dir = root_dir
+[?2004l[?2004h>         self.ids = ids
+[?2004l[?2004h>         self.is_test = is_test
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.ids)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         rid = self.ids[idx]
+[?2004l[?2004h>         rec_dir = os.path.join(self.root_dir, rid)
+[?2004l[?2004h>         
+[?2004l[?2004h>         b11 = np.load(f'{rec_dir}/band_11.npy').astype(np.float32)
+[?2004l[?2004h>         b14 = np.load(f'{rec_dir}/band_14.npy').astype(np.float32)
+[?2004l[?2004h>         b15 = np.load(f'{rec_dir}/band_15.npy').astype(np.float32)
+[?2004l[?2004h>         
+[?2004l[?2004h>         x = np.stack([b11[..., 4], b14[..., 4], b15[..., 4]], axis=0)
+[?2004l[?2004h>         x = (x - x.mean()) / (x.std() + 1e-6)
+[?2004l[?2004h>         x = torch.from_numpy(x)
+[?2004l[?2004h>         
+[?2004l[?2004h>         if self.is_test:
+[?2004l[?2004h>             return rid, x
+[?2004l[?2004h>         
+[?2004l[?2004h>         m = np.load(f'{rec_dir}/human_pixel_masks.npy').astype(np.float32).squeeze()
+[?2004l[?2004h>         y = torch.from_numpy(m).unsqueeze(0)
+[?2004l[?2004h>         return x, y
+[?2004l[?2004h> 
+[?2004l[?2004h> class SimpleUNet(nn.Module):
+[?2004l[?2004h>     def __init__(self):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         self.enc1 = self.conv_block(3, 16)
+[?2004l[?2004h>         self.enc2 = self.conv_block(16, 32)
+[?2004l[?2004h>         self.enc3 = self.conv_block(32, 64)
+[?2004l[?2004h>         self.pool = nn.MaxPool2d(2)
+[?2004l[?2004h>         self.up2 = nn.ConvTranspose2d(64, 32, 2, stride=2)
+[?2004l[?2004h>         self.dec2 = self.conv_block(64, 32)
+[?2004l[?2004h>         self.up1 = nn.ConvTranspose2d(32, 16, 2, stride=2)
+[?2004l[?2004h>         self.dec1 = self.conv_block(32, 16)
+[?2004l[?2004h>         self.final = nn.Conv2d(16, 1, 1)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def conv_block(self, in_ch, out_ch):
+[?2004l[?2004h>         return nn.Sequential(
+[?2004l[?2004h>             nn.Conv2d(in_ch, out_ch, 3, padding=1),
+[?2004l[?2004h>             nn.ReLU(inplace=True),
+[?2004l[?2004h>             nn.Conv2d(out_ch, out_ch, 3, padding=1),
+[?2004l[?2004h>             nn.ReLU(inplace=True)
+[?2004l[?2004h>         )
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         e1 = self.enc1(x)
+[?2004l[?2004h>         e2 = self.enc2(self.pool(e1))
+[?2004l[?2004h>         e3 = self.enc3(self.pool(e2))
+[?2004l[?2004h>         d2 = self.up2(e3)
+[?2004l[?2004h>         d2 = torch.cat([d2, e2], dim=1)
+[?2004l[?2004h>         d2 = self.dec2(d2)
+[?2004l[?2004h>         d1 = self.up1(d2)
+[?2004l[?2004h>         d1 = torch.cat([d1, e1], dim=1)
+[?2004l[?2004h>         d1 = self.dec1(d1)
+[?2004l[?2004h>         return self.final(d1)
+[?2004l[?2004h> 
+[?2004l[?2004h> def rle(mask):
+[?2004l[?2004h>     flat = mask.reshape(-1)
+[?2004l[?2004h>     if flat.sum() == 0:
+[?2004l[?2004h>         return ''
+[?2004l[?2004h>     d = np.diff(np.concatenate([[0], flat, [0]]))
+[?2004l[?2004h>     starts, ends = np.where(d == 1)[0], np.where(d == -1)[0]
+[?2004l[?2004h>     return ' '.join(f'{s} {e - s}' for s, e in zip(starts, ends))
+[?2004l[?2004h> 
+[?2004l[?2004h> train_ids = sorted(os.listdir('train'))
+[?2004l[?2004h> test_ids = sorted(os.listdir('test'))
+[?2004l[?2004h> 
+[?2004l[?2004h> split = int(0.9 * len(train_ids))
+[?2004l[?2004h> train_set = ContrailDataset('train', train_ids[:split])
+[?2004l[?2004h> val_set = ContrailDataset('train', train_ids[split:])
+[?2004l[?2004h> train_loader = DataLoader(train_set, batch_size=4, shuffle=True)
+[?2004l[?2004h> val_loader = DataLoader(val_set, batch_size=4)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SimpleUNet().to(DEVICE)
+[?2004l[?2004h> opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+[?2004l[?2004h> criterion = nn.BCEWithLogitsLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> epochs = 3
+[?2004l[?2004h> for epoch in range(epochs):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     train_loss = 0
+[?2004l[?2004h>     for x, y in train_loader:
+[?2004l[?2004h>         x, y = x.to(DEVICE), y.to(DEVICE)
+[?2004l[?2004h>         opt.zero_grad()
+[?2004l[?2004h>         pred = model(x)
+[?2004l[?2004h>         loss = criterion(pred, y)
+[?2004l[?2004h>         loss.backward()
+[?2004l[?2004h>         opt.step()
+[?2004l[?2004h>         train_loss += loss.item()
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     val_loss = 0
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         for x, y in val_loader:
+[?2004l[?2004h>             x, y = x.to(DEVICE), y.to(DEVICE)
+[?2004l[?2004h>             val_loss += criterion(model(x), y).item()
+[?2004l[?2004h>     
+[?2004l[?2004h>     print(f'Epoch {epoch+1}/{epochs} - Train Loss: {train_loss/len(train_loader):.4f} - Val Loss: {val_loss/len(val_loader):.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> test_set = ContrailDataset('test', test_ids, is_test=True)
+[?2004l[?2004h> test_loader = DataLoader(test_set, batch_size=4)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> rows = []
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     for rid, x in test_loader:
+[?2004l[?2004h>         x = x.to(DEVICE)
+[?2004l[?2004h>         preds = torch.sigmoid(model(x)).cpu().numpy()
+[?2004l[?2004h>         for i in range(len(rid)):
+[?2004l[?2004h>             mask = (preds[i, 0] > 0.5).astype(np.uint8)
+[?2004l[?2004h>             rows.append({'record_id': rid[i], 'rle': rle(mask)})
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame(rows).to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@2c5c968541ec:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Traceback (most recent call last):
+  File "/workspace/train.py", line 99, in <module>
+    for x, y in train_loader:
+                ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/workspace/train.py", line 30, in __getitem__
+    x = np.stack([b11[..., 4], b14[..., 4], b15[..., 4]], axis=0)
+                  ~~~^^^^^^^^
+IndexError: index 4 is out of bounds for axis 2 with size 3
+[?2004hroot@2c5c968541ec:/workspace# python3 -c "import numpy as np; print(np.load('train/' + next(os.listdir('train')) + '/band_11.npy').shape)"
+[?2004lTraceback (most recent call last):
+  File "<string>", line 1, in <module>
+NameError: name 'os' is not defined. Did you forget to import 'os'?
+[?2004hroot@2c5c968541ec:/workspace# sed -i 's/b11[..., 4], b14[..., 4], b15[..., 4]/b11[..., b11.shape[-1]//2], b14[..., b14.shape[-1]//2], b15[..., b15.shape[-1]//2]/' train.py
+[?2004lsed: -e expression #1, char 64: unknown option to `s'
+[?2004hroot@2c5c968541ec:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Traceback (most recent call last):
+  File "/workspace/train.py", line 99, in <module>
+    for x, y in train_loader:
+                ^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 51, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/workspace/train.py", line 30, in __getitem__
+    x = np.stack([b11[..., 4], b14[..., 4], b15[..., 4]], axis=0)
+                  ~~~^^^^^^^^
+IndexError: index 4 is out of bounds for axis 2 with size 3
+[?2004hroot@2c5c968541ec:/workspace# cat <<'EOF' > train.py
+[?2004l[?2004h> import os
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.nn.functional as F
+[?2004l[?2004h> from torch.utils.data import Dataset, DataLoader
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l)
+rows = []
+with torch.no_grad():
+    for rid, x in test_loade[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class ContrailDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, root_dir, ids, is_test=False):
+[?2004l[?2004h>         self.root_dir = root_dir
+[?2004l[?2004h>         self.ids = ids
+[?2004l[?2004h>         self.is_test = is_test
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.ids)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         rid = self.ids[idx]
+[?2004l[?2004h>         rec_dir = os.path.join(self.root_dir, rid)
+[?2004l[?2004h>         
+[?2004l[?2004h>         try:
+[?2004l[?2004h>             b11 = np.load(f'{rec_dir}/band_11.npy').astype(np.float32)
+[?2004l[?2004h>             b14 = np.load(f'{rec_dir}/band_14.npy').astype(np.float32)
+[?2004l[?2004h>             b15 = np.load(f'{rec_dir}/band_15.npy').astype(np.float32)
+[?2004l[?2004h>             
+[?2004l[?2004h>             # Use middle frame
+[?2004l[?2004h>             t_idx = b11.shape[-1] // 2
+[?2004l[?2004h>             x = np.stack([b11[..., t_idx], b14[..., t_idx], b15[..., t_idx]], axis=0)
+[?2004l[?2004h>             x = (x - x.mean()) / (x.std() + 1e-6)
+[?2004l[?2004h>             x = torch.from_numpy(x)
+[?2004l[?2004h>             
+[?2004l[?2004h>             if self.is_test:
+[?2004l[?2004h>                 return rid, x
+[?2004l[?2004h>             
+[?2004l[?2004h>             m = np.load(f'{rec_dir}/human_pixel_masks.npy').astype(np.float32).squeeze()
+[?2004l[?2004h>             y = torch.from_numpy(m).unsqueeze(0)
+[?2004l[?2004h>             return x, y
+[?2004l[?2004h>         except Exception as e:
+[?2004l[?2004h>             print(f"Error loading {rid}: {e}")
+[?2004l[?2004h>             # Return dummy data in case of corruption to avoid crashing
+[?2004l[?2004h>             x = torch.zeros((3, 256, 256))
+[?2004l[?2004h>             if self.is_test: return rid, x
+[?2004l[?2004h>             return x, torch.zeros((1, 256, 256))
+[?2004l[?2004h> 
+[?2004l[?2004h> class SimpleUNet(nn.Module):
+[?2004l[?2004h>     def __init__(self):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         self.enc1 = self.conv_block(3, 16)
+[?2004l[?2004h>         self.enc2 = self.conv_block(16, 32)
+[?2004l[?2004h>         self.enc3 = self.conv_block(32, 64)
+[?2004l[?2004h>         self.pool = nn.MaxPool2d(2)
+[?2004l[?2004h>         self.up2 = nn.ConvTranspose2d(64, 32, 2, stride=2)
+[?2004l[?2004h>         self.dec2 = self.conv_block(64, 32)
+[?2004l[?2004h>         self.up1 = nn.ConvTranspose2d(32, 16, 2, stride=2)
+[?2004l[?2004h>         self.dec1 = self.conv_block(32, 16)
+[?2004l[?2004h>         self.final = nn.Conv2d(16, 1, 1)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def conv_block(self, in_ch, out_ch):
+[?2004l[?2004h>         return nn.Sequential(
+[?2004l[?2004h>             nn.Conv2d(in_ch, out_ch, 3, padding=1),
+[?2004l[?2004h>             nn.ReLU(inplace=True),
+[?2004l[?2004h>             nn.Conv2d(out_ch, out_ch, 3, padding=1),
+[?2004l[?2004h>             nn.ReLU(inplace=True)
+[?2004l[?2004h>         )
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         e1 = self.enc1(x)
+[?2004l[?2004h>         e2 = self.enc2(self.pool(e1))
+[?2004l[?2004h>         e3 = self.enc3(self.pool(e2))
+[?2004l[?2004h>         d2 = self.up2(e3)
+[?2004l[?2004h>         d2 = torch.cat([d2, e2], dim=1)
+[?2004l[?2004h>         d2 = self.dec2(d2)
+[?2004l[?2004h>         d1 = self.up1(d2)
+[?2004l[?2004h>         d1 = torch.cat([d1, e1], dim=1)
+[?2004l[?2004h>         d1 = self.dec1(d1)
+[?2004l[?2004h>         return self.final(d1)
+[?2004l[?2004h> 
+[?2004l[?2004h> def rle(mask):
+[?2004l[?2004h>     flat = mask.reshape(-1)
+[?2004l[?2004h>     if flat.sum() == 0:
+[?2004l[?2004h>         return ''
+[?2004l[?2004h>     d = np.diff(np.concatenate([[0], flat, [0]]))
+[?2004l[?2004h>     starts, ends = np.where(d == 1)[0], np.where(d == -1)[0]
+[?2004l[?2004h>     return ' '.join(f'{s} {e - s}' for s, e in zip(starts, ends))
+[?2004l[?2004h> 
+[?2004l[?2004h> train_ids = sorted(os.listdir('train'))
+[?2004l[?2004h> test_ids = sorted(os.listdir('test'))
+[?2004l[?2004h> 
+[?2004l[?2004h> split = int(0.9 * len(train_ids))
+[?2004l[?2004h> train_set = ContrailDataset('train', train_ids[:split])
+[?2004l[?2004h> val_set = ContrailDataset('train', train_ids[split:])
+[?2004l[?2004h> train_loader = DataLoader(train_set, batch_size=4, shuffle=True)
+[?2004l[?2004h> val_loader = DataLoader(val_set, batch_size=4)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SimpleUNet().to(DEVICE)
+[?2004l[?2004h> opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+[?2004l[?2004h> criterion = nn.BCEWithLogitsLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> epochs = 3
+[?2004l[?2004h> for epoch in range(epochs):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     train_loss = 0
+[?2004l[?2004h>     for x, y in train_loader:
+[?2004l[?2004h>         x, y = x.to(DEVICE), y.to(DEVICE)
+[?2004l[?2004h>         opt.zero_grad()
+[?2004l[?2004h>         pred = model(x)
+[?2004l[?2004h>         loss = criterion(pred, y)
+[?2004l[?2004h>         loss.backward()
+[?2004l[?2004h>         opt.step()
+[?2004l[?2004h>         train_loss += loss.item()
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     val_loss = 0
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         for x, y in val_loader:
+[?2004l[?2004h>             x, y = x.to(DEVICE), y.to(DEVICE)
+[?2004l[?2004h>             val_loss += criterion(model(x), y).item()
+[?2004l[?2004h>     
+[?2004l[?2004h>     print(f'Epoch {epoch+1}/{epochs} - Train Loss: {train_loss/len(train_loader):.4f} - Val Loss: {val_loss/len(val_loader):.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> test_set = ContrailDataset('test', test_ids, is_test=True)
+[?2004l[?2004h> test_loader = DataLoader(test_set, batch_size=4)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> rows = []
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     for rid, x in test_loader:
+[?2004l[?2004h>         x = x.to(DEVICE)
+[?2004l[?2004h>         preds = torch.sigmoid(model(x)).cpu().numpy()
+[?2004l[?2004h>         for i in range(len(rid)):
+[?2004l[?2004h>             mask = (preds[i, 0] > 0.5).astype(np.uint8)
+[?2004l[?2004h>             rows.append({'record_id': rid[i], 'rle': rle(mask)})
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame(rows).to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@2c5c968541ec:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Epoch 1/3 - Train Loss: 0.3054 - Val Loss: 0.0740
+Epoch 2/3 - Train Loss: 0.0612 - Val Loss: 0.0555
+Epoch 3/3 - Train Loss: 0.0499 - Val Loss: 0.0524
+wrote submission.csv
+ls -la submission.csv
+head -n 5 submission.csv
+[?2004hroot@2c5c968541ec:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 679 Sep  4 15:58 submission.csv
+[?2004hroot@2c5c968541ec:/workspace# head -n 5 submission.csv
+[?2004lrecord_id,rle
+100071707854144929,
+1003994937842600998,
+1009978130200705421,
+1010442478196990831,
+[?2004hroot@2c5c968541ec:/workspace# head -n 10 submission.csv
+[?2004lrecord_id,rle
+100071707854144929,
+1003994937842600998,
+1009978130200705421,
+1010442478196990831,
+1010494526449412435,
+1014013767105267825,
+1015004752231541787,
+1015638064991661829,
+101725507974209875,
+[?2004hroot@2c5c968541ec:/workspace# 

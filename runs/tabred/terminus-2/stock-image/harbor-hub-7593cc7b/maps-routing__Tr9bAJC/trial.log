@@ -1,0 +1,31 @@
+Skipping image OS validation for hb__64138fa7922d1ae48680c3e0fa52fc6a: docker inspect returned 1
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+- Command 1 should end with newline when followed by another command. Otherwise the two commands will be concatenated together on the same line.
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/maps-routing__Tr9bAJC/agent/trajectory.json
+Collecting main service artifacts

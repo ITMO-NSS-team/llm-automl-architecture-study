@@ -1,0 +1,9 @@
+file,benchmark,variant,characters,sha256_prefix,characters_with_separator,sha256_prefix_with_separator
+instruction_file/tabred_library.md,TabReD,library,1291,b8170933171ce646,1293,dcdd71dca39bfacb
+instruction_file/tabred_discipline.md,TabReD,discipline,3678,22b138e8d5317eac,3680,a8fbb6ca6ef694ef
+instruction_file/tabred_both.md,TabReD,both,4970,b70ef52957ed8247,4972,a58b4d40678ff1aa
+instruction_file/tabred_discipline_trimmed.md,TabReD,discipline trimmed,2481,af1d7e38d9b8c745,2483,42e304c4f86856d8
+instruction_file/mlagentbench_tabular.md,MLAgentBench,both; tabular tasks,5084,2ecf7e06649c4492,5086,0c011b0608eb124e
+instruction_file/mlagentbench_vision.md,MLAgentBench,both; vision tasks,4362,a78d7bfbec425019,4364,efa4d7c8a771b7e7
+instruction_file/mlagentbench_text.md,MLAgentBench,both; text tasks,4162,55158418fc9204a4,4164,0408c0cabebcba7c
+instruction_file/mlagentbench_graph.md,MLAgentBench,both; graph tasks,4152,3ea7e1d949b23abd,4154,cbe95d0821b056c0

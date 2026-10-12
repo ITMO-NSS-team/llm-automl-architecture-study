@@ -1,0 +1,136 @@
+[?2004hroot@63f2e50d649f:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@63f2e50d649f:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@63f2e50d649f:/workspace# ls -la /app/data
+[?2004ltotal 1019368
+drwxr-xr-x 2 root root      4096 Aug 28 15:18 .
+drwxr-xr-x 3 root root      4096 Aug 28 15:18 ..
+-rw-rw-r-- 1 root root     10603 Aug 27 21:18 schema.json
+-rw-rw-r-- 1 root root 157194676 Aug 27 21:18 test.csv
+-rw-rw-r-- 1 root root 725242065 Aug 27 21:18 train.csv
+-rw-rw-r-- 1 root root 161355034 Aug 27 21:18 val.csv
+[?2004hroot@63f2e50d649f:/workspace# head -n 5 /app/data/schema.json
+[?2004l{
+  "dataset": "homecredit-default",
+  "source_split": "default",
+  "task_type": "binclass",
+  "score": "roc-auc",
+[?2004hroot@63f2e50d649f:/workspace# python3 -c "import pandas as pd; df = pd.read_csv('/app/data/train.csv', nrows=100); print(df.columns.tolist()[:10])"
+[?2004l['num_0', 'num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7', 'num_8', 'num_9']
+[?2004hroot@63f2e50d649f:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> import lightgbm as lgb
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def solve():
+[?2004l[?2004h>     # Load data
+[?2004l[?2004h>     train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h>     val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h>     test = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h>     target_col = 'target'
+[?2004l[?2004h>     X_train = train.drop(columns=[target_col])
+[?2004l[?2004h>     y_train = train[target_col]
+[?2004l[?2004h>     X_val = val.drop(columns=[target_col])
+[?2004l[?2004h>     y_val = val[target_col]
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Trivial baseline: mean of training target
+[?2004l[?2004h>     train_mean = y_train.mean()
+[?2004l[?2004h>     baseline_preds = np.full(len(y_val), train_mean)
+[?2004l[?2004h>     baseline_auc = roc_auc_score(y_val, baseline_preds)
+[?2004l[?2004h>     print(f'Trivial Baseline (Train Mean): {baseline_auc:.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Identify feature types
+[?2004l[?2004h>     cat_features = [col for col in X_train.columns if col.startswith('cat_')]
+[?2004l[?2004h>     # LightGBM handles nan for numericals naturally. For categoricals, we cast to category type.
+[?2004l[?2004h>     for col in cat_features:
+[?2004l[?2004h>         X_train[col] = X_train[col].astype('category')
+[?2004l[?2004h>         X_val[col] = X_val[col].astype('category')
+[?2004l[?2004h>         test[col] = test[col].astype('category')
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Model training
+[?2004l[?2004h>     # Use LightGBM with early stopping on validation set
+[?2004l[?2004h>     model = lgb.LGBMClassifier(
+[?2004l[?2004h>         n_estimators=1000,
+[?2004l[?2004h>         learning_rate=0.05,
+[?2004l[?2004h>         num_leaves=31,
+[?2004l[?2004h>         objective='binary',
+[?2004l[?2004h>         metric='auc',
+[?2004l[?2004h>         random_state=42,
+[?2004l[?2004h>         n_jobs=-1,
+[?2004l[?2004h>         verbosity=-1
+[?2004l[?2004h>     )
+[?2004l[?2004h> 
+[?2004l[?2004h>     model.fit(
+[?2004l[?2004h>         X_train, y_train,
+[?2004l[?2004h>         eval_set=[(X_val, y_val)],
+[?2004l[?2004h>         eval_metric='auc',
+[?2004l[?2004h>         callbacks=[lgb.early_stopping(stopping_rounds=50)]
+[?2004l[?2004h>     )
+[?2004l[?2004h> 
+[?2004l[?2004h>     val_preds = model.predict_proba(X_val)[:, 1]
+[?2004l[?2004h>     model_auc = roc_auc_score(y_val, val_preds)
+[?2004l[?2004h>     print(f'Model Validation AUC: {model_auc:.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h>     if model_auc <= baseline_auc:
+[?2004l[?2004h>         print('Model did not beat baseline. Using baseline for submission.')
+[?2004l[?2004h>         final_preds = np.full(len(test), train_mean)
+[?2004l[?2004h>     else:
+[?2004l[?2004h>         print('Model beat baseline. Generating test predictions.')
+[?2004l[?2004h>         final_preds = model.predict_proba(test)[:, 1]
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Sanity check predictions
+[?2004l[?2004h>     if np.isnan(final_preds).any() or np.isinf(final_preds).any():
+[?2004l[?2004h>         print('Warning: NaN or Inf detected in predictions. Filling with mean.')
+[?2004l[?2004h>         final_preds = np.nan_to_num(final_preds, nan=train_mean)
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Save submission
+[?2004l[?2004h>     submission = pd.DataFrame({'target': final_preds})
+[?2004l[?2004h>     submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h>     print('Predictions saved to /app/predictions.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     solve()
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@63f2e50d649f:/workspace# python3 solution.py
+[?2004lDEVICE= cpu
+ls -l /app/predictions.csv
+head -n 5 /app/predictions.csv
+python3 solution.py
+Trivial Baseline (Train Mean): 0.5000
+/usr/local/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[212]	valid_0's auc: 0.832657
+Model Validation AUC: 0.8327
+Model beat baseline. Generating test predictions.
+Predictions saved to /app/predictions.csv
+[?2004hroot@63f2e50d649f:/workspace# ls -l /app/predictions.csv
+[?2004l-rw-r--r-- 1 root root 1156559 Aug 30 14:11 /app/predictions.csv
+[?2004hroot@63f2e50d649f:/workspace# head -n 5 /app/predictions.csv
+[?2004ltarget
+0.004929208841052395
+0.025096749236794457
+0.04032778518253011
+0.025192120565982194
+[?2004hroot@63f2e50d649f:/workspace# python3 solution.py
+[?2004lDEVICE= cpu
+Trivial Baseline (Train Mean): 0.5000
+/usr/local/lib/python3.12/site-packages/lightgbm/sklearn.py:1106: LGBMDeprecationWarning: The argument 'eval_set' is deprecated, use 'eval_X' and 'eval_y' instead.
+  eval_set = _validate_eval_set_Xy(eval_set=eval_set, eval_X=eval_X, eval_y=eval_y)
+Training until validation scores don't improve for 50 rounds
+Early stopping, best iteration is:
+[212]	valid_0's auc: 0.832657
+Model Validation AUC: 0.8327
+Model beat baseline. Generating test predictions.
+Predictions saved to /app/predictions.csv
+[?2004hroot@63f2e50d649f:/workspace# 

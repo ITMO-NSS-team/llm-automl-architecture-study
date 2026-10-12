@@ -1,0 +1,123 @@
+{
+    "id": "2d094a70-ac20-4ce8-9672-3e9678bd803c",
+    "started_at": "2026-08-30T11:35:32.853224",
+    "updated_at": "2026-08-30T13:21:08.495980",
+    "finished_at": "2026-08-30T13:21:08.495980",
+    "n_total_trials": 24,
+    "stats": {
+        "n_completed_trials": 24,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "terminus-2__google/gemma-4-31b-it__tabred-kdisc": {
+                "n_trials": 24,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "reward": 0.34619768833150233,
+                        "rmse": 0.0670101536568329,
+                        "roc_auc": 0.18622799647265442
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "homecredit-default__yLPNHer",
+                            "weather__awGBqWD",
+                            "homesite-insurance__hMWSZtu",
+                            "cooking-time__iroUsPY",
+                            "weather__PP7mBur",
+                            "delivery-eta__bbF5YAn",
+                            "maps-routing__KFWGEk5",
+                            "sberbank-housing__GLB4aCA",
+                            "homecredit-default__sB5izqU",
+                            "cooking-time__3gXCK88",
+                            "weather__FBKbTBr",
+                            "delivery-eta__kqavNgJ",
+                            "sberbank-housing__eD2SkEG"
+                        ],
+                        "0.6741603387034706": [
+                            "cooking-time__QtHMRsx"
+                        ],
+                        "0.568475627673355": [
+                            "ecom-offers__NCzCFgo"
+                        ],
+                        "0.6460719226115209": [
+                            "delivery-eta__CuhBZRF"
+                        ],
+                        "0.8601434944553081": [
+                            "maps-routing__jLfHbHg"
+                        ],
+                        "0.7989514852383693": [
+                            "sberbank-housing__KBU83dB"
+                        ],
+                        "0.856682249374387": [
+                            "homecredit-default__Vj2WjeZ"
+                        ],
+                        "0.5527167939066917": [
+                            "ecom-offers__ko5U6XW"
+                        ],
+                        "0.9602925873194796": [
+                            "homesite-insurance__D9QQ7pm"
+                        ],
+                        "0.5726993003223346": [
+                            "ecom-offers__xxtL45F"
+                        ],
+                        "0.8599453636036805": [
+                            "maps-routing__kHXj7yT"
+                        ],
+                        "0.9586053567474581": [
+                            "homesite-insurance__GotvNZF"
+                        ]
+                    },
+                    "rmse": {
+                        "0.48332665478834996": [
+                            "cooking-time__QtHMRsx"
+                        ],
+                        "0.5478152896009597": [
+                            "delivery-eta__CuhBZRF"
+                        ],
+                        "0.1625967137416495": [
+                            "maps-routing__jLfHbHg"
+                        ],
+                        "0.25164045436582083": [
+                            "sberbank-housing__KBU83dB"
+                        ],
+                        "0.16286457526720952": [
+                            "maps-routing__kHXj7yT"
+                        ]
+                    },
+                    "roc_auc": {
+                        "0.568475627673355": [
+                            "ecom-offers__NCzCFgo"
+                        ],
+                        "0.856682249374387": [
+                            "homecredit-default__Vj2WjeZ"
+                        ],
+                        "0.5527167939066917": [
+                            "ecom-offers__ko5U6XW"
+                        ],
+                        "0.9602925873194796": [
+                            "homesite-insurance__D9QQ7pm"
+                        ],
+                        "0.5726993003223346": [
+                            "ecom-offers__xxtL45F"
+                        ],
+                        "0.9586053567474581": [
+                            "homesite-insurance__GotvNZF"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 12064534,
+        "n_cache_tokens": 11115424,
+        "n_output_tokens": 212923,
+        "cost_usd": 0.72775165
+    }
+}

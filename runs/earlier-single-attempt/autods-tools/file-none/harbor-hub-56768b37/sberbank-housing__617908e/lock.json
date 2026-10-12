@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task": {
+    "name": "sberbank-housing",
+    "type": "local",
+    "digest": "sha256:b3fe2ddb42aeb3efb59f278a95c0448d2d277893073a7a07f9aa6e341bc34695",
+    "source": "tabred-real",
+    "path": "harbor-datasets-tabred/datasets/tabred-real/sberbank-housing",
+    "git_url": null,
+    "git_commit_id": null
+  },
+  "install_only": false,
+  "timeout_multiplier": 1.0,
+  "agent": {
+    "name": "autods",
+    "model_name": "openrouter/google/gemma-4-31b-it",
+    "skills": [],
+    "extra_allowed_hosts": [],
+    "kwargs": {
+      "temperature": 0.2
+    },
+    "mcp_servers": []
+  },
+  "skills": [],
+  "environment": {
+    "type": null,
+    "import_path": null,
+    "force_build": false,
+    "delete": true,
+    "extra_docker_compose": [],
+    "kwargs": {},
+    "extra_allowed_hosts": []
+  },
+  "verifier": {
+    "disable": false
+  }
+}

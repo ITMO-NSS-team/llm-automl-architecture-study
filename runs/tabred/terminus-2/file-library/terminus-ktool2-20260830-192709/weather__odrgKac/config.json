@@ -1,0 +1,13 @@
+{
+    "task": {
+        "path": "datasets/tabred-ktool/weather",
+        "source": "tabred-ktool"
+    },
+    "trial_name": "weather__odrgKac",
+    "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709",
+    "agent": {
+        "name": "terminus-2",
+        "model_name": "openrouter/google/gemma-4-31b-it"
+    },
+    "job_id": "83f73a38-c8cc-4cd5-904d-160356eb8afe"
+}

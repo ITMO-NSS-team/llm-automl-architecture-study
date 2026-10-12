@@ -1,0 +1,34 @@
+Skipping image OS validation for hb__bedbcf202e03f615e42812f0f64f327f: docker inspect returned 1
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Unknown Error in LLM interaction: litellm.APIError: APIError: OpenrouterException - Cannot connect to host proxy-host:9739 ssl:<ssl.SSLContext object at 0x7b45eb228250> [Connect call failed ('proxy-host', 9739)]
+Unknown Error in LLM interaction: litellm.APIError: APIError: OpenrouterException - Cannot connect to host proxy-host:9739 ssl:<ssl.SSLContext object at 0x7b45eb228250> [Connect call failed ('proxy-host', 9739)]
+Unknown Error in LLM interaction: litellm.APIError: APIError: OpenrouterException - Cannot connect to host proxy-host:9739 ssl:<ssl.SSLContext object at 0x7b45eb228250> [Connect call failed ('proxy-host', 9739)]
+Trajectory dumped to /var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-ktool2-20260830-192709/weather__odrgKac/agent/trajectory.json
+Trial weather__odrgKac failed: litellm.APIError: APIError: OpenrouterException - Cannot connect to host proxy-host:9739 ssl:<ssl.SSLContext object at 0x7b45eb228250> [Connect call failed ('proxy-host', 9739)]
+Collecting main service artifacts

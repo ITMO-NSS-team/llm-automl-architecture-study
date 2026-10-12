@@ -1,0 +1,125 @@
+{
+    "id": "d5dfe21a-78fb-4c03-932b-a4d155bc5f49",
+    "task_name": "mlab-c1/spaceship-titanic",
+    "trial_name": "spaceship-titanic__P2eBgNw",
+    "trial_uri": "file:///var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/autods-mlab-c1-full-20260903-234827/spaceship-titanic__P2eBgNw",
+    "task_id": {
+        "path": "datasets/mlab-c1/spaceship-titanic"
+    },
+    "source": "mlab-c1",
+    "task_checksum": "9c916f9b3c39bbf6dc505b91d794d8666f323805ca33dfbce2a15628f0c195db",
+    "config": {
+        "task": {
+            "path": "datasets/mlab-c1/spaceship-titanic",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "mlab-c1"
+        },
+        "trial_name": "spaceship-titanic__P2eBgNw",
+        "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/autods-mlab-c1-full-20260903-234827",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "autods_harbor.agent:AutoDSAgent",
+            "import_path": null,
+            "model_name": "google/gemma-4-31b-it",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {
+                "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                "workspace": "/workspace"
+            },
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "32e9239d-d093-425b-a99f-f904ef123785",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "autods",
+        "version": "autods-harbor",
+        "model_info": {
+            "name": "gemma-4-31b-it",
+            "provider": "google"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 95266,
+        "n_cache_tokens": 8672,
+        "n_output_tokens": 8313,
+        "cost_usd": 0.0114,
+        "rollout_details": null,
+        "metadata": {
+            "autods_workspace": "/workspace",
+            "autods_model": "google/gemma-4-31b-it"
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.8079584775086506,
+            "accuracy": 0.8079584775086506,
+            "n": 1734
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-09-04T06:41:49.345091Z",
+    "finished_at": "2026-09-04T07:04:27.409135Z",
+    "environment_setup": {
+        "started_at": "2026-09-04T06:41:49.361589Z",
+        "finished_at": "2026-09-04T06:41:54.212303Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-04T06:41:54.212354Z",
+        "finished_at": "2026-09-04T06:42:34.898366Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-04T06:42:34.898499Z",
+        "finished_at": "2026-09-04T07:04:01.462617Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-04T07:04:02.333949Z",
+        "finished_at": "2026-09-04T07:04:03.480400Z"
+    },
+    "step_results": null
+}

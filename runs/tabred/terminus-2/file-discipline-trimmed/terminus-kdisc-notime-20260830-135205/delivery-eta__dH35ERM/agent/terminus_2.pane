@@ -1,0 +1,397 @@
+[?2004hroot@f645a8fae298:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@f645a8fae298:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@f645a8fae298:/workspace# ls -la /app/data
+[?2004ltotal 839220
+drwxr-xr-x 2 root root      4096 Aug 28 15:55 .
+drwxr-xr-x 3 root root      4096 Aug 28 15:55 ..
+-rw-rw-r-- 1 root root      3592 Aug 27 21:13 schema.json
+-rw-rw-r-- 1 root root  83333630 Aug 27 21:13 test.csv
+-rw-rw-r-- 1 root root 699050037 Aug 27 21:13 train.csv
+-rw-rw-r-- 1 root root  76947472 Aug 27 21:13 val.csv
+[?2004hroot@f645a8fae298:/workspace# cat /app/data/schema.json
+[?2004l{
+  "dataset": "delivery-eta",
+  "source_split": "default",
+  "task_type": "regression",
+  "score": "rmse",
+  "target_column": "target",
+  "feature_columns": [
+    "num_0",
+    "num_1",
+    "num_2",
+    "num_3",
+    "num_4",
+    "num_5",
+    "num_6",
+    "num_7",
+    "num_8",
+    "num_9",
+    "num_10",
+    "num_11",
+    "num_12",
+    "num_13",
+    "num_14",
+    "num_15",
+    "num_16",
+    "num_17",
+    "num_18",
+    "num_19",
+    "num_20",
+    "num_21",
+    "num_22",
+    "num_23",
+    "num_24",
+    "num_25",
+    "num_26",
+    "num_27",
+    "num_28",
+    "num_29",
+    "num_30",
+    "num_31",
+    "num_32",
+    "num_33",
+    "num_34",
+    "num_35",
+    "num_36",
+    "num_37",
+    "num_38",
+    "num_39",
+    "num_40",
+    "num_41",
+    "num_42",
+    "num_43",
+    "num_44",
+    "num_45",
+    "num_46",
+    "num_47",
+    "num_48",
+    "num_49",
+    "num_50",
+    "num_51",
+    "num_52",
+    "num_53",
+    "num_54",
+    "num_55",
+    "num_56",
+    "num_57",
+    "num_58",
+    "num_59",
+    "num_60",
+    "num_61",
+    "num_62",
+    "num_63",
+    "num_64",
+    "num_65",
+    "num_66",
+    "num_67",
+    "num_68",
+    "num_69",
+    "num_70",
+    "num_71",
+    "num_72",
+    "num_73",
+    "num_74",
+    "num_75",
+    "num_76",
+    "num_77",
+    "num_78",
+    "num_79",
+    "num_80",
+    "num_81",
+    "num_82",
+    "num_83",
+    "num_84",
+    "num_85",
+    "num_86",
+    "num_87",
+    "num_88",
+    "num_89",
+    "num_90",
+    "num_91",
+    "num_92",
+    "num_93",
+    "num_94",
+    "num_95",
+    "num_96",
+    "num_97",
+    "num_98",
+    "num_99",
+    "num_100",
+    "num_101",
+    "num_102",
+    "num_103",
+    "num_104",
+    "num_105",
+    "num_106",
+    "num_107",
+    "num_108",
+    "num_109",
+    "num_110",
+    "num_111",
+    "num_112",
+    "num_113",
+    "num_114",
+    "num_115",
+    "num_116",
+    "num_117",
+    "num_118",
+    "num_119",
+    "num_120",
+    "num_121",
+    "num_122",
+    "num_123",
+    "num_124",
+    "num_125",
+    "num_126",
+    "num_127",
+    "num_128",
+    "num_129",
+    "num_130",
+    "num_131",
+    "num_132",
+    "num_133",
+    "num_134",
+    "num_135",
+    "num_136",
+    "num_137",
+    "num_138",
+    "num_139",
+    "num_140",
+    "num_141",
+    "num_142",
+    "num_143",
+    "num_144",
+    "num_145",
+    "num_146",
+    "num_147",
+    "num_148",
+    "num_149",
+    "num_150",
+    "num_151",
+    "num_152",
+    "num_153",
+    "num_154",
+    "num_155",
+    "num_156",
+    "num_157",
+    "num_158",
+    "num_159",
+    "num_160",
+    "num_161",
+    "num_162",
+    "num_163",
+    "num_164",
+    "num_165",
+    "num_166",
+    "num_167",
+    "num_168",
+    "num_169",
+    "num_170",
+    "num_171",
+    "num_172",
+    "num_173",
+    "num_174",
+    "num_175",
+    "num_176",
+    "num_177",
+    "num_178",
+    "num_179",
+    "num_180",
+    "num_181",
+    "num_182",
+    "num_183",
+    "num_184",
+    "num_185",
+    "num_186",
+    "num_187",
+    "num_188",
+    "num_189",
+    "num_190",
+    "num_191",
+    "num_192",
+    "num_193",
+    "num_194",
+    "num_195",
+    "num_196",
+    "num_197",
+    "num_198",
+    "num_199",
+    "num_200",
+    "num_201",
+    "num_202",
+    "num_203",
+    "num_204",
+    "num_205",
+    "num_206",
+    "num_207",
+    "num_208",
+    "num_209",
+    "num_210",
+    "num_211",
+    "num_212",
+    "num_213",
+    "num_214",
+    "num_215",
+    "num_216",
+    "num_217",
+    "num_218",
+    "num_219",
+    "num_220",
+    "bin_0",
+    "cat_0"
+  ],
+  "feature_counts": {
+    "num": 221,
+    "bin": 1,
+    "cat": 1
+  },
+  "split_sizes": {
+    "train": 279415,
+    "val": 34174,
+    "test": 36927
+  },
+  "excluded_arrays": [
+    "x_meta.npy"
+  ]
+}
+[?2004hroot@f645a8fae298:/workspace# pip install xgboost lightgbm pandas scikit-learn
+[?2004lRequirement already satisfied: xgboost in /usr/local/lib/python3.12/site-packages (2.1.4)
+Requirement already satisfied: lightgbm in /usr/local/lib/python3.12/site-packages (4.7.0)
+Requirement already satisfied: pandas in /usr/local/lib/python3.12/site-packages (3.0.5)
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.12/site-packages (1.9.0)
+Requirement already satisfied: numpy in /usr/local/lib/python3.12/site-packages (from xgboost) (2.5.2)
+Requirement already satisfied: nvidia-nccl-cu12 in /usr/local/lib/python3.12/site-packages (from xgboost) (2.31.2)
+Requirement already satisfied: scipy in /usr/local/lib/python3.12/site-packages (from xgboost) (1.18.1)
+Requirement already satisfied: narwhals>=1.15 in /usr/local/lib/python3.12/site-packages (from lightgbm) (2.25.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/site-packages (from pandas) (2.9.0.post0)
+Requirement already satisfied: joblib>=1.4.0 in /usr/local/lib/python3.12/site-packages (from scikit-learn) (1.5.3)
+Requirement already satisfied: threadpoolctl>=3.5.0 in /usr/local/lib/python3.12/site-packages (from scikit-learn) (3.6.0)
+Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/site-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m A new release of pip is available: [0m[31;49m25.0.1[0m[39;49m -> [0m[32;49m26.2.1[0m
+[1m[[0m[34;49mnotice[0m[1;39;49m][0m[39;49m To update, run: [0m[32;49mpip install --upgrade pip[0m
+[?2004hroot@f645a8fae298:/workspace# cat << 'EOF' > baseline_and_train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from sklearn.metrics import mean_squared_error
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import xgboost as xgb
+[?2004l[?2004h> 
+[?2004l[?2004h> # Required hardware device resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> print('Loading data...')
+[?2004l[?2004h> train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> target_col = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline: Median of training target
+[?2004l[?2004h> median_val = train[target_col].median()
+[?2004l[?2004h> baseline_preds = np.full(len(val), median_val)
+[?2004l[?2004h> baseline_rmse = np.sqrt(mean_squared_error(val[target_col], baseline_preds))
+[?2004l[?2004h> print(f'Trivial Baseline (Median): {median_val}')
+[?2004l[?2004h> print(f'Baseline RMSE: {baseline_rmse}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Preprocessing
+[?2004l[?2004h> # Identify feature types
+[?2004l[?2004h> num_cols = [c for c in train.columns if c.startswith('num_')]
+[?2004l[?2004h> bin_cols = [c for c in train.columns if c.startswith('bin_')]
+[?2004l[?2004h> cat_cols = [c for c in train.columns if c.startswith('cat_')]
+[?2004l[?2004h> 
+[?2004l[?2004h> # Fill numerical NaNs with median
+[?2004l[?2004h> for col in num_cols:
+[?2004l[?2004h>     train[col] = train[col].fillna(train[col].median())
+[?2004l[?2004h>     val[col] = val[col].fillna(train[col].median())
+[?2004l[?2004h>     test[col] = test[col].fillna(train[col].median())
+[?2004l[?2004h> 
+[?2004l[?2004h> # Simple categorical encoding (label encoding)
+[?2004l[?2004h> for col in cat_cols:
+[?2004l[?2004h>     train[col] = train[col].astype(str).astype('category').cat.codes
+[?2004l[?2004h>     val[col] = val[col].astype(str).astype('category').cat.codes
+[?2004l[?2004h>     test[col] = test[col].astype(str).astype('category').cat.codes
+[?2004l[?2004h> 
+[?2004l[?2004h> # Train XGBoost
+[?2004l[?2004h> X_train = train.drop(columns=[target_col])
+[?2004l[?2004h> y_train = train[target_col]
+[?2004l[?2004h> X_val = val.drop(columns=[target_col])
+[?2004l[?2004h> y_val = val[target_col]
+[?2004l[?2004h> 
+[?2004l[?2004h> model = xgb.XGBRegressor(
+[?2004l[?2004h>     n_estimators=1000,
+[?2004l[?2004h>     learning_rate=0.05,
+[?2004l[?2004h>     max_depth=6,
+[?2004l[?2004h>     tree_method='hist',
+[?2004l[?2004h>     device=DEVICE if DEVICE != 'mps' else 'cpu', # XGBoost uses 'cuda' or 'cpu'
+[?2004l[?2004h>     early_stopping_rounds=50,
+[?2004l[?2004h>     eval_metric='rmse'
+[?2004l[?2004h> )
+[?2004l[?2004h> 
+[?2004l[?2004h> # If DEVICE is cuda, we use gpu_id=0 or similar, but 'device' param in newer XGB handles it.
+[?2004l[?2004h> # To be safe with the requirement, we'll use 'cuda' if available.
+[?2004l[?2004h> if DEVICE == 'cuda':
+[?2004l[?2004h>     model.set_params(device='cuda')
+[?2004l[?2004h> 
+[?2004l[?2004h> model.fit(
+[?2004l[?2004h>     X_train, y_train,
+[?2004l[?2004h>     eval_set=[(X_val, y_val)],
+[?2004l[?2004h>     verbose=100
+[?2004l[?2004h> )
+[?2004l[?2004h> 
+[?2004l[?2004h> val_preds = model.predict(X_val)
+[?2004l[?2004h> model_rmse = np.sqrt(mean_squared_error(y_val, val_preds))
+[?2004l[?2004h> print(f'Model RMSE: {model_rmse}')
+[?2004l[?2004h> 
+[?2004l[?2004h> if model_rmse < baseline_rmse:
+[?2004l[?2004h>     print('Model beats baseline!')
+[?2004l[?2004h>     # Predict test set
+[?2004l[?2004h>     test_preds = model.predict(test)
+[?2004l[?2004h>     pd.DataFrame({'target': test_preds}).to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h>     print('Predictions saved to /app/predictions.csv')
+[?2004l[?2004h> else:
+[?2004l[?2004h>     print('Model failed to beat baseline. Using baseline predictions.')
+[?2004l[?2004h>     test_preds = np.full(len(test), median_val)
+[?2004l[?2004h>     pd.DataFrame({'target': test_preds}).to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h>     print('Baseline predictions saved to /app/predictions.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f645a8fae298:/workspace# python3 baseline_and_train.py
+[?2004lDEVICE= cpu
+Loading data...
+Trivial Baseline (Median): 1.68948066
+Baseline RMSE: 0.7749197529971861
+[0]	validation_0-rmse:0.74380
+[100]	validation_0-rmse:0.56576
+[200]	validation_0-rmse:0.56103
+[300]	validation_0-rmse:0.55911
+[400]	validation_0-rmse:0.55814
+[500]	validation_0-rmse:0.55773
+[600]	validation_0-rmse:0.55759
+[700]	validation_0-rmse:0.55743
+[800]	validation_0-rmse:0.55732
+[900]	validation_0-rmse:0.55727
+[999]	validation_0-rmse:0.55724
+Model RMSE: 0.5571711232550123
+Model beats baseline!
+Predictions saved to /app/predictions.csv
+[?2004hroot@f645a8fae298:/workspace# head -n 5 /app/predictions.csv
+[?2004ltarget
+2.4545245
+2.4495165
+1.9330121
+1.9075832
+[?2004hroot@f645a8fae298:/workspace# wc -l /app/predictions.csv
+[?2004l36928 /app/predictions.csv
+[?2004hroot@f645a8fae298:/workspace# python3 -c "import pandas as pd; df = pd.read_csv('/app/predictions.csv'); print('Columns:', df.columns.tolist()); print('Shape:', df.shape); print('NaNs:', df.isna().sum().sum()); print('Inf:', (df == float('inf')).sum().sum())"
+[?2004lColumns: ['target']
+Shape: (36927, 1)
+NaNs: 0
+Inf: 0
+[?2004hroot@f645a8fae298:/workspace# 

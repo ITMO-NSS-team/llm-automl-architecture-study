@@ -1,0 +1,375 @@
+[?2004hroot@3c4a8bce5752:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@3c4a8bce5752:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@3c4a8bce5752:/workspace# ls -la
+[?2004ltotal 103776
+drwxr-xr-x 2 root root     4096 Sep  3 14:42 .
+drwxr-xr-x 1 root root     4096 Sep  4 16:02 ..
+-rw-rw-r-- 1 root root 18660016 Sep  3 14:42 edges.npy
+-rw-rw-r-- 1 root root 86703744 Sep  3 14:42 node_features.npy
+-rw-rw-r-- 1 root root    57065 Sep  3 14:42 test.csv
+-rw-rw-r-- 1 root root   830904 Sep  3 14:42 train.csv
+-rw-rw-r-- 1 root root     1931 Sep  3 14:42 train.py
+[?2004hroot@3c4a8bce5752:/workspace# cat train.py
+[?2004limport numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+device = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', device)
+
+feat = np.load('node_features.npy').astype(np.float32)
+edges = np.load('edges.npy')            # the baseline below ignores the graph entirely
+tr = pd.read_csv('train.csv')
+te = pd.read_csv('test.csv')
+
+Xtr = torch.tensor(feat[tr['id'].values])
+ytr = torch.tensor(tr['label'].values, dtype=torch.long)
+Xte = torch.tensor(feat[te['id'].values])
+n_classes = int(tr['label'].max()) + 1
+
+
+class MLP(nn.Module):
+    def __init__(self, in_dim, hidden, out_dim, num_layers=2, dropout=0.0):
+        super().__init__()
+        self.lins = nn.ModuleList([nn.Linear(in_dim, hidden)])
+        for _ in range(num_layers - 2):
+            self.lins.append(nn.Linear(hidden, hidden))
+        self.lins.append(nn.Linear(hidden, out_dim))
+        self.dropout = dropout
+
+    def forward(self, x):
+        for lin in self.lins[:-1]:
+            x = F.relu(lin(x))
+            x = F.dropout(x, p=self.dropout, training=self.training)
+        return self.lins[-1](x)
+
+
+# model = SAGE(feat.shape[1], 256, n_classes, num_layers=2)   # graph model, unused
+model = MLP(feat.shape[1], hidden=16, out_dim=n_classes, num_layers=2).to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=1)
+criterion = nn.CrossEntropyLoss()
+
+epochs = 4
+Xtr_d, ytr_d = Xtr.to(device), ytr.to(device)
+for epoch in range(epochs):
+    model.train()
+    optimizer.zero_grad()
+    loss = criterion(model(Xtr_d), ytr_d)
+    loss.backward()
+    optimizer.step()
+    print(f'epoch {epoch} loss {loss.item():.4f}')
+
+model.eval()
+with torch.no_grad():
+    pred = model(Xte.to(device)).argmax(1).cpu().numpy()
+pd.DataFrame({'id': te['id'].values, 'label': pred}).to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+[?2004hroot@3c4a8bce5752:/workspace# pip list | grep torch-geometric
+[?2004ltorch-geometric          2.8.0.post1
+[?2004hroot@3c4a8bce5752:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.nn.functional as F
+[?2004l[?2004h> from torch_geometric.nn import SAGEConv
+[?2004l[?2004h> from torch_geometric.data import Data
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> feat = np.load('node_features.npy').astype(np.float32)
+[?2004l[?2004h> edges_np = np.load('edges.npy')
+[?2004l[?2004h> tr = pd.read_csv('train.csv')
+[?2004l[?2004h> te = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Create PyG Data object
+[?2004l[?2004h> x = torch.tensor(feat, dtype=torch.float)
+[?2004l[?2004h> edge_index = torch.tensor(edges_np, dtype=torch.long).t().contiguous()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Use all nodes in the graph for the message passing
+[?2004l[?2004h> data = Data(x=x, edge_index=edge_index)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Labels: Need to handle the fact that not all nodes are in the train set
+[?2004l[?2004h> # We initialize labels with -1 and fill in the training labels
+[?2004l[?2004h> n_nodes = feat.shape[0]
+[?2004l[?2004h> all_labels = torch.full((n_nodes,), -1, dtype=torch.long)
+[?2004l[?2004h> all_labels[tr['id'].values] = torch.tensor(tr['label'].values, dtype=torch.long)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training mask
+[?2004l[?2004h> train_mask = torch.zeros(n_nodes, dtype=torch.bool)
+[?2004l[?2004h> train_mask[tr['id'].values] = True
+[?2004l[?2004h> 
+[?2004l[?2004h> # Test IDs
+[?2004l[?2004h> test_ids = te['id'].values
+[?2004l[?2004h> 
+[?2004l[?2004h> n_classes = int(tr['label'].max()) + 1
+[?2004l[?2004h> 
+[?2004l[?2004h> class SAGE(nn.Module):
+[?2004l[?2004h>     def __init__(self, in_dim, hidden, out_dim):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         self.conv1 = SAGEConv(in_dim, hidden)
+[?2004l[?2004h>         self.conv2 = SAGEConv(hidden, out_dim)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, x, edge_index):
+[?2004l[?2004h>         x = self.conv1(x, edge_index)
+[?2004l[?2004h>         x = F.relu(x)
+[?2004l[?2004h>         x = F.dropout(x, p=0.5, training=self.training)
+[?2004l[?2004h>         x = self.conv2(x, edge_index)
+[?2004l[?2004h>         return x
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SAGE(feat.shape[1], 256, n_classes).to(DEVICE)
+[?2004l[?2004h> optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+[?2004l[?2004h> criterion = nn.CrossEntropyLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Move data to device
+[?2004l[?2004h> data = data.to(DEVICE)
+[?2004l[?2004h> all_labels = all_labels.to(DEVICE)
+[?2004l[?2004h> train_mask = train_mask.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> epochs = 10
+[?2004l[?2004h> for epoch in range(epochs):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     out = model(data.x, data.edge_index)
+[?2004l[?2004h>     # Only calculate loss for training nodes
+[?2004l[?2004h>     loss = criterion(out[train_mask], all_labels[train_mask])
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     print(f'epoch {epoch} loss {loss.item():.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     out = model(data.x, data.edge_index)
+[?2004l[?2004h>     pred = out[test_ids].argmax(1).cpu().numpy()
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'id': test_ids, 'label': pred}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3c4a8bce5752:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:29: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  all_labels[tr['id'].values] = torch.tensor(tr['label'].values, dtype=torch.long)
+Traceback (most recent call last):
+  File "/workspace/train.py", line 66, in <module>
+    out = model(data.x, data.edge_index)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/train.py", line 47, in forward
+    x = self.conv1(x, edge_index)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch_geometric/nn/conv/sage_conv.py", line 134, in forward
+    out = self.propagate(edge_index, x=x, size=size)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/torch_geometric.nn.conv.sage_conv_SAGEConv_propagate_k5mvkcau.py", line 128, in propagate
+    mutable_size = self._check_input(edge_index, size)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch_geometric/nn/conv/message_passing.py", line 238, in _check_input
+    raise ValueError(f"Expected 'edge_index' to have size '2' in "
+ValueError: Expected 'edge_index' to have size '2' in the first dimension (got '1166243')
+[?2004hroot@3c4a8bce5752:/workspace# python3 -c "import numpy as np; print(np.load('edges.npy').shape)"
+[?2004l(2, 1166243)
+[?2004hroot@3c4a8bce5752:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.nn.functional as F
+[?2004l[?2004h> from torch_geometric.nn import SAGEConv
+[?2004l[?2004h> from torch_geometric.data import Data
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> feat = np.load('node_features.npy').astype(np.float32)
+[?2004l[?2004h> edges_np = np.load('edges.npy')
+[?2004l[?2004h> tr = pd.read_csv('train.csv')
+[?2004l[?2004h> te = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Create PyG Data object
+[?2004l[?2004h> x = torch.from_numpy(feat)
+[?2004l[?2004h> # Ensure edge_index is [2, num_edges]
+[?2004l[?2004h> edge_index = torch.from_numpy(edges_np).long()
+[?2004l[?2004h> if edge_index.shape[0] != 2:
+[?2004l[?2004h>     edge_index = edge_index.t().contiguous()
+[?2004l[?2004h> 
+[?2004l[?2004h> data = Data(x=x, edge_index=edge_index)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Labels
+[?2004l[?2004h> n_nodes = feat.shape[0]
+[?2004l[?2004h> all_labels = torch.full((n_nodes,), -1, dtype=torch.long)
+[?2004l[?2004h> all_labels[tr['id'].values] = torch.tensor(tr['label'].values.values, dtype=torch.long) if hasattr(tr['label'], 'values') else torch.tensor(tr['label'].values, dtype=torch.long)
+[?2004l[?2004h> # Actually, let's just use a simpler way to assign labels
+[?2004l[?2004h> train_ids = tr['id'].values
+[?2004l[?2004h> train_labels = tr['label'].values
+[?2004l[?2004h> all_labels = torch.full((n_nodes,), -1, dtype=torch.long)
+[?2004l[?2004h> all_labels[train_ids] = torch.tensor(train_labels, dtype=torch.long)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training mask
+[?2004l[?2004h> train_mask = torch.zeros(n_nodes, dtype=torch.bool)
+[?2004l[?2004h> train_mask[train_ids] = True
+[?2004l[?2004h> 
+[?2004l[?2004h> # Test IDs
+[?2004l[?2004h> test_ids = te['id'].values
+[?2004l[?2004h> 
+[?2004l[?2004h> n_classes = int(tr['label'].max()) + 1
+[?2004l[?2004h> 
+[?2004l[?2004h> class SAGE(nn.Module):
+[?2004l[?2004h>     def __init__(self, in_dim, hidden, out_dim):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         self.conv1 = SAGEConv(in_dim, hidden)
+[?2004l[?2004h>         self.conv2 = SAGEConv(hidden, out_dim)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, x, edge_index):
+[?2004l[?2004h>         x = self.conv1(x, edge_index)
+[?2004l[?2004h>         x = F.relu(x)
+[?2004l[?2004h>         x = F.dropout(x, p=0.5, training=self.training)
+[?2004l[?2004h>         x = self.conv2(x, edge_index)
+[?2004l[?2004h>         return x
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SAGE(feat.shape[1], 256, n_classes).to(DEVICE)
+[?2004l[?2004h> optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+[?2004l[?2004h> criterion = nn.CrossEntropyLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> data = data.to(DEVICE)
+[?2004l[?2004h> all_labels = all_labels.to(DEVICE)
+[?2004l[?2004h> train_mask = train_mask.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> epochs = 10
+[?2004l[?2004h> for epoch in range(epochs):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     out = model(data.x, data.edge_index)
+[?2004l[?2004h>     loss = criterion(out[train_mask], all_labels[train_mask])
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     print(f'epoch {epoch} loss {loss.item():.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     out = model(data.x, data.edge_index)
+[?2004l[?2004h>     pred = out[test_ids].argmax(1).cpu().numpy()
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'id': test_ids, 'label': pred}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3c4a8bce5752:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Traceback (most recent call last):
+  File "/workspace/train.py", line 30, in <module>
+    all_labels[tr['id'].values] = torch.tensor(tr['label'].values.values, dtype=torch.long) if hasattr(tr['label'], 'values') else torch.tensor(tr['label'].values, dtype=torch.long)
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'numpy.ndarray' object has no attribute 'values'
+[?2004hroot@3c4a8bce5752:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.nn.functional as F
+[?2004l[?2004h> from torch_geometric.nn import SAGEConv
+[?2004l[?2004h> from torch_geometric.data import Data
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> feat = np.load('node_features.npy').astype(np.float32)
+[?2004l[?2004h> edges_np = np.load('edges.npy')
+[?2004l[?2004h> tr = pd.read_csv('train.csv')
+[?2004l[?2004h> te = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Create PyG Data object
+[?2004l[?2004h> x = torch.from_numpy(feat)
+[?2004l[?2004h> edge_index = torch.from_numpy(edges_np).long()
+[?2004l[?2004h> if edge_index.shape[0] != 2:
+[?2004l[?2004h>     edge_index = edge_index.t().contiguous()
+[?2004l[?2004h> 
+[?2004l[?2004h> data = Data(x=x, edge_index=edge_index)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Labels and masks
+[?2004l[?2004h> n_nodes = feat.shape[0]
+[?2004l[?2004h> train_ids = tr['id'].values
+[?2004l[?2004h> train_labels = tr['label'].values
+[?2004l[?2004h> 
+[?2004l[?2004h> all_labels = torch.full((n_nodes,), -1, dtype=torch.long)
+[?2004l[?2004h> all_labels[train_ids] = torch.tensor(train_labels, dtype=torch.long)
+[?2004l[?2004h> 
+[?2004l[?2004h> train_mask = torch.zeros(n_nodes, dtype=torch.bool)
+[?2004l[?2004h> train_mask[train_ids] = True
+[?2004l[?2004h> 
+[?2004l[?2004h> test_ids = te['id'].values
+[?2004l[?2004h> n_classes = int(tr['label'].max()) + 1
+[?2004l[?2004h> 
+[?2004l[?2004h> class SAGE(nn.Module):
+[?2004l[?2004h>     def __init__(self, in_dim, hidden, out_dim):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         self.conv1 = SAGEConv(in_dim, hidden)
+[?2004l[?2004h>         self.conv2 = SAGEConv(hidden, out_dim)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, x, edge_index):
+[?2004l[?2004h>         x = self.conv1(x, edge_index)
+[?2004l[?2004h>         x = F.relu(x)
+[?2004l[?2004h>         x = F.dropout(x, p=0.5, training=self.training)
+[?2004l[?2004h>         x = self.conv2(x, edge_index)
+[?2004l[?2004h>         return x
+[?2004l[?2004h> 
+[?2004l[?2004h> model = SAGE(feat.shape[1], 256, n_classes).to(DEVICE)
+[?2004l[?2004h> optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
+[?2004l[?2004h> criterion = nn.CrossEntropyLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> data = data.to(DEVICE)
+[?2004l[?2004h> all_labels = all_labels.to(DEVICE)
+[?2004l[?2004h> train_mask = train_mask.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> epochs = 10
+[?2004l[?2004h> for epoch in range(epochs):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     out = model(data.x, data.edge_index)
+[?2004l[?2004h>     loss = criterion(out[train_mask], all_labels[train_mask])
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h>     print(f'epoch {epoch} loss {loss.item():.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     out = model(data.x, data.edge_index)
+[?2004l[?2004h>     pred = out[test_ids].argmax(1).cpu().numpy()
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'id': test_ids, 'label': pred}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3c4a8bce5752:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:32: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:206.)
+  all_labels[train_ids] = torch.tensor(train_labels, dtype=torch.long)
+epoch 0 loss 3.6903
+epoch 1 loss 3.1554
+epoch 2 loss 3.3233
+epoch 3 loss 3.0466
+epoch 4 loss 2.9943
+epoch 5 loss 2.9388
+epoch 6 loss 2.8253
+epoch 7 loss 2.7219
+epoch 8 loss 2.6687
+epoch 9 loss 2.5680
+wrote submission.csv
+[?2004hroot@3c4a8bce5752:/workspace# 

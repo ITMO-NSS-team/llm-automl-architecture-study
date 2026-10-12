@@ -1,0 +1,125 @@
+{
+    "id": "bca32d57-5190-4b52-a551-649726818aa0",
+    "started_at": "2026-08-30T16:59:18.387129",
+    "updated_at": "2026-08-30T19:25:15.163175",
+    "finished_at": "2026-08-30T19:25:15.163175",
+    "n_total_trials": 24,
+    "stats": {
+        "n_completed_trials": 24,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "terminus-2__google/gemma-4-31b-it__tabred-kboth": {
+                "n_trials": 24,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "reward": 0.37028267623300937,
+                        "rmse": 0.20325630703132544,
+                        "roc_auc": 0.14449499254889442
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.8635503910374048": [
+                            "homecredit-default__J9G9nKw"
+                        ],
+                        "0.0": [
+                            "cooking-time__zfXNdQK",
+                            "weather__RpUsFwD",
+                            "delivery-eta__QEmiuoW",
+                            "homesite-insurance__RiTnNDD",
+                            "homecredit-default__iNeaij6",
+                            "cooking-time__pTzgieF",
+                            "sberbank-housing__QcQstnx",
+                            "homesite-insurance__7acsefp",
+                            "cooking-time__WSMQzd5",
+                            "maps-routing__AssksYu",
+                            "homesite-insurance__9mjfjof"
+                        ],
+                        "0.5799913674546233": [
+                            "ecom-offers__CFNgSA4"
+                        ],
+                        "0.860645830038881": [
+                            "maps-routing__z3pDqRU",
+                            "maps-routing__iTaSr2b"
+                        ],
+                        "0.7990683451592648": [
+                            "sberbank-housing__ALqmgi3",
+                            "sberbank-housing__EDTVGFH"
+                        ],
+                        "0.403508532242396": [
+                            "weather__EZ5o3gs"
+                        ],
+                        "0.5799700461374829": [
+                            "ecom-offers__iW497Ah"
+                        ],
+                        "0.6462098525066309": [
+                            "delivery-eta__puoF5nm"
+                        ],
+                        "0.864393764413252": [
+                            "homecredit-default__uZEjQtY"
+                        ],
+                        "0.40350857519096933": [
+                            "weather__MNtZ24U"
+                        ],
+                        "0.5799742521307027": [
+                            "ecom-offers__wtStWHt"
+                        ],
+                        "0.6462490980824714": [
+                            "delivery-eta__xahGiGo"
+                        ]
+                    },
+                    "roc_auc": {
+                        "0.8635503910374048": [
+                            "homecredit-default__J9G9nKw"
+                        ],
+                        "0.5799913674546233": [
+                            "ecom-offers__CFNgSA4"
+                        ],
+                        "0.5799700461374829": [
+                            "ecom-offers__iW497Ah"
+                        ],
+                        "0.864393764413252": [
+                            "homecredit-default__uZEjQtY"
+                        ],
+                        "0.5799742521307027": [
+                            "ecom-offers__wtStWHt"
+                        ]
+                    },
+                    "rmse": {
+                        "0.16191813763255386": [
+                            "maps-routing__z3pDqRU",
+                            "maps-routing__iTaSr2b"
+                        ],
+                        "0.25145740794010163": [
+                            "sberbank-housing__ALqmgi3",
+                            "sberbank-housing__EDTVGFH"
+                        ],
+                        "1.478262341672813": [
+                            "weather__EZ5o3gs"
+                        ],
+                        "0.5474849170451774": [
+                            "delivery-eta__puoF5nm"
+                        ],
+                        "1.4782620778919702": [
+                            "weather__MNtZ24U"
+                        ],
+                        "0.547390940996539": [
+                            "delivery-eta__xahGiGo"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 52420493,
+        "n_cache_tokens": 50552320,
+        "n_output_tokens": 343975,
+        "cost_usd": 2.8135380399999996
+    }
+}

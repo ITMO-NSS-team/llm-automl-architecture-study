@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task": {
+    "name": "identify-contrails",
+    "type": "local",
+    "digest": "sha256:7ff8232bb99272b2f69126887d1f78a68dcd561660a0f79c9311311857ff3ddd",
+    "source": "mlab-protocol",
+    "path": "harbor-datasets-mlab/datasets/mlab-protocol/identify-contrails",
+    "git_url": null,
+    "git_commit_id": null
+  },
+  "install_only": false,
+  "timeout_multiplier": 1.0,
+  "agent": {
+    "name": "autods",
+    "model_name": "openrouter/google/gemma-4-31b-it",
+    "skills": [],
+    "extra_allowed_hosts": [],
+    "kwargs": {
+      "temperature": 0.2
+    },
+    "mcp_servers": []
+  },
+  "skills": [],
+  "environment": {
+    "type": null,
+    "import_path": null,
+    "force_build": false,
+    "delete": true,
+    "extra_docker_compose": [],
+    "kwargs": {},
+    "extra_allowed_hosts": []
+  },
+  "verifier": {
+    "disable": false
+  }
+}

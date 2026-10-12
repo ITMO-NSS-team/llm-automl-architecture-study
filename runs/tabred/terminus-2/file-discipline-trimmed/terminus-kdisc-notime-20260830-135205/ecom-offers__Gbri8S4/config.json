@@ -1,0 +1,13 @@
+{
+    "task": {
+        "path": "datasets/tabred-kdisc-notime/ecom-offers",
+        "source": "tabred-kdisc-notime"
+    },
+    "trial_name": "ecom-offers__Gbri8S4",
+    "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-kdisc-notime-20260830-135205",
+    "agent": {
+        "name": "terminus-2",
+        "model_name": "openrouter/google/gemma-4-31b-it"
+    },
+    "job_id": "76672fb2-1068-4052-ab76-9a74ad2c657d"
+}

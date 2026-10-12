@@ -1,0 +1,36 @@
+case,harness,cell,trial,counted,outcome,pearson_r,norm_rmse,r2,accuracy,balanced_accuracy,f1,mae,minutes_agent,path
+maize-yield,autods-tools,text-with-library-section,maize-yield__crg5riv,yes,scored,0.563619,1.003731,-0.007475,,,,,13.9,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/maize-yield__crg5riv
+maize-yield,autods-tools,text-with-library-section,maize-yield__ieFaKAX,no,error,,,,,,,,,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/maize-yield__ieFaKAX
+maize-yield,autods-tools,text-with-library-section,maize-yield__zzJe2ed,yes,scored,0.535805,0.965781,0.067266,,,,,16.4,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/maize-yield__zzJe2ed
+maize-yield,autods-tools,text-with-library-section,maize-yield__hYcCDmJ,yes,scored,0.615848,0.972600,0.054049,,,,,14.1,runs/case-studies/autods-tools/text-with-library-section/autods-cases-top-20260924-164757/maize-yield__hYcCDmJ
+maize-yield,fedot-llm,text-plain,maize-yield__9RJMazG,yes,scored,0.602773,0.848280,0.280421,,,,,52.8,runs/case-studies/fedot-llm/text-plain/fedot-plain-20260910-114632/maize-yield__9RJMazG
+maize-yield,fedot-llm,text-plain,maize-yield__vowJM3u,yes,scored,0.579230,0.864998,0.251778,,,,,52.1,runs/case-studies/fedot-llm/text-plain/fedot-plain-20260910-114632/maize-yield__vowJM3u
+maize-yield,fedot-llm,text-plain,maize-yield__zF2RHx7,yes,scored,0.578138,0.866034,0.249985,,,,,57.0,runs/case-studies/fedot-llm/text-plain/fedot-plain-20260910-114632/maize-yield__zF2RHx7
+maize-yield,terminus-2,text-plain,maize-yield__Bvr8Khf,yes,scored,0.635760,0.812801,0.339355,,,,,0.8,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/maize-yield__Bvr8Khf
+maize-yield,terminus-2,text-plain,maize-yield__UqitPYf,yes,no submission,,,,,,,,3.2,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/maize-yield__UqitPYf
+maize-yield,terminus-2,text-plain,maize-yield__y9P3UE3,yes,scored,0.674405,0.770523,0.406294,,,,,2.1,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/maize-yield__y9P3UE3
+maize-yield,terminus-2,text-with-library-section,maize-yield__Egdtyph,yes,no submission,,,,,,,,3.4,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/maize-yield__Egdtyph
+maize-yield,terminus-2,text-with-library-section,maize-yield__VLKDXs9,yes,no submission,,,,,,,,5.5,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/maize-yield__VLKDXs9
+maize-yield,terminus-2,text-with-library-section,maize-yield__owBUTPo,yes,no submission,,,,,,,,4.0,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/maize-yield__owBUTPo
+fdata-exit,autods-tools,text-with-library-section,fdata-exit__5HQKyy5,yes,scored,,,,0.920499,0.704370,0.956324,,21.8,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/fdata-exit__5HQKyy5
+fdata-exit,autods-tools,text-with-library-section,fdata-exit__PrzD9CM,yes,scored,,,,0.920115,0.677490,0.956455,,18.3,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/fdata-exit__PrzD9CM
+fdata-exit,autods-tools,text-with-library-section,fdata-exit__uktenG3,yes,scored,,,,0.920115,0.677490,0.956455,,20.1,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/fdata-exit__uktenG3
+fdata-exit,fedot-llm,text-plain,fdata-exit__DcfUAFQ,yes,scored,,,,0.951787,0.852961,0.972904,,45.7,runs/case-studies/fedot-llm/text-plain/fedot-plain-20260910-114632/fdata-exit__DcfUAFQ
+fdata-exit,fedot-llm,text-plain,fdata-exit__Ut2xwKj,yes,scored,,,,0.951787,0.852961,0.972904,,42.7,runs/case-studies/fedot-llm/text-plain/fedot-plain-20260910-114632/fdata-exit__Ut2xwKj
+fdata-exit,fedot-llm,text-plain,fdata-exit__aiyYyNK,yes,scored,,,,0.951787,0.852961,0.972904,,45.4,runs/case-studies/fedot-llm/text-plain/fedot-plain-20260910-114632/fdata-exit__aiyYyNK
+fdata-exit,terminus-2,text-plain,fdata-exit__RVvW8pZ,yes,scored,,,,0.922038,0.716404,0.957060,,0.4,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/fdata-exit__RVvW8pZ
+fdata-exit,terminus-2,text-plain,fdata-exit__rNjbSkH,yes,scored,,,,0.922038,0.716094,0.957064,,1.1,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/fdata-exit__rNjbSkH
+fdata-exit,terminus-2,text-plain,fdata-exit__vguzt7b,yes,scored,,,,0.922551,0.714215,0.957387,,1.7,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/fdata-exit__vguzt7b
+fdata-exit,terminus-2,text-with-library-section,fdata-exit__CpXJFYQ,yes,no submission,,,,,,,,2.5,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/fdata-exit__CpXJFYQ
+fdata-exit,terminus-2,text-with-library-section,fdata-exit__i6CFzNC,yes,no submission,,,,,,,,1.5,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/fdata-exit__i6CFzNC
+fdata-exit,terminus-2,text-with-library-section,fdata-exit__norbcbv,yes,no submission,,,,,,,,4.7,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/fdata-exit__norbcbv
+openpoly-tg,autods-tools,text-with-library-section,openpoly-tg__8tdX4XW,yes,scored,0.750986,,0.556093,,,,37.920013,11.4,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/openpoly-tg__8tdX4XW
+openpoly-tg,autods-tools,text-with-library-section,openpoly-tg__k9C26DF,yes,scored,0.724675,,0.518430,,,,37.934315,13.1,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/openpoly-tg__k9C26DF
+openpoly-tg,autods-tools,text-with-library-section,openpoly-tg__sdS8APc,no,error,,,,,,,,,runs/case-studies/autods-tools/text-with-library-section/autods-cases-20260924-152108/openpoly-tg__sdS8APc
+openpoly-tg,autods-tools,text-with-library-section,openpoly-tg__ZJhxo6d,yes,scored,0.724345,,0.512330,,,,43.309020,34.2,runs/case-studies/autods-tools/text-with-library-section/autods-cases-top-20260924-164757/openpoly-tg__ZJhxo6d
+openpoly-tg,terminus-2,text-plain,openpoly-tg__8f5GRNj,yes,scored,0.759972,,0.566729,,,,37.677543,4.8,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/openpoly-tg__8f5GRNj
+openpoly-tg,terminus-2,text-plain,openpoly-tg__9b7Soxi,yes,scored,0.692179,,0.475295,,,,42.458375,1.1,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/openpoly-tg__9b7Soxi
+openpoly-tg,terminus-2,text-plain,openpoly-tg__UTuRT9P,yes,no submission,,,,,,,,3.2,runs/case-studies/terminus-2/text-plain/terminus-cases-plain-20260910-100339/openpoly-tg__UTuRT9P
+openpoly-tg,terminus-2,text-with-library-section,openpoly-tg__DC3fg9E,yes,no submission,,,,,,,,1.7,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/openpoly-tg__DC3fg9E
+openpoly-tg,terminus-2,text-with-library-section,openpoly-tg__McyXeko,yes,no submission,,,,,,,,3.0,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/openpoly-tg__McyXeko
+openpoly-tg,terminus-2,text-with-library-section,openpoly-tg__WuDivuW,yes,no submission,,,,,,,,2.6,runs/case-studies/terminus-2/text-with-library-section/terminus-cases-20260910-100938/openpoly-tg__WuDivuW

@@ -1,0 +1,7 @@
+>> LOCAL maps-routing from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/maps-routing
+>> RUN maps-routing/c1 (family=tabular)  01:47:43
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 22 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/maps-routing-c1/trace.json
+>> SCORE maps-routing/c1 (answer: answer.csv)
+{"reward": 0.7961019533931948, "r2": 0.7961019533931948, "rmse": 0.16572566929638596, "n": 10000}

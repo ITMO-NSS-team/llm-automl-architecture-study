@@ -1,0 +1,7 @@
+>> LOCAL spaceship-titanic from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/spaceship-titanic
+>> RUN spaceship-titanic/base (family=tabular)  01:18:15
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 27 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/spaceship-titanic-base/trace.json
+>> SCORE spaceship-titanic/base (answer: answer.csv)
+{"reward": 0.8102652825836217, "accuracy": 0.8102652825836217, "n": 1734}

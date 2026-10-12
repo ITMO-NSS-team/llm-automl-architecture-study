@@ -1,0 +1,264 @@
+[?2004hroot@dc20e3abb9a3:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@dc20e3abb9a3:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@dc20e3abb9a3:/workspace# ls -la /app/data
+[?2004ltotal 49688
+drwxr-xr-x 2 root root     4096 Aug 27 21:13 .
+drwxr-xr-x 3 root root     4096 Aug 28 15:18 ..
+-rw-rw-r-- 1 root root     2024 Aug 27 21:13 schema.json
+-rw-rw-r-- 1 root root  8472468 Aug 27 21:13 test.csv
+-rw-rw-r-- 1 root root 34210043 Aug 27 21:13 train.csv
+-rw-rw-r-- 1 root root  8176089 Aug 27 21:13 val.csv
+[?2004hroot@dc20e3abb9a3:/workspace# head -n 5 /app/data/train.csv
+[?2004lnum_0,num_1,num_2,num_3,num_4,num_5,num_6,num_7,num_8,num_9,num_10,num_11,num_12,num_13,num_14,num_15,num_16,num_17,num_18,num_19,num_20,num_21,num_22,num_23,num_24,num_25,num_26,num_27,num_28,num_29,num_30,num_31,num_32,num_33,num_34,num_35,num_36,num_37,num_38,num_39,num_40,num_41,num_42,num_43,num_44,num_45,num_46,num_47,num_48,num_49,num_50,num_51,num_52,num_53,num_54,num_55,num_56,num_57,num_58,num_59,num_60,num_61,num_62,num_63,num_64,num_65,num_66,num_67,num_68,num_69,num_70,num_71,num_72,num_73,num_74,num_75,num_76,num_77,num_78,num_79,num_80,num_81,num_82,num_83,num_84,num_85,num_86,num_87,num_88,num_89,num_90,num_91,num_92,num_93,num_94,num_95,num_96,num_97,num_98,num_99,num_100,num_101,num_102,num_103,num_104,num_105,num_106,num_107,num_108,num_109,num_110,num_111,num_112,bin_0,bin_1,bin_2,bin_3,bin_4,bin_5,target
+2126.33008,1,5,1,60,0,0,0,1,2,3.98000002,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0
+1982.91003,1,5,1,60,0,0,0,2,2,4.67999983,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1
+2016.95996,1,5,1,60,0,0,0,1,1,0.99000001,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0
+705.580017,1,5,1,60,0,0,0,5,6,7.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1
+[?2004hroot@dc20e3abb9a3:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> from lightautoml.automl.presets.tabular_presets import TabularAutoML
+[?2004l[?2004h> from lightautoml.tasks import Task
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Time Budget Allocation
+[?2004l[?2004h> print('BUDGET_ALLOCATION: Exploration: 5m, Training: 2h, Finalization: 15m')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load Data
+[?2004l[?2004h> train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> TARGET_COLUMN = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline
+[?2004l[?2004h> # Predict the mean of target for all rows
+[?2004l[?2004h> baseline_pred = np.full(len(val_df), train_df[TARGET_COLUMN].mean())
+[?2004l[?2004h> baseline_score = roc_auc_score(val_df[TARGET_COLUMN], baseline_pred)
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_SCORE={baseline_score}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # LightAutoML setup
+[?2004l[?2004h> task = Task('binary')
+[?2004l[?2004h> roles = {'target': TARGET_COLUMN}
+[?2004l[?2004h> # Setting a generous timeout for convergence
+[?2004l[?2004h> automl = TabularAutoML(task=task, timeout=3600)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Fit and predict on training/val for OOF
+[?2004l[?2004h> oof = automl.fit_predict(train_df, roles=roles)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Evaluate on validation set
+[?2004l[?2004h> val_preds = automl.predict(val_df).data.reshape(-1)
+[?2004l[?2004h> val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+[?2004l[?2004h> print(f'VALIDATION_SCORE={val_score}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Final check against baseline
+[?2004l[?2004h> if val_score <= baseline_score:
+[?2004l[?2004h>     print('Warning: Model did not beat baseline. Consider increasing budget or checking data.')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict on test set
+[?2004l[?2004h> pred = automl.predict(test_df).data.reshape(-1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Save predictions
+[?2004l[?2004h> submission = pd.DataFrame({'target': pred})
+[?2004l[?2004h> submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> 
+[?2004l[?2004h> print('MODEL_USED=', type(automl).__name__)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@dc20e3abb9a3:/workspace# python3 solution.py
+[?2004l'nlp' extra dependency package 'fasttext-numpy2' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'nltk' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'transformers' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+/usr/local/lib/python3.12/site-packages/lightautoml/ml_algo/dl_model.py:40: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/embed.py:24: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/dl_transformers.py:25: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+DEVICE= cpu
+BUDGET_ALLOCATION: Exploration: 5m, Training: 2h, Finalization: 15m
+TRIVIAL_BASELINE_SCORE=0.5
+ls -l /app/predictions.csv
+ps aux | grep python3
+C-c
+cat << 'EOF' > solution.py
+import pandas as pd
+import numpy as np
+import torch
+from sklearn.metrics import roc_auc_score
+from lightautoml.automl.presets.tabular_presets import TabularAutoML
+from lightautoml.tasks import Task
+
+# Hardware Resolution
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+# Time Budget Allocation
+print('BUDGET_ALLOCATION: Training: 15m, Finalization: 5m')
+
+# Load Data
+train_df = pd.read_csv('/app/data/train.csv')
+val_df = pd.read_csv('/app/data/val.csv')
+test_df = pd.read_csv('/app/data/test.csv')
+
+TARGET_COLUMN = 'target'
+
+# Trivial Baseline
+baseline_pred = np.full(len(val_df), train_df[TARGET_COLUMN].mean())
+baseline_score = roc_auc_score(val_df[TARGET_COLUMN], baseline_pred)
+print(f'TRIVIAL_BASELINE_SCORE={baseline_score}')
+
+# LightAutoML setup
+task = Task('binary')
+roles = {'target': TARGET_COLUMN}
+# Reduce timeout to ensure it finishes and prints results
+automl = TabularAutoML(task=task, timeout=600)
+
+# Fit and predict
+oof = automl.fit_predict(train_df, roles=roles)
+
+# Evaluate on validation set
+val_preds = automl.predict(val_df).data.reshape(-1)
+val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+print(f'VALIDATION_SCORE={val_score}')
+
+# Predict on test set
+pred = automl.predict(test_df).data.reshape(-1)
+
+# Save predictions
+submission = pd.DataFrame({'target': pred})
+submission.to_csv('/app/predictions.csv', index=False)
+
+print('MODEL_USED=', type(automl).__name__)
+EOF
+python3 solution.py
+C-c
+cat << 'EOF' > solution.py
+import pandas as pd
+import numpy as np
+import torch
+from sklearn.metrics import roc_auc_score
+from lightautoml.automl.presets.tabular_presets import TabularAutoML
+from lightautoml.tasks import Task
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+print('BUDGET_ALLOCATION: Training: 2m, Finalization: 1m')
+
+train_df = pd.read_csv('/app/data/train.csv')
+val_df = pd.read_csv('/app/data/val.csv')
+test_df = pd.read_csv('/app/data/test.csv')
+
+TARGET_COLUMN = 'target'
+baseline_pred = np.full(len(val_df), train_df[TARGET_COLUMN].mean())
+baseline_score = roc_auc_score(val_df[TARGET_COLUMN], baseline_pred)
+print(f'TRIVIAL_BASELINE_SCORE={baseline_score}')
+
+task = Task('binary')
+roles = {'target': TARGET_COLUMN}
+# Extremely short timeout to ensure we get an output
+automl = TabularAutoML(task=task, timeout=120)
+
+# Use a subset of data if necessary to speed up training and prove the pipeline works
+# However, I will first try the full dataset with a short timeout
+try:
+    oof = automl.fit_predict(train_df, roles=roles)
+    val_preds = automl.predict(val_df).data.reshape(-1)
+    val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+    print(f'VALIDATION_SCORE={val_score}')
+    pred = automl.predict(test_df).data.reshape(-1)
+except Exception as e:
+    print(f'Error during fit: {e}')
+    # Fallback to trivial baseline predictions if fit fails
+    pred = np.full(len(test_df), train_df[TARGET_COLUMN].mean())
+
+submission = pd.DataFrame({'target': pred})
+submission.to_csv('/app/predictions.csv', index=False)
+print('MODEL_USED=', type(automl).__name__)
+EOF
+python3 solution.py
+pkill -9 python3
+python3 -u solution.py
+VALIDATION_SCORE=0.620618996255683
+MODEL_USED= TabularAutoML
+[?2004hroot@dc20e3abb9a3:/workspace# ls -l /app/predictions.csv
+[?2004l-rw-r--r-- 1 root root 287153 Aug 30 17:18 /app/predictions.csv
+[?2004hroot@dc20e3abb9a3:/workspace# ps aux | grep python3
+[?2004lbash: ps: command not found
+[?2004hroot@dc20e3abb9a3:/workspace# C-c
+[?2004lbash: C-c: command not found
+[?2004hroot@dc20e3abb9a3:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from sklearn.metrics import roc_auc_score
+[?2004l[?2004h> from lightautoml.automl.presets.tabular_presets import TabularAutoML
+[?2004l[?2004h> from lightautoml.tasks import Task
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Time Budget Allocation
+[?2004l[?2004h> print('BUDGET_ALLOCATION: Training: 15m, Finalization: 5m')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load Data
+[?2004l[?2004h> train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> TARGET_COLUMN = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline
+[?2004l[?2004h> baseline_pred = np.full(len(val_df), train_df[TARGET_COLUMN].mean())
+[?2004l[?2004h> baseline_score = roc_auc_score(val_df[TARGET_COLUMN], baseline_pred)
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_SCORE={baseline_score}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # LightAutoML setup
+[?2004l[?2004h> task = Task('binary')
+[?2004l[?2004h> roles = {'target': TARGET_COLUMN}
+[?2004l[?2004h> # Reduce timeout to ensure it finishes and prints results
+[?2004l[?2004h> automl = TabularAutoML(task=task, timeout=600)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Fit and predict
+[?2004l[?2004h> oof = automl.fit_predict(train_df, roles=roles)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Evaluate on validation set
+[?2004l[?2004h> val_preds = automl.predict(val_df).data.reshape(-1)
+[?2004l[?2004h> val_score = roc_auc_score(val_df[TARGET_COLUMN], val_preds)
+[?2004l[?2004h> print(f'VALIDATION_SCORE={val_score}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Predict on test set
+[?2004l[?2004h> pred = automl.predict(test_df).data.reshape(-1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Save predictions
+[?2004l[?2004h> submission = pd.DataFrame({'target': pred})
+[?2004l[?2004h> submission.to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> 
+[?2004l[?2004h> print('MODEL_USED=', type(automl).__name__)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@dc20e3abb9a3:/workspace# python3 solution.py
+[?2004l'nlp' extra dependency package 'fasttext-numpy2' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'nltk' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'transformers' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+/usr/local/lib/python3.12/site-packages/lightautoml/ml_algo/dl_model.py:40: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/embed.py:24: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/dl_transformers.py:25: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+DEVICE= cpu
+BUDGET_ALLOCATION: Training: 15m, Finalization: 5m
+TRIVIAL_BASELINE_SCORE=0.5
+C-c
+ls -l /app/predictions.csv

@@ -1,0 +1,7 @@
+>> LOCAL identify-contrails from /Users/danilezov/mlab-protocol/datasets/mlab-protocol/identify-contrails
+>> RUN identify-contrails/base (family=vision)  04:11:19
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 26 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/identify-contrails-base/trace.json
+>> SCORE identify-contrails/base (answer: answer.csv)
+{'reward': 0.0005777722751846808, 'dice': 0.0005777722751846808, 'matched_ids': 32.0, 'n': 32.0}

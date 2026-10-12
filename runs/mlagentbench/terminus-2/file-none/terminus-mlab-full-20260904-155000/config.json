@@ -1,0 +1,26 @@
+{
+    "job_name": "terminus-mlab-full-20260904-155000",
+    "jobs_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs",
+    "n_attempts": 3,
+    "agents": [
+        {
+            "name": "terminus-2",
+            "model_name": "openrouter/google/gemma-4-31b-it"
+        }
+    ],
+    "datasets": [
+        {
+            "path": "datasets/mlab",
+            "task_names": [
+                "amp-parkinsons",
+                "clrs",
+                "fathomnet",
+                "feedback",
+                "house-price",
+                "identify-contrails",
+                "ogbn-arxiv",
+                "spaceship-titanic"
+            ]
+        }
+    ]
+}

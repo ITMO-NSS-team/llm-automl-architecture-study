@@ -1,0 +1,49 @@
+{
+    "id": "484d1333-5930-4930-a109-02754579185d",
+    "started_at": "2026-09-04T09:09:52.087552",
+    "updated_at": "2026-09-04T11:14:04.879886Z",
+    "finished_at": null,
+    "n_total_trials": 6,
+    "stats": {
+        "n_completed_trials": 4,
+        "n_errored_trials": 4,
+        "n_running_trials": 2,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "autods__gemma-4-31b-it__mlab": {
+                "n_trials": 4,
+                "n_errors": 4,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "imdb__FboNRuj",
+                            "cifar10__NwJu2ak",
+                            "imdb__BVqTMiD",
+                            "cifar10__mBNVKPy"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "imdb__FboNRuj",
+                        "cifar10__NwJu2ak",
+                        "imdb__BVqTMiD",
+                        "cifar10__mBNVKPy"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null
+    }
+}

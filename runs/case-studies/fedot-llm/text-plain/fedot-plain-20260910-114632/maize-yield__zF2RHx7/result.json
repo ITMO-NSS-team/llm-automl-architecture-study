@@ -1,0 +1,125 @@
+{
+    "id": "691ffb18-2128-4b80-b0c6-60c051b82407",
+    "task_name": "cases-fedot-plain/maize-yield",
+    "trial_name": "maize-yield__zF2RHx7",
+    "trial_uri": "file:///var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/fedot-plain-20260910-114632/maize-yield__zF2RHx7",
+    "task_id": {
+        "path": "datasets/cases-fedot-plain/maize-yield"
+    },
+    "source": "cases-fedot-plain",
+    "task_checksum": "b8727b690422f5fcccb5f0bfca7eaaad37cc557453140575b99ebeff7648f03f",
+    "config": {
+        "task": {
+            "path": "datasets/cases-fedot-plain/maize-yield",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "cases-fedot-plain"
+        },
+        "trial_name": "maize-yield__zF2RHx7",
+        "trials_dir": "../jobs/fedot-plain-20260910-114632",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "fedot_harbor.agent:FedotLLMAgent",
+            "import_path": null,
+            "model_name": "openrouter/google/gemma-4-31b-it",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "e1a811e8-b46e-47fd-bf85-89dfe063d4f4",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "fedotllm",
+        "version": "fedotllm",
+        "model_info": {
+            "name": "google/gemma-4-31b-it",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": null,
+        "n_cache_tokens": null,
+        "n_output_tokens": null,
+        "cost_usd": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.24998546013822154,
+            "r2": 0.24998546013822154,
+            "rmse": 43.44304238319531,
+            "norm_rmse": 0.8660337983368653,
+            "pearson_r": 0.5781377561977575,
+            "n": 4240,
+            "baseline_dnn_norm_rmse": 0.948,
+            "baseline_dnn_pearson_r": 0.426,
+            "baseline_blup_pearson_r": 0.461
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-09-10T11:46:35.271565Z",
+    "finished_at": "2026-09-10T12:44:18.319959Z",
+    "environment_setup": {
+        "started_at": "2026-09-10T11:46:36.808370Z",
+        "finished_at": "2026-09-10T11:46:54.304256Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-10T11:46:54.304306Z",
+        "finished_at": "2026-09-10T11:47:06.773918Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-10T11:47:06.774020Z",
+        "finished_at": "2026-09-10T12:44:06.178949Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-10T12:44:06.791378Z",
+        "finished_at": "2026-09-10T12:44:07.335095Z"
+    },
+    "step_results": null
+}

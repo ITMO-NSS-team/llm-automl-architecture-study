@@ -1,0 +1,155 @@
+[?2004hroot@242da9965cba:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@242da9965cba:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@242da9965cba:/workspace# ls -la
+[?2004ltotal 8832
+drwxr-xr-x 2 root root    4096 Sep  3 11:48 .
+drwxr-xr-x 1 root root    4096 Sep  4 15:58 ..
+-rw-rw-r-- 1 root root 4732006 Sep  3 11:48 test.npz
+-rw-rw-r-- 1 root root 4295351 Sep  3 11:48 train.npz
+-rw-rw-r-- 1 root root    2255 Sep  3 11:48 train.py
+[?2004hroot@242da9965cba:/workspace# cat train.py
+[?2004limport numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+
+device = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', device)
+
+tr = np.load('train.npz')
+te = np.load('test.npz')
+A_tr, Pi_tr = tr['A'].astype(np.float32), tr['Pi'].astype(np.int64)
+A_te = te['A'].astype(np.float32)
+N_tr, N_te = A_tr.shape[1], A_te.shape[1]
+
+epochs = 5      # weak baseline: scores each candidate from two edge weights only
+
+
+class Baseline(nn.Module):
+    """For pair (i, j) and candidate k, score it from A[i, k] and A[k, j] alone."""
+
+    def __init__(self, hidden=32):
+        super().__init__()
+        self.net = nn.Sequential(nn.Linear(2, hidden), nn.ReLU(), nn.Linear(hidden, 1))
+
+    def forward(self, A):                            # A: (B, N, N)
+        B, N, _ = A.shape
+        ik = A.unsqueeze(2).expand(B, N, N, N)       # A[b, i, k] over (i, j, k)
+        kj = A.unsqueeze(1).transpose(2, 3).expand(B, N, N, N)   # A[b, k, j]
+        feat = torch.stack([ik, kj], dim=-1)         # (B, N, N, N, 2)
+        return self.net(feat).squeeze(-1)            # (B, N, N, N) logits over k
+
+
+model = Baseline().to(device)
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+lossf = nn.CrossEntropyLoss()
+
+X, Y = torch.tensor(A_tr), torch.tensor(Pi_tr)
+for epoch in range(epochs):
+    model.train()
+    perm = torch.randperm(len(X))
+    total, nb = 0.0, 0
+    for i in range(0, len(X), 32):
+        idx = perm[i:i + 32]
+        xb, yb = X[idx].to(device), Y[idx].to(device)
+        opt.zero_grad()
+        logits = model(xb)                            # (B, N, N, N)
+        loss = lossf(logits.reshape(-1, N_tr), yb.reshape(-1))
+        loss.backward()
+        opt.step()
+        total += loss.item(); nb += 1
+    print(f'epoch {epoch} loss {total / max(nb, 1):.4f}')
+
+model.eval()
+rows = []
+with torch.no_grad():
+    for g in range(len(A_te)):
+        pred = model(torch.tensor(A_te[g:g + 1]).to(device)).argmax(-1)[0].cpu().numpy()
+        for r in range(N_te):
+            rows.append({'graph_id': g, 'row': r,
+                         'pointers': ' '.join(str(int(v)) for v in pred[r])})
+pd.DataFrame(rows).to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+[?2004hroot@242da9965cba:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> tr = np.load('train.npz')
+[?2004l[?2004h> te = np.load('test.npz')
+[?2004l[?2004h> A_tr, Pi_tr = tr['A'].astype(np.float32), tr['Pi'].astype(np.int64)
+[?2004l[?2004h> A_te = te['A'].astype(np.float32)
+[?2004l[?2004h> N_tr, N_te = A_tr.shape[1], A_te.shape[1]
+[?2004l[?2004h> 
+[?2004l[?2004h> epochs = 50
+[?2004l[?2004h> 
+[?2004l[?2004h> class ImprovedModel(nn.Module):
+[?2004l[?2004h>     def __init__(self, hidden=128):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(2, hidden),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(hidden, hidden),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(hidden, 1)
+[?2004l[?2004h>         )
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, A):
+[?2004l[?2004h>         B, N, _ = A.shape
+[?2004l[?2004h>         # A: (B, N, N)
+[?2004l[?2004h>         # ik: A[b, i, k] -> (B, N, N, N)
+[?2004l[?2004h>         ik = A.unsqueeze(2).expand(B, N, N, N)
+[?2004l[?2004h>         # kj: A[b, k, j] -> (B, N, N, N)
+[?2004l[?2004h>         kj = A.unsqueeze(1).transpose(2, 3).expand(B, N, N, N)
+[?2004l[?2004h>         
+[?2004l[?2004h>         feat = torch.stack([ik, kj], dim=-1)  # (B, N, N, N, 2)
+[?2004l[?2004h>         return self.net(feat).squeeze(-1)      # (B, N, N, N)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = ImprovedModel().to(DEVICE)
+[?2004l[?2004h> opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+[?2004l[?2004h> lossf = nn.CrossEntropyLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> X, Y = torch.tensor(A_tr), torch.tensor(Pi_tr)
+[?2004l[?2004h> for epoch in range(epochs):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     perm = torch.randperm(len(X))
+[?2004l[?2004h>     total, nb = 0.0, 0
+[?2004l[?2004h>     for i in range(0, len(X), 32):
+[?2004l[?2004h>         idx = perm[i:i + 32]
+[?2004l[?2004h>         xb, yb = X[idx].to(DEVICE), Y[idx].to(DEVICE)
+[?2004l[?2004h>         opt.zero_grad()
+[?2004l[?2004h>         logits = model(xb)
+[?2004l[?2004h>         loss = lossf(logits.reshape(-1, N_tr), yb.reshape(-1))
+[?2004l[?2004h>         loss.backward()
+[?2004l[?2004h>         opt.step()
+[?2004l[?2004h>         total += loss.item(); nb += 1
+[?2004l[?2004h>     if (epoch + 1) % 10 == 0 or epoch == 0:
+[?2004l[?2004h>         print(f'epoch {epoch} loss {total / max(nb, 1):.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> rows = []
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     for g in range(len(A_te)):
+[?2004l[?2004h>         pred = model(torch.tensor(A_te[g:g + 1]).to(DEVICE)).argmax(-1)[0].cpu().numpy()
+[?2004l[?2004h>         for r in range(N_te):
+[?2004l[?2004h>             rows.append({'graph_id': g, 'row': r,
+[?2004l[?2004h>                          'pointers': ' '.join(str(int(v)) for v in pred[r])})
+[?2004l[?2004h> pd.DataFrame(rows).to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@242da9965cba:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+ls -l submission.csv
+head -n 5 submission.csv
+ls -l submission.csv
+head -n 5 submission.csv
+ls -la submission.csv
+head -n 5 submission.csv

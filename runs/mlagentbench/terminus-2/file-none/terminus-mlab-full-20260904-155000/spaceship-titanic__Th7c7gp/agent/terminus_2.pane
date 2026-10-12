@@ -1,0 +1,371 @@
+[?2004hroot@0afac032e6d8:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@0afac032e6d8:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@0afac032e6d8:/workspace# cat task_descriptor.txt
+[?2004lcat: task_descriptor.txt: No such file or directory
+[?2004hroot@0afac032e6d8:/workspace# ls -la
+[?2004ltotal 668
+drwxr-xr-x 2 root root   4096 Sep  3 15:43 .
+drwxr-xr-x 1 root root   4096 Sep  4 15:54 ..
+-rw-rw-r-- 1 root root 125993 Sep  3 15:43 test.csv
+-rw-rw-r-- 1 root root 543385 Sep  3 15:43 train.csv
+-rw-rw-r-- 1 root root   1938 Sep  3 15:43 train.py
+[?2004hroot@0afac032e6d8:/workspace# cat train.py
+[?2004limport pandas as pd
+from sklearn.linear_model import LogisticRegression
+
+
+def create_new_dataframe(data, column_names):
+    new_data = {}
+    for column in column_names:
+        if column in data.columns:
+            new_data[column] = data[column]
+        else:
+            new_data[column] = pd.Series(0, index=data.index)
+    return pd.DataFrame(new_data)
+
+
+df = pd.read_csv("train.csv")
+num_examples = df.shape[0]
+df = df.sample(frac=1, random_state=1)
+train_data = df[0:int(0.8 * num_examples)]
+val_data = df[int(0.8 * num_examples) + 1:]
+
+for part in (train_data, val_data):
+    part[["Deck", "Cabin_num", "Side"]] = part["Cabin"].str.split("/", expand=True)
+train_data = train_data.drop('Cabin', axis=1)
+val_data = val_data.drop('Cabin', axis=1)
+
+TargetY = train_data["Transported"]
+TargetY_test = val_data["Transported"]
+
+selectColumns = ["Deck", "Cabin_num", "Side"]
+ResourceX = pd.get_dummies(train_data[selectColumns])
+ResourceX_test = pd.get_dummies(val_data[selectColumns])
+
+# ***********************************************
+# In this part of the code, write and train the model on the above dataset to perform the task.
+# This part should populate the variable train_accuracy and val_accuracy
+# ***********************************************
+
+
+# ***********************************************
+# End of the main training module
+# ***********************************************
+
+print(f"Train Accuracy: {train_accuracy}")
+print(f"Validation Accuracy: {val_accuracy}")
+
+test_data = pd.read_csv('test.csv')
+test_data[["Deck", "Cabin_num", "Side"]] = test_data["Cabin"].str.split("/", expand=True)
+test_data = test_data.drop('Cabin', axis=1)
+
+test_X = pd.get_dummies(test_data[selectColumns])
+test_X = test_X.reindex(columns=ResourceX.columns, fill_value=0)
+
+test_preds = model.predict(test_X)
+pd.DataFrame({'PassengerId': test_data.PassengerId,
+              'Transported': test_preds}).to_csv('submission.csv', index=False)
+[?2004hroot@0afac032e6d8:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import LabelEncoder, StandardScaler
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolve
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df):
+[?2004l[?2004h>     # Handle Cabin
+[?2004l[?2004h>     if 'Cabin' in df.columns:
+[?2004l[?2004h>         df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>         df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Features to use
+[?2004l[?2004h>     cols_to_use = ['HomeWorld', 'Destination', 'Age', 'VIP', 'Deck', 'Side']
+[?2004l[?2004h>     # Filter columns that exist
+[?2004l[?2004h>     cols_to_use = [c for c in cols_to_use if c in df.columns]
+[?2004l[?2004h>     
+[?2004l[?2004h>     X = df[cols_to_use].copy()
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Fill missing values
+[?2004l[?2004h>     for col in X.columns:
+[?2004l[?2004h>         if X[col].dtype == 'object':
+[?2004l[?2004h>             X[col] = X[col].fillna('Unknown')
+[?2004l[?2004h>             le = LabelEncoder()
+[?2004l[?2004h>             X[col] = le.fit_transform(X[col].astype(str))
+[?2004l[?2004h>         else:
+[?2004l[?2004h>             X[col] = X[col].fillna(X[col].median())
+[?2004l[?2004h>             
+[?2004l[?2004h>     scaler = StandardScaler()
+[?2004l[?2004h>     X = scaler.fit_transform(X)
+[?2004l[?2004h>     return torch.tensor(X, dtype=torch.float32)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train_df = pd.read_csv('train.csv')
+[?2004l[?2004h> test_df = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Target
+[?2004l[?2004h> Y = train_df['Transported'].astype(int).values
+[?2004l[?2004h> Y = torch.tensor(Y, dtype=torch.float32).unsqueeze(1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Preprocess
+[?2004l[?2004h> X = preprocess_data(train_df)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Split
+[?2004l[?2004h> X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=0.2, random_state=42)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Model
+[?2004l[?2004h> class TitanicNet(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(TitanicNet, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 16),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(16, 8),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(8, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = TitanicNet(X.shape[1]).to(DEVICE)
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.01)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training
+[?2004l[?2004h> X_train, Y_train = X_train.to(DEVICE), Y_train.to(DEVICE)
+[?2004l[?2004h> X_val, Y_val = X_val.to(DEVICE), Y_val.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> for epoch in range(100):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> # Test and Submission
+[?2004l[?2004h> X_test_raw = preprocess_data(test_df)
+[?2004l[?2004h> X_test = X_test_raw.to(DEVICE)
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy()
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'PassengerId': test_df.PassengerId, 'Transported': test_preds.astype(int)}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@0afac032e6d8:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Traceback (most recent call last):
+  File "/workspace/train.py", line 49, in <module>
+    X = preprocess_data(train_df)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/train.py", line 34, in preprocess_data
+    X[col] = X[col].fillna(X[col].median())
+                           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/util/_decorators.py", line 336, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/series.py", line 8196, in median
+    return NDFrame.median(
+           ^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/generic.py", line 11831, in median
+    return self._stat_function(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/generic.py", line 11773, in _stat_function
+    return self._reduce(
+           ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/series.py", line 7480, in _reduce
+    result = delegate._reduce(name, skipna=skipna, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/arrays/string_.py", line 968, in _reduce
+    raise TypeError(f"Cannot perform reduction '{name}' with string dtype")
+TypeError: Cannot perform reduction 'median' with string dtype
+[?2004hroot@0afac032e6d8:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.preprocessing import LabelEncoder, StandardScaler
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from sklearn.metrics import accuracy_score
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware Resolve
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess_data(df):
+[?2004l[?2004h>     df = df.copy()
+[?2004l[?2004h>     # Handle Cabin
+[?2004l[?2004h>     if 'Cabin' in df.columns:
+[?2004l[?2004h>         df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>         df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Features to use
+[?2004l[?2004h>     cols_to_use = ['HomeWorld', 'Destination', 'Age', 'VIP', 'Deck', 'Side']
+[?2004l[?2004h>     cols_to_use = [c for c in cols_to_use if c in df.columns]
+[?2004l[?2004h>     
+[?2004l[?2004h>     X = df[cols_to_use].copy()
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Fill missing values and Encode
+[?2004l[?2004h>     for col in X.columns:
+[?2004l[?2004h>         if pd.api.types.is_numeric_dtype(X[col]):
+[?2004l[?2004h>             X[col] = X[col].fillna(X[col].median())
+[?2004l[?2004h>         else:
+[?2004l[?2004h>             X[col] = X[col].fillna('Unknown').astype(str)
+[?2004l[?2004h>             le = LabelEncoder()
+[?2004l[?2004h>             X[col] = le.fit_transform(X[col])
+[?2004l[?2004h>             
+[?2004l[?2004h>     scaler = StandardScaler()
+[?2004l[?2004h>     X_scaled = scaler.fit_transform(X)
+[?2004l[?2004h>     return torch.tensor(X_scaled, dtype=torch.float32)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train_df = pd.read_csv('train.csv')
+[?2004l[?2004h> test_df = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Target
+[?2004l[?2004h> Y = train_df['Transported'].astype(int).values
+[?2004l[?2004h> Y = torch.tensor(Y, dtype=torch.float32).unsqueeze(1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Preprocess
+[?2004l[?2004h> X = preprocess_data(train_df)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Split
+[?2004l[?2004h> X_train, X_val, Y_train, Y_val = train_test_split(X, Y, test_size=0.2, random_state=42)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Model
+[?2004l[?2004h> class TitanicNet(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(TitanicNet, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.2),
+[?2004l[?2004h>             nn.Linear(32, 16),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(16, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = TitanicNet(X.shape[1]).to(DEVICE)
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training
+[?2004l[?2004h> X_train, Y_train = X_train.to(DEVICE), Y_train.to(DEVICE)
+[?2004l[?2004h> X_val, Y_val = X_val.to(DEVICE), Y_val.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> for epoch in range(200):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train)
+[?2004l[?2004h>     loss = criterion(outputs, Y_train)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     train_preds = (model(X_train) > 0.5).float()
+[?2004l[?2004h>     val_preds = (model(X_val) > 0.5).float()
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_accuracy = accuracy_score(Y_train.cpu(), train_preds.cpu())
+[?2004l[?2004h>     val_accuracy = accuracy_score(Y_val.cpu(), val_preds.cpu())
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_accuracy}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_accuracy}")
+[?2004l[?2004h> 
+[?2004l[?2004h> # Test and Submission
+[?2004l[?2004h> X_test_raw = preprocess_data(test_df)
+[?2004l[?2004h> X_test = X_test_raw.to(DEVICE)
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_preds = (model(X_test) > 0.5).float().cpu().numpy()
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'PassengerId': test_df.PassengerId, 'Transported': test_preds.astype(int)}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@0afac032e6d8:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+ls -la submission.csv
+python3 train.py
+Train Accuracy: 0.6106417400683085
+Validation Accuracy: 0.612508986340762
+Traceback (most recent call last):
+  File "/workspace/train.py", line 105, in <module>
+    pd.DataFrame({'PassengerId': test_df.PassengerId, 'Transported': test_preds.astype(int)}).to_csv('submission.csv', index=False)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/frame.py", line 769, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 460, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 113, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 631, in _extract_index
+    raise ValueError("Per-column arrays must each be 1-dimensional")
+ValueError: Per-column arrays must each be 1-dimensional
+[?2004hroot@0afac032e6d8:/workspace# ls -la submission.csv
+[?2004lls: cannot access 'submission.csv': No such file or directory
+[?2004hroot@0afac032e6d8:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+Train Accuracy: 0.6131583677871651
+Validation Accuracy: 0.6074766355140186
+Traceback (most recent call last):
+  File "/workspace/train.py", line 105, in <module>
+    pd.DataFrame({'PassengerId': test_df.PassengerId, 'Transported': test_preds.astype(int)}).to_csv('submission.csv', index=False)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/frame.py", line 769, in __init__
+    mgr = dict_to_mgr(data, index, columns, dtype=dtype, copy=copy)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 460, in dict_to_mgr
+    return arrays_to_mgr(arrays, columns, index, dtype=dtype, consolidate=copy)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 113, in arrays_to_mgr
+    index = _extract_index(arrays)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/pandas/core/internals/construction.py", line 631, in _extract_index
+    raise ValueError("Per-column arrays must each be 1-dimensional")
+ValueError: Per-column arrays must each be 1-dimensional
+[?2004hroot@0afac032e6d8:/workspace# sed -i 's/test_preds = (model(X_test) > 0.5).float().cpu().numpy()/test_preds = (model(X_test) > 0.5).float().cpu().numpy().flatten()/' train.py
+[?2004l[?2004hroot@0afac032e6d8:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+ls -la submission.csv
+ls -la submission.csv
+python3 train.py
+ls -la submission.csv
+python3 train.py
+Train Accuracy: 0.6093834262088801
+Validation Accuracy: 0.6146657081236521
+[?2004hroot@0afac032e6d8:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 17364 Sep  4 15:57 submission.csv
+[?2004hroot@0afac032e6d8:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 17364 Sep  4 15:57 submission.csv
+[?2004hroot@0afac032e6d8:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+ls -la submission.csv
+head -n 5 submission.csv
+head -n 5 submission.csv

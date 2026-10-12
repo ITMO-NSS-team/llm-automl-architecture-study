@@ -1,0 +1,7 @@
+>> LOCAL delivery-eta from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/delivery-eta
+>> RUN delivery-eta/base (family=tabular)  00:13:53
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 21 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/delivery-eta-base/trace.json
+>> SCORE delivery-eta/base (answer: answer.csv)
+{"reward": 0.3899129963512027, "r2": 0.3899129963512027, "rmse": 0.5656243652095123, "n": 10000}

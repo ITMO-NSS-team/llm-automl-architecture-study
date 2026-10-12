@@ -1,0 +1,17 @@
+{
+    "task": {
+        "path": "datasets/mlab-c1/ogbn-arxiv",
+        "source": "mlab-c1"
+    },
+    "trial_name": "ogbn-arxiv__XKD3Hqe",
+    "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/autods-mlab-c1-full-20260903-234827",
+    "agent": {
+        "name": "autods_harbor.agent:AutoDSAgent",
+        "model_name": "google/gemma-4-31b-it",
+        "kwargs": {
+            "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+            "workspace": "/workspace"
+        }
+    },
+    "job_id": "32e9239d-d093-425b-a99f-f904ef123785"
+}

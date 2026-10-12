@@ -1,0 +1,360 @@
+[?2004hroot@61e5d4b00731:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@61e5d4b00731:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@61e5d4b00731:/workspace# ls -R /app/data
+[?2004l/app/data:
+schema.json  test.csv  train.csv  val.csv
+[?2004hroot@61e5d4b00731:/workspace# cat /app/data/schema.json
+[?2004l{
+  "dataset": "cooking-time",
+  "source_split": "default",
+  "task_type": "regression",
+  "score": "rmse",
+  "target_column": "target",
+  "feature_columns": [
+    "num_0",
+    "num_1",
+    "num_2",
+    "num_3",
+    "num_4",
+    "num_5",
+    "num_6",
+    "num_7",
+    "num_8",
+    "num_9",
+    "num_10",
+    "num_11",
+    "num_12",
+    "num_13",
+    "num_14",
+    "num_15",
+    "num_16",
+    "num_17",
+    "num_18",
+    "num_19",
+    "num_20",
+    "num_21",
+    "num_22",
+    "num_23",
+    "num_24",
+    "num_25",
+    "num_26",
+    "num_27",
+    "num_28",
+    "num_29",
+    "num_30",
+    "num_31",
+    "num_32",
+    "num_33",
+    "num_34",
+    "num_35",
+    "num_36",
+    "num_37",
+    "num_38",
+    "num_39",
+    "num_40",
+    "num_41",
+    "num_42",
+    "num_43",
+    "num_44",
+    "num_45",
+    "num_46",
+    "num_47",
+    "num_48",
+    "num_49",
+    "num_50",
+    "num_51",
+    "num_52",
+    "num_53",
+    "num_54",
+    "num_55",
+    "num_56",
+    "num_57",
+    "num_58",
+    "num_59",
+    "num_60",
+    "num_61",
+    "num_62",
+    "num_63",
+    "num_64",
+    "num_65",
+    "num_66",
+    "num_67",
+    "num_68",
+    "num_69",
+    "num_70",
+    "num_71",
+    "num_72",
+    "num_73",
+    "num_74",
+    "num_75",
+    "num_76",
+    "num_77",
+    "num_78",
+    "num_79",
+    "num_80",
+    "num_81",
+    "num_82",
+    "num_83",
+    "num_84",
+    "num_85",
+    "num_86",
+    "num_87",
+    "num_88",
+    "num_89",
+    "num_90",
+    "num_91",
+    "num_92",
+    "num_93",
+    "num_94",
+    "num_95",
+    "num_96",
+    "num_97",
+    "num_98",
+    "num_99",
+    "num_100",
+    "num_101",
+    "num_102",
+    "num_103",
+    "num_104",
+    "num_105",
+    "num_106",
+    "num_107",
+    "num_108",
+    "num_109",
+    "num_110",
+    "num_111",
+    "num_112",
+    "num_113",
+    "num_114",
+    "num_115",
+    "num_116",
+    "num_117",
+    "num_118",
+    "num_119",
+    "num_120",
+    "num_121",
+    "num_122",
+    "num_123",
+    "num_124",
+    "num_125",
+    "num_126",
+    "num_127",
+    "num_128",
+    "num_129",
+    "num_130",
+    "num_131",
+    "num_132",
+    "num_133",
+    "num_134",
+    "num_135",
+    "num_136",
+    "num_137",
+    "num_138",
+    "num_139",
+    "num_140",
+    "num_141",
+    "num_142",
+    "num_143",
+    "num_144",
+    "num_145",
+    "num_146",
+    "num_147",
+    "num_148",
+    "num_149",
+    "num_150",
+    "num_151",
+    "num_152",
+    "num_153",
+    "num_154",
+    "num_155",
+    "num_156",
+    "num_157",
+    "num_158",
+    "num_159",
+    "num_160",
+    "num_161",
+    "num_162",
+    "num_163",
+    "num_164",
+    "num_165",
+    "num_166",
+    "num_167",
+    "num_168",
+    "num_169",
+    "num_170",
+    "num_171",
+    "num_172",
+    "num_173",
+    "num_174",
+    "num_175",
+    "num_176",
+    "num_177",
+    "num_178",
+    "num_179",
+    "num_180",
+    "num_181",
+    "num_182",
+    "num_183",
+    "num_184",
+    "num_185",
+    "bin_0",
+    "bin_1",
+    "bin_2",
+    "cat_0",
+    "cat_1",
+    "cat_2"
+  ],
+  "feature_counts": {
+    "num": 186,
+    "bin": 3,
+    "cat": 3
+  },
+  "split_sizes": {
+    "train": 227087,
+    "val": 51251,
+    "test": 41648
+  },
+  "excluded_arrays": [
+    "x_meta.npy"
+  ]
+}
+[?2004hroot@61e5d4b00731:/workspace# cat << 'EOF' > solution.py
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from sklearn.metrics import mean_squared_error
+[?2004l[?2004h> from lightautoml.automl.presets.tabular_presets import TabularAutoML
+[?2004l[?2004h> from lightautoml.tasks import Task
+[?2004l[?2004h> 
+[?2004l[?2004h> # Time budget allocation
+[?2004l[?2004h> print('BUDGET_ALLOCATION: Exploration: 10min, Training: 2h, Improvement: 1h, Finalization: 20min')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware resolve
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train_df = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val_df = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> test_df = pd.read_csv('/app/data/test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> TARGET_COLUMN = 'target'
+[?2004l[?2004h> 
+[?2004l[?2004h> # Trivial Baseline
+[?2004l[?2004h> train_median = train_df[TARGET_COLUMN].median()
+[?2004l[?2004h> val_preds_trivial = np.full(len(val_df), train_median)
+[?2004l[?2004h> trivial_rmse = np.sqrt(mean_squared_error(val_df[TARGET_COLUMN], val_preds_trivial))
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_RMSE={trivial_rmse}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # LightAutoML setup
+[?2004l[?2004h> task = Task('reg')
+[?2004l[?2004h> roles = {'target': TARGET_COLUMN}
+[?2004l[?2004h> # Using a reasonable timeout for convergence
+[?2004l[?2004h> automl = TabularAutoML(task=task, timeout=3600)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Fit and predict on validation for OOF score
+[?2004l[?2004h> # LightAutoML internally handles splitting if we provide a validation set, 
+[?2004l[?2004h> # but for simplicity we fit on train and evaluate on val
+[?2004l[?2004h> automl.fit_predict(train_df, roles=roles)
+[?2004l[?2004h> 
+[?2004l[?2004h> val_preds = automl.predict(val_df).data.reshape(-1)
+[?2004l[?2004h> val_rmse = np.sqrt(mean_squared_error(val_df[TARGET_COLUMN], val_preds))
+[?2004l[?2004h> print(f'VALIDATION_SCORE={val_rmse}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Ensure we beat the baseline
+[?2004l[?2004h> if val_rmse < trivial_rmse:
+[?2004l[?2004h>     print('Model beats trivial baseline. Proceeding to test predictions.')
+[?2004l[?2004h>     test_preds = automl.predict(test_df).data.reshape(-1)
+[?2004l[?2004h>     pd.DataFrame({'target': test_preds}).to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> else:
+[?2004l[?2004h>     print('Model failed to beat trivial baseline. Using trivial predictions.')
+[?2004l[?2004h>     test_preds = np.full(len(test_df), train_median)
+[?2004l[?2004h>     pd.DataFrame({'target': test_preds}).to_csv('/app/predictions.csv', index=False)
+[?2004l[?2004h> 
+[?2004l[?2004h> print('MODEL_USED=', type(automl).__name__)
+[?2004l[?2004h> EOF
+[?2004lpython3 solution.py
+[?2004hroot@61e5d4b00731:/workspace# python3 solution.py
+[?2004l'nlp' extra dependency package 'fasttext-numpy2' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'nltk' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+'nlp' extra dependency package 'transformers' isn't installed. Look at README.md in repo 'LightAutoML' for installation instructions.
+/usr/local/lib/python3.12/site-packages/lightautoml/ml_algo/dl_model.py:40: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/embed.py:24: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+/usr/local/lib/python3.12/site-packages/lightautoml/text/dl_transformers.py:25: UserWarning: 'transformers' - package isn't installed
+  warnings.warn("'transformers' - package isn't installed")
+BUDGET_ALLOCATION: Exploration: 10min, Training: 2h, Improvement: 1h, Finalization: 20min
+DEVICE= cpu
+TRIVIAL_BASELINE_RMSE=0.660414922508867
+ls -l /app/predictions.csv
+ps aux | grep python3
+ls /app/predictions.csv
+ps -ef | grep solution.py
+free -m
+echo 'Checking terminal status...'
+ls -la /app/predictions.csv
+C-c
+ls -l /app/predictions.csv
+C-c
+C-c
+ls -l /app/predictions.csv
+cat << 'EOF' > solution.py
+import torch
+import pandas as pd
+import numpy as np
+from sklearn.metrics import mean_squared_error
+from lightautoml.automl.presets.tabular_presets import TabularAutoML
+from lightautoml.tasks import Task
+
+print('BUDGET_ALLOCATION: Training: 1h')
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+train_df = pd.read_csv('/app/data/train.csv')
+val_df = pd.read_csv('/app/data/val.csv')
+test_df = pd.read_csv('/app/data/test.csv')
+TARGET_COLUMN = 'target'
+
+train_median = train_df[TARGET_COLUMN].median()
+val_preds_trivial = np.full(len(val_df), train_median)
+trivial_rmse = np.sqrt(mean_squared_error(val_df[TARGET_COLUMN], val_preds_trivial))
+print(f'TRIVIAL_BASELINE_RMSE={trivial_rmse}')
+
+task = Task('reg')
+roles = {'target': TARGET_COLUMN}
+automl = TabularAutoML(task=task, timeout=600)
+
+automl.fit_predict(train_df, roles=roles)
+val_preds = automl.predict(val_df).data.reshape(-1)
+val_rmse = np.sqrt(mean_squared_error(val_df[TARGET_COLUMN], val_preds))
+print(f'VALIDATION_SCORE={val_rmse}')
+
+if val_rmse < trivial_rmse:
+    test_preds = automl.predict(test_df).data.reshape(-1)
+    pd.DataFrame({'target': test_preds}).to_csv('/app/predictions.csv', index=False)
+else:
+    test_preds = np.full(len(test_df), train_median)
+    pd.DataFrame({'target': test_preds}).to_csv('/app/predictions.csv', index=False)
+
+print('MODEL_USED=', type(automl).__name__)
+EOF
+python3 solution.py
+pkill -9 python3
+ps aux | grep python3
+python3 solution.py
+pkill -9 python3
+nohup python3 solution.py > output.log 2>&1 &
+sleep 10
+cat output.log
+cat output.log
+ls -l /app/predictions.csv
+ls -l output.log
+cat output.log
+ls -l /app/predictions.csv
+ls -l /app/predictions.csv
+cat output.log

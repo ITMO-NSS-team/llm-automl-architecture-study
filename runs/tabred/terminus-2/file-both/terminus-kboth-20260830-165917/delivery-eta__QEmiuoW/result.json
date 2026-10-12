@@ -1,0 +1,146 @@
+{
+    "id": "33492cda-d323-4385-9626-666f038530a4",
+    "task_name": "yandex-research/tabred__delivery-eta",
+    "trial_name": "delivery-eta__QEmiuoW",
+    "trial_uri": "file:///var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-kboth-20260830-165917/delivery-eta__QEmiuoW",
+    "task_id": {
+        "path": "datasets/tabred-kboth/delivery-eta"
+    },
+    "source": "tabred-kboth",
+    "task_checksum": "bafe94e717297a4138095fb3ed6ee6d7fe68e4d5cc21908dde9d22f3aad51b07",
+    "config": {
+        "task": {
+            "path": "datasets/tabred-kboth/delivery-eta",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tabred-kboth"
+        },
+        "trial_name": "delivery-eta__QEmiuoW",
+        "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-kboth-20260830-165917",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openrouter/google/gemma-4-31b-it",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "bca32d57-5190-4b52-a551-649726818aa0",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "google/gemma-4-31b-it",
+            "provider": "openrouter"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 360796,
+        "n_cache_tokens": 339648,
+        "n_output_tokens": 8122,
+        "cost_usd": 0.021647200000000002,
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 24,
+            "api_request_times_msec": [
+                9727.04792022705,
+                15136.715650558472,
+                35242.47169494629,
+                17732.187509536743,
+                8062.472820281982,
+                6680.217027664185,
+                7582.015514373779,
+                8889.018774032593,
+                9086.496829986572,
+                9862.971544265747,
+                13270.640134811401,
+                5885.075569152832,
+                11891.401767730713,
+                26680.302619934082,
+                6992.322206497192,
+                5837.21137046814,
+                10699.431896209717,
+                10556.728839874268,
+                24022.599458694458,
+                8132.195472717285,
+                16612.736463546753,
+                22008.397340774536,
+                12905.969619750977,
+                11928.34496498108
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-08-30T17:17:26.620611Z",
+    "finished_at": "2026-08-30T17:40:37.544348Z",
+    "environment_setup": {
+        "started_at": "2026-08-30T17:17:27.487944Z",
+        "finished_at": "2026-08-30T17:17:44.651345Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-08-30T17:17:44.651408Z",
+        "finished_at": "2026-08-30T17:17:58.091975Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-08-30T17:17:58.092181Z",
+        "finished_at": "2026-08-30T17:40:23.543945Z"
+    },
+    "verifier": {
+        "started_at": "2026-08-30T17:40:24.020027Z",
+        "finished_at": "2026-08-30T17:40:26.116562Z"
+    },
+    "step_results": null
+}

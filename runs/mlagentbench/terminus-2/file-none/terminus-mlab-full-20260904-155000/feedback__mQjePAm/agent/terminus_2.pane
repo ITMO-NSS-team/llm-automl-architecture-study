@@ -1,0 +1,467 @@
+[?2004hroot@f730f4fad923:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@f730f4fad923:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@f730f4fad923:/workspace# ls -la
+[?2004ltotal 9072
+drwxr-xr-x 2 root root    4096 Sep  3 11:57 .
+drwxr-xr-x 1 root root    4096 Sep  4 15:51 ..
+-rw-rw-r-- 1 root root    1086 Sep  3 11:57 task_descriptor.txt
+-rw-rw-r-- 1 root root 1899150 Sep  3 11:57 test.csv
+-rw-rw-r-- 1 root root 7371801 Sep  3 11:57 train.csv
+-rw-rw-r-- 1 root root    1484 Sep  3 11:57 train.py
+[?2004hroot@f730f4fad923:/workspace# cat data_description.txt
+[?2004lcat: data_description.txt: No such file or directory
+[?2004hroot@f730f4fad923:/workspace# cat evaluation_details.txt
+[?2004lcat: evaluation_details.txt: No such file or directory
+[?2004hroot@f730f4fad923:/workspace# cat train.py
+[?2004limport numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+SEED = 42
+
+
+def compute_metrics_for_regression(y_test, y_test_pred):
+    metrics = {}
+    for i, task in enumerate(DIMENSIONS):
+        rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+        metrics[f"rmse_{task}"] = rmse
+    return metrics
+
+
+def train_model(X_train, y_train, X_valid, y_valid):
+    # TODO. define and train the model
+    model = None
+    return model
+
+
+def predict(model, X):
+    # TODO. predict the model
+    y_pred = np.random.rand(len(X), len(DIMENSIONS))
+    return y_pred
+
+
+if __name__ == '__main__':
+    train_df = pd.read_csv('train.csv')
+    X = list(train_df['full_text'])
+    y = np.array([train_df[d].values for d in DIMENSIONS]).T
+
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+    model = train_model(X_train, y_train, X_valid, y_valid)
+
+    y_valid_pred = predict(model, X_valid)
+    metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+    print(metrics)
+    print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+
+    test_df = pd.read_csv('test.csv')
+    y_test_pred = predict(model, list(test_df['full_text']))
+    out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+    out.insert(0, 'text_id', test_df['text_id'])
+    out.to_csv('submission.csv', index=False)
+[?2004hroot@f730f4fad923:/workspace# cat task_descriptor.txt
+[?2004lDataset Description
+The dataset presented here (the ELLIPSE corpus) comprises argumentative essays written by 8th-12th grade English Language Learners (ELLs). The essays have been scored according to six analytic measures: cohesion, syntax, vocabulary, phraseology, grammar, and conventions.
+
+Each measure represents a component of proficiency in essay writing, with greater scores corresponding to greater proficiency in that measure. The scores range from 1.0 to 5.0 in increments of 0.5. Your task is to predict the score of each of the six measures for the essays given in the test set.
+
+File and Field Information
+train.csv - The training set, comprising the full_text of each essay, identified by a unique text_id. The essays are also given a score for each of the seven analytic measures above: cohesion, etc. These analytic measures comprise the target for the competition.
+test.csv - For the test data we give only the full_text of an essay together with its text_id.
+sample_submission.csv - A submission file in the correct format. See the evaluation_details.txt for details.
+[?2004hroot@f730f4fad923:/workspace# head -n 5 train.csv
+[?2004ltext_id,full_text,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+C7BD62EA392F,"Dear Principal:
+
+I personally don't think its a good idea that your considering changing school policy so that people may not participate in sports or other activities unless they have at least a grade B average.
+
+[?2004hroot@f730f4fad923:/workspace# head -n 5 test.csv
+[?2004ltext_id,full_text
+8A9E12ADD91C,"Should the aouthor Ralph Waldo Emerson, is righ what he was wrote.?
+
+If you already learn something new and you want to tray again make sure to try and make little of different because is not really good idea alway making the same thing in your life.
+
+[?2004hroot@f730f4fad923:/workspace# pip install transformers torch accelerate
+[?2004lRequirement already satisfied: transformers in /usr/local/lib/python3.12/site-packages (4.44.2)
+Requirement already satisfied: torch in /usr/local/lib/python3.12/site-packages (2.2.2)
+Collecting accelerate
+  Downloading accelerate-1.14.0-py3-none-any.whl.metadata (19 kB)
+Requirement already satisfied: filelock in /usr/local/lib/python3.12/site-packages (from transformers) (3.32.5)
+Requirement already satisfied: huggingface-hub<1.0,>=0.23.2 in /usr/local/lib/python3.12/site-packages (from transformers) (0.36.2)
+Requirement already satisfied: numpy>=1.17 in /usr/local/lib/python3.12/site-packages (from transformers) (1.26.4)
+Requirement already satisfied: packaging>=20.0 in /usr/local/lib/python3.12/site-packages (from transformers) (26.3)
+Requirement already satisfied: pyyaml>=5.1 in /usr/local/lib/python3.12/site-packages (from transformers) (6.0.3)
+Requirement already satisfied: regex!=2019.12.17 in /usr/local/lib/python3.12/site-packages (from transformers) (2026.9.3)
+Requirement already satisfied: requests in /usr/local/lib/python3.12/site-packages (from transformers) (2.34.2)
+Requirement already satisfied: safetensors>=0.4.1 in /usr/local/lib/python3.12/site-packages (from transformers) (0.8.0)
+Requirement already satisfied: tokenizers<0.20,>=0.19 in /usr/local/lib/python3.12/site-packages (from transformers) (0.19.1)
+Requirement already satisfied: tqdm>=4.27 in /usr/local/lib/python3.12/site-packages (from transformers) (4.70.0)
+Requirement already satisfied: fsspec>=2023.5.0 in /usr/local/lib/python3.12/site-packages (from huggingface-hub<1.0,>=0.23.2->transformers) (2026.6.0)
+Requirement already satisfied: hf-xet<2.0.0,>=1.1.3 in /usr/local/lib/python3.12/site-packages (from huggingface-hub<1.0,>=0.23.2->transformers) (1.6.0)
+Requirement already satisfied: typing-extensions>=3.7.4.3 in /usr/local/lib/python3.12/site-packages (from huggingface-hub<1.0,>=0.23.2->transformers) (4.16.0)
+Requirement already satisfied: sympy in /usr/local/lib/python3.12/site-packages (from torch) (1.14.0)
+Requirement already satisfied: networkx in /usr/local/lib/python3.12/site-packages (from torch) (3.6.1)
+Requirement already satisfied: jinja2 in /usr/local/lib/python3.12/site-packages (from torch) (3.1.6)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.1.105 in /usr/local/lib/python3.12/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.1.105 in /usr/local/lib/python3.12/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.1.105 in /usr/local/lib/python3.12/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cudnn-cu12==8.9.2.26 in /usr/local/lib/python3.12/site-packages (from torch) (8.9.2.26)
+Requirement already satisfied: nvidia-cublas-cu12==12.1.3.1 in /usr/local/lib/python3.12/site-packages (from torch) (12.1.3.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.0.2.54 in /usr/local/lib/python3.12/site-packages (from torch) (11.0.2.54)
+Requirement already satisfied: nvidia-curand-cu12==10.3.2.106 in /usr/local/lib/python3.12/site-packages (from torch) (10.3.2.106)
+Requirement already satisfied: nvidia-cusolver-cu12==11.4.5.107 in /usr/local/lib/python3.12/site-packages (from torch) (11.4.5.107)
+Requirement already satisfied: nvidia-cusparse-cu12==12.1.0.106 in /usr/local/lib/python3.12/site-packages (from torch) (12.1.0.106)
+Requirement already satisfied: nvidia-nccl-cu12==2.19.3 in /usr/local/lib/python3.12/site-packages (from torch) (2.19.3)
+Requirement already satisfied: nvidia-nvtx-cu12==12.1.105 in /usr/local/lib/python3.12/site-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-nvjitlink-cu12 in /usr/local/lib/python3.12/site-packages (from nvidia-cusolver-cu12==11.4.5.107->torch) (12.9.86)
+Collecting psutil (from accelerate)
+  Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
+Requirement already satisfied: MarkupSafe>=2.0 in /usr/local/lib/python3.12/site-packages (from jinja2->torch) (3.0.3)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/site-packages (from requests->transformers) (3.5.1)
+Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/site-packages (from requests->transformers) (3.19)
+Requirement already satisfied: urllib3<3,>=1.26 in /usr/local/lib/python3.12/site-packages (from requests->transformers) (2.7.0)
+Requirement already satisfied: certifi>=2023.5.7 in /usr/local/lib/python3.12/site-packages (from requests->transformers) (2026.7.22)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /usr/local/lib/python3.12/site-packages (from sympy->torch) (1.3.0)
+Downloading accelerate-1.14.0-py3-none-any.whl (389 kB)
+Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
+Installing collected packages: psutil, accelerate
+[?25l[2K   [38;5;197m━━━━━━━━━━━━━━━━━━━━[0m[38;5;237m╺[0m[38;5;237m━━━━━━━━━━━━━━━━━━━[0m [32m1/2[0m [accelerate][2K   [38;5;70m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m2/2[0m [accelerate]
+[?25h[1A[2KSuccessfully installed accelerate-1.14.0 psutil-7.2.2
+[33mWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.[0m[33m
+[0m[?2004hroot@f730f4fad923:/workspace# cat <<EOF > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from torch.utils.data import DataLoader, Dataset
+[?2004l[?2004h> from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW, get_linear_schedule_with_warmup
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware resolution
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+[?2004l[?2004h> SEED = 42
+[?2004l[?2004h> MODEL_NAME = 'distilbert-base-uncased'
+[?2004l[?2004h> MAX_LEN = 256
+[?2004l[?2004h> BATCH_SIZE = 16
+[?2004l[?2004h> EPOCHS = 3
+[?2004l[?2004h> LEARNING_RATE = 2e-5
+[?2004l[?2004h> 
+[?2004l[?2004h> class EssayDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, texts, labels, tokenizer, max_len):
+[?2004l[?2004h>         self.texts = texts
+[?2004l[?2004h>         self.labels = labels
+[?2004l[?2004h>         self.tokenizer = tokenizer
+[?2004l[?2004h>         self.max_len = max_len
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.texts)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, item):
+[?2004l[?2004h>         text = str(self.texts[item])
+[?2004l[?2004h>         inputs = self.tokenizer.encode_plus(
+[?2004l[?2004h>             text, 
+[?2004l[?2004h>             None, 
+[?2004l[?2004h>             add_special_tokens=True, 
+[?2004l[?2004h>             max_length=self.max_len, 
+[?2004l[?2004h>             padding='max_length', 
+[?2004l[?2004h>             truncation=True, 
+[?2004l[?2004h>             return_attention_mask=True, 
+[?2004l[?2004h>             return_tensors='pt'
+[?2004l[?2004h>         )
+[?2004l[?2004h>         
+[?2004l[?2004h>         return {
+[?2004l[?2004h>             'input_ids': inputs['input_ids'].flatten(),
+[?2004l[?2004h>             'attention_mask': inputs['attention_mask'].flatten(),
+[?2004l[?2004h>             'labels': torch.tensor(self.labels[item], dtype=torch.float)
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h> def compute_metrics_for_regression(y_test, y_test_pred):
+[?2004l[?2004h>     metrics = {}
+[?2004l[?2004h>     for i, task in enumerate(DIMENSIONS):
+[?2004l[?2004h>         rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+[?2004l[?2004h>         metrics[f"rmse_{task}"] = rmse
+[?2004l[?2004h>     return metrics
+[?2004l[?2004h> 
+[?2004l[?2004h> def train_model(X_train, y_train, X_valid, y_valid):
+[?2004l[?2004h>     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+[?2004l[?2004h>     model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=len(DIMENSIONS))
+[?2004l[?2004h>     model.to(DEVICE)
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_dataset = EssayDataset(X_train, y_train, tokenizer, MAX_LEN)
+[?2004l[?2004h>     valid_dataset = EssayDataset(X_valid, y_valid, tokenizer, MAX_LEN)
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+[?2004l[?2004h>     valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
+[?2004l[?2004h>     
+[?2004l[?2004h>     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+[?2004l[?2004h>     criterion = torch.nn.MSELoss()
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     for epoch in range(EPOCHS):
+[?2004l[?2004h>         for batch in train_loader:
+[?2004l[?2004h>             optimizer.zero_grad()
+[?2004l[?2004h>             input_ids = batch['input_ids'].to(DEVICE)
+[?2004l[?2004h>             attention_mask = batch['attention_mask'].to(DEVICE)
+[?2004l[?2004h>             labels = batch['labels'].to(DEVICE)
+[?2004l[?2004h>             
+[?2004l[?2004h>             outputs = model(input_ids, attention_mask=attention_mask)
+[?2004l[?2004h>             logits = outputs.logits
+[?2004l[?2004h>             loss = criterion(logits, labels)
+[?2004l[?2004h>             loss.backward()
+[?2004l[?2004h>             optimizer.step()
+[?2004l[?2004h>         print(f"Epoch {epoch+1}/{EPOCHS} complete")
+[?2004l[?2004h>     
+[?2004l[?2004h>     return (model, tokenizer)
+[?2004l[?2004h> 
+[?2004l[?2004h> def predict(model_tuple, X):
+[?2004l[?2004h>     model, tokenizer = model_tuple
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     tokenizer = tokenizer
+[?2004l[?2004h>     
+[?2004l[?2004h>     predictions = []
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         for i in range(0, len(X), BATCH_SIZE):
+[?2004l[?2004h>             batch_texts = X[i:i+BATCH_SIZE]
+[?2004l[?2004h>             inputs = tokenizer(batch_texts, padding=True, truncation=True, max_length=MAX_LEN, return_tensors="pt").to(DEVICE)
+[?2004l[?2004h>             outputs = model(**inputs)
+[?2004l[?2004h>             predictions.append(outputs.logits.cpu().numpy())
+[?2004l[?2004h>     
+[?2004l[?2004h>     return np.vstack(predictions)
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     train_df = pd.read_csv('train.csv')
+[?2004l[?2004h>     X = list(train_df['full_text'])
+[?2004l[?2004h>     y = np.array([train_df[d].values for d in DIMENSIONS]).T
+[?2004l[?2004h> 
+[?2004l[?2004h>     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+[?2004l[?2004h>     
+[?2004l[?2004h>     model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+[?2004l[?2004h> 
+[?2004l[?2004h>     y_valid_pred = predict(model_tuple, X_valid)
+[?2004l[?2004h>     metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+[?2004l[?2004h>     print(metrics)
+[?2004l[?2004h>     print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+[?2004l[?2004h> 
+[?2004l[?2004h>     test_df = pd.read_csv('test.csv')
+[?2004l[?2004h>     y_test_pred = predict(model_tuple, list(test_df['full_text']))
+[?2004l[?2004h>     out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+[?2004l[?2004h>     out.insert(0, 'text_id', test_df['text_id'])
+[?2004l[?2004h>     out.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f730f4fad923:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+tokenizer_config.json:   0%|                                                                                                        | 0.00/48.0 [00:00<?, ?B/s]tokenizer_config.json: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 48.0/48.0 [00:00<00:00, 349kB/s]
+config.json:   0%|                                                                                                                   | 0.00/483 [00:00<?, ?B/s]config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 483/483 [00:00<00:00, 3.06MB/s]
+vocab.txt: 0.00B [00:00, ?B/s]vocab.txt: 232kB [00:00, 6.27MB/s]
+tokenizer.json: 0.00B [00:00, ?B/s]tokenizer.json: 466kB [00:00, 17.4MB/s]
+/usr/local/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+model.safetensors:   0%|                                                                                                            | 0.00/268M [00:00<?, ?B/s]model.safetensors:  52%|███████████████████████████████████████████████████▊                                                | 139M/268M [00:02<00:02, 54.6MB/s]model.safetensors:  67%|███████████████████████████████████████████████████████████████████▎                                | 181M/268M [00:02<00:01, 68.4MB/s]model.safetensors: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████| 268M/268M [00:03<00:00, 111MB/s]model.safetensors: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 268M/268M [00:04<00:00, 66.6MB/s]
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/usr/local/lib/python3.12/site-packages/transformers/optimization.py:591: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+ls -la submission.csv
+ps aux | grep python3
+ps aux | grep python3
+ls -la
+pkill -9 python3
+cat <<EOF > train.py
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import train_test_split
+import torch
+
+# Required Hardware resolution snippet
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+SEED = 42
+
+def compute_metrics_for_regression(y_test, y_test_pred):
+    metrics = {}
+    for i, task in enumerate(DIMENSIONS):
+        rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+        metrics[f"rmse_{task}"] = rmse
+    return metrics
+
+def train_model(X_train, y_train, X_valid, y_valid):
+    vectorizer = TfidfVectorizer(max_features=10000, stop_words='english')
+    X_train_tfidf = vectorizer.fit_transform(X_train)
+    X_valid_tfidf = vectorizer.transform(X_valid)
+    
+    model = Ridge(alpha=1.0)
+    model.fit(X_train_tfidf, y_train)
+    return (model, vectorizer)
+
+def predict(model_tuple, X):
+    model, vectorizer = model_tuple
+    X_tfidf = vectorizer.transform(X)
+    return model.predict(X_tfidf)
+
+if __name__ == '__main__':
+    train_df = pd.read_csv('train.csv')
+    X = list(train_df['full_text'])
+    y = np.array([train_df[d].values for d in DIMENSIONS]).T
+
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+    
+    model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+
+    y_valid_pred = predict(model_tuple, X_valid)
+    metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+    print(metrics)
+    print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+
+    test_df = pd.read_csv('test.csv')
+    y_test_pred = predict(model_tuple, list(test_df['full_text']))
+    out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+    out.insert(0, 'text_id', test_df['text_id'])
+    out.to_csv('submission.csv', index=False)
+EOF
+python3 train.py
+^C
+Traceback (most recent call last):
+  File "/workspace/train.py", line 110, in <module>
+    model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/train.py", line 83, in train_model
+    optimizer.step()
+  File "/usr/local/lib/python3.12/site-packages/torch/optim/optimizer.py", line 385, in wrapper
+    out = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/transformers/optimization.py", line 648, in step
+    denom = exp_avg_sq.sqrt().add_(group["eps"])
+            ^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+killall -9 python3
+cat <<EOF > train.py
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import train_test_split
+import torch
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+SEED = 42
+
+def compute_metrics_for_regression(y_test, y_test_pred):
+    metrics = {}
+    for i, task in enumerate(DIMENSIONS):
+        rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+        metrics[f"rmse_{task}"] = rmse
+    return metrics
+
+def train_model(X_train, y_train, X_valid, y_valid):
+    vectorizer = TfidfVectorizer(max_features=5000, stop_words='english')
+    X_train_tfidf = vectorizer.fit_transform(X_train)
+    model = Ridge(alpha=1.0)
+    model.fit(X_train_tfidf, y_train)
+    return (model, vectorizer)
+
+def predict(model_tuple, X):
+    model, vectorizer = model_tuple
+    X_tfidf = vectorizer.transform(X)
+    return model.predict(X_tfidf)
+
+if __name__ == '__main__':
+    train_df = pd.read_csv('train.csv')
+    X = list(train_df['full_text'])
+    y = np.array([train_df[d].values for d in DIMENSIONS]).T
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+    model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+    y_valid_pred = predict(model_tuple, X_valid)
+    metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+    print(metrics)
+    print("final MCRMSE: ", np.mean(list(metrics.values())))
+    test_df = pd.read_csv('test.csv')
+    y_test_pred = predict(model_tuple, list(test_df['full_text']))
+    out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+    out.insert(0, 'text_id', test_df['text_id'])
+    out.to_csv('submission.csv', index=False)
+EOF
+python3 train.py
+
+[?2004hroot@f730f4fad923:/workspace# 
+[?2004l[?2004hroot@f730f4fad923:/workspace# killall -9 python3
+[?2004lbash: killall: command not found
+[?2004hroot@f730f4fad923:/workspace# cat <<EOF > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> from sklearn.feature_extraction.text import TfidfVectorizer
+[?2004l[?2004h> from sklearn.linear_model import Ridge
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> import torch
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+[?2004l[?2004h> SEED = 42
+[?2004l[?2004h> 
+[?2004l[?2004h> def compute_metrics_for_regression(y_test, y_test_pred):
+[?2004l[?2004h>     metrics = {}
+[?2004l[?2004h>     for i, task in enumerate(DIMENSIONS):
+[?2004l[?2004h>         rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+[?2004l[?2004h>         metrics[f"rmse_{task}"] = rmse
+[?2004l[?2004h>     return metrics
+[?2004l[?2004h> 
+[?2004l[?2004h> def train_model(X_train, y_train, X_valid, y_valid):
+[?2004l[?2004h>     vectorizer = TfidfVectorizer(max_features=5000, stop_words='english')
+[?2004l[?2004h>     X_train_tfidf = vectorizer.fit_transform(X_train)
+[?2004l[?2004h>     model = Ridge(alpha=1.0)
+[?2004l[?2004h>     model.fit(X_train_tfidf, y_train)
+[?2004l[?2004h>     return (model, vectorizer)
+[?2004l[?2004h> 
+[?2004l[?2004h> def predict(model_tuple, X):
+[?2004l[?2004h>     model, vectorizer = model_tuple
+[?2004l[?2004h>     X_tfidf = vectorizer.transform(X)
+[?2004l[?2004h>     return model.predict(X_tfidf)
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     train_df = pd.read_csv('train.csv')
+[?2004l[?2004h>     X = list(train_df['full_text'])
+[?2004l[?2004h>     y = np.array([train_df[d].values for d in DIMENSIONS]).T
+[?2004l[?2004h>     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+[?2004l[?2004h>     model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+[?2004l[?2004h>     y_valid_pred = predict(model_tuple, X_valid)
+[?2004l[?2004h>     metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+[?2004l[?2004h>     print(metrics)
+[?2004l[?2004h>     print("final MCRMSE: ", np.mean(list(metrics.values())))
+[?2004l[?2004h>     test_df = pd.read_csv('test.csv')
+[?2004l[?2004h>     y_test_pred = predict(model_tuple, list(test_df['full_text']))
+[?2004l[?2004h>     out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+[?2004l[?2004h>     out.insert(0, 'text_id', test_df['text_id'])
+[?2004l[?2004h>     out.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f730f4fad923:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+{'rmse_cohesion': 0.5856183933940149, 'rmse_syntax': 0.5646477681919617, 'rmse_vocabulary': 0.5042196864341987, 'rmse_phraseology': 0.5313556821361266, 'rmse_grammar': 0.6188930599894039, 'rmse_conventions': 0.579208830351522}
+final MCRMSE:  0.5639905700828713
+[?2004hroot@f730f4fad923:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 97179 Sep  4 15:54 submission.csv
+[?2004hroot@f730f4fad923:/workspace# head -n 5 submission.csv
+[?2004ltext_id,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+8A9E12ADD91C,2.4751222612702724,2.504658499981258,2.6959720443332102,2.6601666252757674,2.565793753184973,2.3160565434475506
+D1C5C7879A33,2.836240586464734,2.65655945632942,2.959327048369752,2.6853277922113854,3.0305558263014243,3.187586771554887
+A4A90A401002,3.4316870657215706,3.265092911957575,3.460971821358081,3.183857180671536,3.3587075396536687,3.4893723477341445
+F12C7794CDCB,3.2367938255547046,3.328915127947328,3.3610181331003854,3.4545998008401173,3.170399841597961,3.4052874373775595
+[?2004hroot@f730f4fad923:/workspace# 

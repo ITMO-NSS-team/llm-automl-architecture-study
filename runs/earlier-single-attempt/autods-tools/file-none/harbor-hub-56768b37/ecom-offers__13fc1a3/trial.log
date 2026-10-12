@@ -1,0 +1,7 @@
+>> LOCAL ecom-offers from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/ecom-offers
+>> RUN ecom-offers/base (family=tabular)  14:00:03
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 24 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/ecom-offers-base/trace.json
+>> SCORE ecom-offers/base (answer: answer.csv)
+{"reward": 0.6196551746670674, "auc": 0.6196551746670674, "n": 10000}

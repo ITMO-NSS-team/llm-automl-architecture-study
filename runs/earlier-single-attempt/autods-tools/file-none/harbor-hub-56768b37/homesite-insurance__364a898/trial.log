@@ -1,0 +1,10 @@
+>> LOCAL homesite-insurance from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/homesite-insurance
+>> RUN homesite-insurance/base (family=tabular)  15:17:07
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+langchain_openai.stream_chunk_timeout fired
+langchain_openai.stream_chunk_timeout fired
+langchain_openai.stream_chunk_timeout fired
+[autods-harbor] wrote trace with 19 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/homesite-insurance-base/trace.json
+>> SCORE homesite-insurance/base (answer: answer.csv)
+{"reward": 0.9590528324453316, "auc": 0.9590528324453316, "n": 10000}

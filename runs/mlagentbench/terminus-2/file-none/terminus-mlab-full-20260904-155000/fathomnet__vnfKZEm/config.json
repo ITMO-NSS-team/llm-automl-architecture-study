@@ -1,0 +1,13 @@
+{
+    "task": {
+        "path": "datasets/mlab/fathomnet",
+        "source": "mlab"
+    },
+    "trial_name": "fathomnet__vnfKZEm",
+    "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/terminus-mlab-full-20260904-155000",
+    "agent": {
+        "name": "terminus-2",
+        "model_name": "openrouter/google/gemma-4-31b-it"
+    },
+    "job_id": "aabb088d-3a31-48e9-a36f-ea4ccf41a406"
+}

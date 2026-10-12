@@ -1,0 +1,22 @@
+Skipping image OS validation for hb__9053184fc22a879931c1d4ecf50687f9: docker inspect returned 1
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+- Command 1 should end with newline when followed by another command. Otherwise the two commands will be concatenated together on the same line.
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Parser warnings: - Extra text detected before JSON object
+- Extra text detected after JSON object
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Trajectory dumped to jobs/terminus-2-gemma-4-31b-it-3attm/cooking-time__VVHpfi3/agent/trajectory.json
+Collecting main service artifacts

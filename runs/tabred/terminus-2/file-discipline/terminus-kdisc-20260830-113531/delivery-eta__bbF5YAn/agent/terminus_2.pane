@@ -1,0 +1,340 @@
+[?2004hroot@f74d86cabb00:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@f74d86cabb00:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@f74d86cabb00:/workspace# ls -la /app/data
+[?2004ltotal 839220
+drwxr-xr-x 2 root root      4096 Aug 28 15:55 .
+drwxr-xr-x 3 root root      4096 Aug 28 15:55 ..
+-rw-rw-r-- 1 root root      3592 Aug 27 21:13 schema.json
+-rw-rw-r-- 1 root root  83333630 Aug 27 21:13 test.csv
+-rw-rw-r-- 1 root root 699050037 Aug 27 21:13 train.csv
+-rw-rw-r-- 1 root root  76947472 Aug 27 21:13 val.csv
+[?2004hroot@f74d86cabb00:/workspace# pip list | grep -E 'torch|xgboost|lightgbm|catboost'
+[?2004lpython3 -c "import pandas as pd; df = pd.read_csv('/app/data/train.csv', nrows=100); print(df.head()); print(df.columns)"
+catboost                      1.2.10
+lightgbm                      4.7.0
+torch                         2.13.0
+xgboost                       2.1.4
+[?2004hroot@f74d86cabb00:/workspace# python3 -c "import pandas as pd; df = pd.read_csv('/app/data/train.csv', nrows=100); print(df.head()); print(df.columns)"
+[?2004l      num_0     num_1     num_2     num_3     num_4     num_5     num_6     num_7  ...  num_216  num_217  num_218  num_219  num_220  bin_0  cat_0    target
+0  2.296951  2.169694  2.096521  2.004234  2.411523  2.198333  2.096483  1.995877  ...      NaN      NaN      NaN      NaN      NaN      1      1  1.076140
+1  2.296951  2.169694  2.096521  2.004234  2.438743  2.327614  2.191018  2.087355  ...      NaN      NaN      NaN      NaN      NaN      1      1  2.060514
+2  2.296951  2.169694  2.096521  2.004234  2.385812  2.262578  2.147366  2.058595  ...      NaN      NaN      NaN      NaN      NaN      1      1  2.374906
+3  2.256625  2.135756  2.135756  2.063775  2.189940  2.130557  2.100847  2.077907  ...      NaN      NaN      NaN      NaN      NaN      1      1  1.791760
+4  2.651732  2.651732  2.511791  2.096521  2.651762  2.575595  2.384818  2.018703  ...      NaN      NaN      NaN      NaN      NaN      1      1  2.944439
+
+[5 rows x 224 columns]
+Index(['num_0', 'num_1', 'num_2', 'num_3', 'num_4', 'num_5', 'num_6', 'num_7',
+       'num_8', 'num_9',
+       ...
+       'num_214', 'num_215', 'num_216', 'num_217', 'num_218', 'num_219',
+       'num_220', 'bin_0', 'cat_0', 'target'],
+      dtype='str', length=224)
+[?2004hroot@f74d86cabb00:/workspace# echo "TIME_BUDGET: Exploration: 15m, Training: 2h, Finalization: 15m"
+[?2004lTIME_BUDGET: Exploration: 15m, Training: 2h, Finalization: 15m
+[?2004hroot@f74d86cabb00:/workspace# cat << 'EOF' > baseline.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from sklearn.metrics import mean_squared_error
+[?2004l[?2004h> 
+[?2004l[?2004h> train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h> val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> median_val = train['target'].median()
+[?2004l[?2004h> val_preds = np.full(len(val), median_val)
+[?2004l[?2004h> rmse = np.sqrt(mean_squared_error(val['target'], val_preds))
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f'TRIVIAL_BASELINE_MEDIAN={median_val}')
+[?2004l[?2004h> print(f'VALIDATION_SCORE={rmse}')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f74d86cabb00:/workspace# python3 baseline.py
+[?2004lTRIVIAL_BASELINE_MEDIAN=1.68948066
+VALIDATION_SCORE=0.7749197529971861
+[?2004hroot@f74d86cabb00:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from torch.utils.data import DataLoader, Dataset
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler, LabelEncoder
+[?2004l[?2004h> from sklearn.metrics import mean_squared_error
+[?2004l[?2004h> import json
+[?2004l[?2004h> 
+[?2004l[?2004h> # HARDWARE REQUIREMENT
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> class TabularDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, X, y=None):
+[?2004l[?2004h>         self.X = torch.tensor(X, dtype=torch.float32)
+[?2004l[?2004h>         self.y = torch.tensor(y, dtype=torch.float32).unsqueeze(1) if y is not None else None
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.X)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         if self.y is not None:
+[?2004l[?2004h>             return self.X[idx], self.y[idx]
+[?2004l[?2004h>         return self.X[idx]
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess():
+[?2004l[?2004h>     train = pd.read_csv('/app/data/train.csv')
+[?2004l[?2004h>     val = pd.read_csv('/app/data/val.csv')
+[?2004l[?2004h>     
+[?2004l[?2004h>     num_cols = [c for c in train.columns if c.startswith('num_')]
+[?2004l[?2004h>     bin_cols = [c for c in train.columns if c.startswith('bin_')]
+[?2004l[?2004h>     cat_cols = [c for c in train.columns if c.startswith('cat_')]
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Numerical
+[?2004l[?2004h>     num_means = train[num_cols].mean()
+[?2004l[?2004h>     train[num_cols] = train[num_cols].fillna(num_means)
+[?2004l[?2004h>     val[num_cols] = val[num_cols].fillna(num_means)
+[?2004l[?2004h>     
+[?2004l[?2004h>     scaler = StandardScaler()
+[?2004l[?2004h>     train[num_cols] = scaler.fit_transform(train[num_cols])
+[?2004l[?2004h>     val[num_cols] = scaler.transform(val[num_cols])
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Categorical
+[?2004l[?2004h>     cat_mappings = {}
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         le = LabelEncoder()
+[?2004l[?2004h>         train[col] = le.fit_transform(train[col].astype(str))
+[?2004l[?2004h>         val[col] = le.transform(val[col].astype(str))
+[?2004l[?2004h>         cat_mappings[col] = le
+[?2004l[?2004h>         
+[?2004l[?2004h>     # Target
+[?2004l[?2004h>     y_train = train['target'].values
+[?2004l[?2004h>     y_val = val['target'].values
+[?2004l[?2004h>     
+[?2004l[?2004h>     X_train = train[num_cols + bin_cols + cat_cols].values
+[?2004l[?2004h>     X_val = val[num_cols + bin_cols + cat_cols].values
+[?2004l[?2004h>     
+[?2004l[?2004h>     return X_train, y_train, X_val, y_val, num_cols, bin_cols, cat_cols, cat_mappings, scaler
+[?2004l[?2004h> 
+[?2004l[?2004h> class TabularModel(nn.Module):
+[?2004l[?2004h>     def __init__(self, num_cont, cat_cols_sizes):
+[?2004l[?2004h>         super().__init__()
+[?2004l[?2004h>         # Simple MLP for this task
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(num_cont, 256),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.BatchNorm1d(256),
+[?2004l[?2004h>             nn.Linear(256, 128),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.BatchNorm1d(128),
+[?2004l[?2004h>             nn.Linear(128, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(64, 1)
+[?2004l[?2004h>         )
+[?2004l[?2004h> 
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     X_train, y_train, X_val, y_val, num_cols, bin_cols, cat_cols, cat_mappings, scaler = preprocess()
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_ds = TabularDataset(X_train, y_train)
+[?2004l[?2004h>     val_ds = TabularDataset(X_val, y_val)
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_loader = DataLoader(train_ds, batch_size=1024, shuffle=True)
+[?2004l[?2004h>     val_loader = DataLoader(val_ds, batch_size=1024)
+[?2004l[?2004h>     
+[?2004l[?2004h>     model = TabularModel(len(num_cols) + len(bin_cols) + len(cat_cols), []).to(DEVICE)
+[?2004l[?2004h>     criterion = nn.MSELoss()
+[?2004l[?2004h>     optimizer = optim.Adam(model.parameters(), lr=1e-3)
+[?2004l[?2004h>     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, factor=0.5)
+[?2004l[?2004h>     
+[?2004l[?2004h>     best_rmse = float('inf')
+[?2004l[?2004h>     patience_counter = 0
+[?2004l[?2004h>     best_epoch = 0
+[?2004l[?2004h>     
+[?2004l[?2004h>     for epoch in range(1, 201):
+[?2004l[?2004h>         model.train()
+[?2004l[?2004h>         train_loss = 0
+[?2004l[?2004h>         for xb, yb in train_loader:
+[?2004l[?2004h>             xb, yb = xb.to(DEVICE), yb.to(DEVICE)
+[?2004l[?2004h>             optimizer.zero_grad()
+[?2004l[?2004h>             pred = model(xb)
+[?2004l[?2004h>             loss = criterion(pred, yb)
+[?2004l[?2004h>             loss.backward()
+[?2004l[?2004h>             optimizer.step()
+[?2004l[?2004h>             train_loss += loss.item()
+[?2004l[?2004h>         
+[?2004l[?2004h>         model.eval()
+[?2004l[?2004h>         val_preds = []
+[?2004l[?2004h>         val_targets = []
+[?2004l[?2004h>         with torch.no_grad():
+[?2004l[?2004h>             for xb, yb in val_loader:
+[?2004l[?2004h>                 xb, yb = xb.to(DEVICE), yb.to(DEVICE)
+[?2004l[?2004h>                 val_preds.append(model(xb).cpu().numpy())
+[?2004l[?2004h>                 val_targets.append(yb.cpu().numpy())
+[?2004l[?2004h>         
+[?2004l[?2004h>         val_preds = np.concatenate(val_preds)
+[?2004l[?2004h>         val_targets = np.concatenate(val_targets)
+[?2004l[?2004h>         rmse = np.sqrt(mean_squared_error(val_targets, val_preds))
+[?2004l[?2004h>         
+[?2004l[?2004h>         scheduler.step(rmse)
+[?2004l[?2004h>         
+[?2004l[?2004h>         if rmse < best_rmse:
+[?2004l[?2004h>             best_rmse = rmse
+[?2004l[?2004h>             torch.save(model.state_dict(), 'best_model.pth')
+[?2004l[?2004h>             patience_counter = 0
+[?2004l[?2004h>             best_epoch = epoch
+[?2004l[?2004h>         else:
+[?2004l[?2004h>             patience_counter += 1
+[?2004l[?2004h>             
+[?2004l[?2004h>         if epoch % 10 == 0:
+[?2004l[?2004h>             print(f'Epoch {epoch} - VAL_RMSE: {rmse:.4f} - Best: {best_rmse:.4f}')
+[?2004l[?2004h>             
+[?2004l[?2004h>         if patience_counter >= 20:
+[?2004l[?2004h>             print(f'Early stopping at epoch {epoch}')
+[?2004l[?2004h>             break
+[?2004l[?2004h>             
+[?2004l[?2004h>     print(f'VALIDATION_SCORE={best_rmse}')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f74d86cabb00:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+ls -l best_model.pth
+pkill -f train.py
+cat << 'EOF' > train_xgb.py
+import pandas as pd
+import numpy as np
+import xgboost as xgb
+from sklearn.metrics import mean_squared_error
+
+# Load data
+train = pd.read_csv('/app/data/train.csv')
+val = pd.read_csv('/app/data/val.csv')
+test = pd.read_csv('/app/data/test.csv')
+
+num_cols = [c for c in train.columns if c.startswith('num_')]
+bin_cols = [c for c in train.columns if c.startswith('bin_')]
+cat_cols = [c for c in train.columns if c.startswith('cat_')]
+
+# Preprocess categorical: simply cast to category for XGBoost
+for col in cat_cols:
+    train[col] = train[col].astype('category')
+    val[col] = val[col].astype('category')
+    test[col] = test[col].astype('category')
+
+# Split features and target
+X_train = train[num_cols + bin_cols + cat_cols]
+y_train = train['target']
+X_val = val[num_cols + bin_cols + cat_cols]
+y_val = val['target']
+X_test = test[num_cols + bin_cols + cat_cols]
+
+# XGBoost model with categorical support
+model = xgb.XGBRegressor(
+    n_estimators=1000,
+    learning_rate=0.05,
+    max_depth=6,
+    tree_method='hist',
+    enable_categorical=True,
+    early_stopping_rounds=50,
+    eval_metric='rmse'
+)
+
+model.fit(
+    X_train, y_train,
+    eval_set=[(X_val, y_val)],
+    verbose=100
+)
+
+val_preds = model.predict(X_val)
+rmse = np.sqrt(mean_squared_error(y_val, val_preds))
+print(f'VALIDATION_SCORE={rmse}')
+
+# Generate predictions
+test_preds = model.predict(X_test)
+preds_df = pd.DataFrame({'target': test_preds})
+preds_df.to_csv('/app/predictions.csv', index=False)
+print('Predictions saved to /app/predictions.csv')
+EOF
+python3 train_xgb.py
+ls -l /app/predictions.csv
+ps aux | grep train_xgb.py
+pkill -f train_xgb.py
+cat << 'EOF' > train_lgbm.py
+import pandas as pd
+import numpy as np
+import lightgbm as lgb
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import LabelEncoder
+
+print('Loading data...')
+train = pd.read_csv('/app/data/train.csv')
+val = pd.read_csv('/app/data/val.csv')
+test = pd.read_csv('/app/data/test.csv')
+
+num_cols = [c for c in train.columns if c.startswith('num_')]
+bin_cols = [c for c in train.columns if c.startswith('bin_')]
+cat_cols = [c for c in train.columns if c.startswith('cat_')]
+
+print('Preprocessing...')
+for col in cat_cols:
+    le = LabelEncoder()
+    train[col] = le.fit_transform(train[col].astype(str))
+    val[col] = le.transform(val[col].astype(str))
+    test[col] = le.transform(test[col].astype(str))
+
+X_train = train[num_cols + bin_cols + cat_cols]
+y_train = train['target']
+X_val = val[num_cols + bin_cols + cat_cols]
+y_val = val['target']
+X_test = test[num_cols + bin_cols + cat_cols]
+
+print('Training LightGBM...')
+model = lgb.LGBMRegressor(
+    n_estimators=1000,
+    learning_rate=0.05,
+    max_depth=7,
+    num_leaves=63,
+    importance_type='gain',
+    n_jobs=-1
+)
+
+model.fit(
+    X_train, y_train,
+    eval_set=[(X_val, y_val)],
+    callbacks=[lgb.early_stopping(stopping_rounds=50), lgb.log_evaluation(period=100)]
+)
+
+val_preds = model.predict(X_val)
+rmse = np.sqrt(mean_squared_error(y_val, val_preds))
+print(f'VALIDATION_SCORE={rmse}')
+
+print('Generating predictions...')
+test_preds = model.predict(X_test)
+preds_df = pd.DataFrame({'target': test_preds})
+preds_df.to_csv('/app/predictions.csv', index=False)
+print('Predictions saved to /app/predictions.csv')
+EOF
+python3 train_lgbm.py
+ls -l /app/predictions.csv
+ps aux | grep train_lgbm.py
+pkill -9 -f train_lgbm.py
+cat << 'EOF' > train_fast_lgbm.py
+import pandas as pd
+import numpy as np
+import lightgbm as lgb
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import LabelEncoder
+
+print('Loading data...')
+train = pd.read_csv('/app/data/train.csv')
+val = pd.read_csv('/app/data/val.csv')
+test = pd.read_csv('/app/data/test.csv')
+
+num_cols = [c for c in train.columns if c.startswith('num_')]
+bin_cols = [c for c in train.columns if c.startswith('bin_')]
+cat_cols = [c for c in train.columns if c.startswith('cat_')]
+
+print('Preprocessing...')
+for col in cat_cols:
+    le = LabelEncoder()
+    train[col] = le.fit_transform(train[col].astype(str))
+    val[col] = le.tra

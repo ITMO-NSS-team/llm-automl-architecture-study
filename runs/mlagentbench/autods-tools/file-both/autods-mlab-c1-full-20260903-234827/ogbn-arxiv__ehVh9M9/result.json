@@ -1,0 +1,125 @@
+{
+    "id": "c4434c81-6418-4721-b6ea-6a60860429e7",
+    "task_name": "mlab-c1/ogbn-arxiv",
+    "trial_name": "ogbn-arxiv__ehVh9M9",
+    "trial_uri": "file:///var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/autods-mlab-c1-full-20260903-234827/ogbn-arxiv__ehVh9M9",
+    "task_id": {
+        "path": "datasets/mlab-c1/ogbn-arxiv"
+    },
+    "source": "mlab-c1",
+    "task_checksum": "ffbc6232c00819588cfb5d346314d2f06aefcf6ed35ea1f29ed8dfe5febf01bb",
+    "config": {
+        "task": {
+            "path": "datasets/mlab-c1/ogbn-arxiv",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "mlab-c1"
+        },
+        "trial_name": "ogbn-arxiv__ehVh9M9",
+        "trials_dir": "/var/essdata/s_chumakov/automl-journal/runs/autods-tabred/jobs/autods-mlab-c1-full-20260903-234827",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "autods_harbor.agent:AutoDSAgent",
+            "import_path": null,
+            "model_name": "google/gemma-4-31b-it",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {
+                "install_spec": "git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=packages/autods git+https://github.com/florentiner/AutoDS-Tools.git@mlab-gpu-pub#subdirectory=apps/harbor",
+                "workspace": "/workspace"
+            },
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "32e9239d-d093-425b-a99f-f904ef123785",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "autods",
+        "version": "autods-harbor",
+        "model_info": {
+            "name": "gemma-4-31b-it",
+            "provider": "google"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 76163,
+        "n_cache_tokens": 15104,
+        "n_output_tokens": 8022,
+        "cost_usd": 0.009582,
+        "rollout_details": null,
+        "metadata": {
+            "autods_workspace": "/workspace",
+            "autods_model": "google/gemma-4-31b-it"
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.53,
+            "accuracy": 0.53,
+            "n": 10000
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-09-04T06:00:49.271122Z",
+    "finished_at": "2026-09-04T06:13:52.266036Z",
+    "environment_setup": {
+        "started_at": "2026-09-04T06:00:49.365234Z",
+        "finished_at": "2026-09-04T06:01:49.395577Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-04T06:01:49.395629Z",
+        "finished_at": "2026-09-04T06:02:32.015996Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-04T06:02:32.016161Z",
+        "finished_at": "2026-09-04T06:13:37.964474Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-04T06:13:38.650209Z",
+        "finished_at": "2026-09-04T06:13:39.427221Z"
+    },
+    "step_results": null
+}

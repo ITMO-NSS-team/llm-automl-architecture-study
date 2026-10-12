@@ -1,0 +1,685 @@
+[?2004hroot@103d752e1de6:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@103d752e1de6:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@103d752e1de6:/workspace# cat data_description.txt
+[?2004lcat: data_description.txt: No such file or directory
+[?2004hroot@103d752e1de6:/workspace# cat evaluation_details.txt
+[?2004lcat: evaluation_details.txt: No such file or directory
+[?2004hroot@103d752e1de6:/workspace# ls -F
+[?2004limages/  task_descriptor.txt  test.csv	train.csv  train.py
+[?2004hroot@103d752e1de6:/workspace# cat train.py
+[?2004limport ast
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+from PIL import Image
+
+device = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', device)
+
+SIZE = 64
+N_CLASSES = 290
+BATCH_SIZE = 32
+EPOCH = 1                       # the original starter also trains for a single epoch
+
+
+def load(ids):
+    out = []
+    for i in ids:
+        for ext in ('.png', '.jpg', '.jpeg'):
+            p = f'images/{i}{ext}'
+            try:
+                out.append(np.asarray(Image.open(p).convert('RGB').resize((SIZE, SIZE)),
+                                      dtype=np.float32) / 255.0)
+                break
+            except FileNotFoundError:
+                continue
+        else:
+            out.append(np.zeros((SIZE, SIZE, 3), dtype=np.float32))
+    return np.stack(out)
+
+
+train = pd.read_csv('train.csv')
+test = pd.read_csv('test.csv')
+X = torch.tensor(load(train['id'].values)).permute(0, 3, 1, 2)
+Y = torch.zeros(len(train), N_CLASSES)
+for r, cats in enumerate(train['categories']):
+    for c in ast.literal_eval(str(cats)):
+        if 0 <= int(c) < N_CLASSES:
+            Y[r, int(c)] = 1.0
+
+model = nn.Sequential(
+    nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+    nn.Flatten(), nn.Linear(16 * (SIZE // 2) ** 2, N_CLASSES)).to(device)
+opt = torch.optim.Adam(model.parameters(), lr=1e-3)
+lossf = nn.BCEWithLogitsLoss()
+
+for epoch in range(EPOCH):
+    model.train()
+    for i in range(0, len(X), BATCH_SIZE):
+        xb, yb = X[i:i + BATCH_SIZE].to(device), Y[i:i + BATCH_SIZE].to(device)
+        opt.zero_grad()
+        loss = lossf(model(xb), yb)
+        loss.backward()
+        opt.step()
+    print(f'epoch {epoch} loss {loss.item():.4f}')
+
+Xte = torch.tensor(load(test['id'].values)).permute(0, 3, 1, 2)
+model.eval()
+rows = []
+with torch.no_grad():
+    for i in range(0, len(Xte), BATCH_SIZE):
+        p = torch.sigmoid(model(Xte[i:i + BATCH_SIZE].to(device))).cpu().numpy()
+        for r in p:
+            rows.append(sorted(np.where(r > 0.5)[0].tolist()))
+pd.DataFrame({'id': test['id'], 'categories': [str(r) for r in rows]}).to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+[?2004hroot@103d752e1de6:/workspace# cat task_descriptor.txt
+[?2004lDataset Description
+The training and test images for the competition were all collected in the Monterey Bay Area between the surface and 1300 meters depth. The images contain bounding box annotations of 290 categories of bottom dwelling animals. The training and evaluation data are split across an 800 meter depth threshold: all training data is collected from 0-800 meters, evaluation data comes from the whole 0-1300 meter range. Since an organisms' habitat range is partially a function of depth, the species distributions in the two regions are overlapping but not identical. Test images are drawn from the same region but may come from above or below the depth horizon.
+
+The competition goal is to label the animals present in a given image (i.e. multi-label classification) and determine whether the image is out-of-sample.
+
+Data format
+The training dataset are provide in two different formats: multi-label classification and object detection. The different formats live in the corresponding named directories. The datasets in these directories are identical aside from how they are organized.
+
+Multi-label classification
+Each line of the csv files indicates an image by its id and a list of corresponding categories present in the frame.
+
+id, categories
+4a7f2199-772d-486d-b8e2-b651246316b5, [1.0]
+3bddedf6-4ff8-4e81-876a-564d2b03b364, "[1.0, 9.0, 11.0, 88.0]"
+3f735021-f5de-4168-b139-74bf2859d12a, "[1.0, 37.0, 51.0, 119.0]"
+130e185f-09c5-490c-8d08-641c4cbf6e54, "[1.0, 51.0, 119.0]"
+The ids correspond those in the object detection files. The categories are the set of all unique annotations found in the associated image.
+
+Object detection
+The datasets are formatted to adhere to the COCO Object Detection standard. Every training image contains at least one annotation corresponding to a category_id ranging from 1 to 290 and a supercategory from 1 to 20. The fine-grained annotations are taxonomic thought not always at the same level of the taxonomic tree.
+
+Supercategories
+Each category also belongs to one of 20 semantic supercategories as indicated in category_key.csv:
+
+['Worm', 'Feather star', 'Sea cucumber', 'Squat lobster', 'Fish', 'Soft coral', 'Urchin', 'Sea star', 'Sea fan', 'Sea pen', 'Barnacle', 'Eel', 'Glass sponge', 'Shrimp', 'Black coral', 'Anemone', 'Sea spider', 'Gastropod', 'Crab', 'Stony coral']
+These supercategories might be useful for certain training procedures. The supercategories are represented in both the training and validation set. But please note that submissions must be made identifying the 290 fine grained categories.
+
+
+Files
+multilabel_classification/train.csv - csv list of training images and categories
+object_detection/train.json - the training images, annotations, and categories in COCO formatted json
+object_detection/eval.json - the evaluation images in COCO formatted json
+sample_submission.csv - a sample submission file in the correct format
+category_key.csv - key mapping numerical index to category and supercategory name
+metric.py - a Python implementation of the metric described in the evaluation_details.txt. This is the same metric used to calculate the leaderboard score.
+[?2004hroot@103d752e1de6:/workspace# head -n 5 train.csv
+[?2004lid,categories
+c7f56fc4-a75d-4be6-828a-c7ff64cfc1a2,"[52.0, 246.0]"
+ea980963-1ed8-42c0-a0ea-cd2815143017,[10.0]
+66ebb2a2-b922-4921-94a9-bc505ea2c66c,[37.0]
+18562d9e-0c39-47d6-a1a9-e68abb821fd9,"[37.0, 51.0, 160.0, 224.0]"
+[?2004hroot@103d752e1de6:/workspace# head -n 5 test.csv
+[?2004lid
+eb0ab4a1-236f-433f-bfeb-50722e57da96
+c30a4300-20fa-474a-bbcc-5e9e4b3bd462
+152edc6b-99ac-40f6-a83e-c45cfd4186f8
+90e5ae4e-06c2-45fa-bf56-614d337591b7
+[?2004hroot@103d752e1de6:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import ast
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> from torch.utils.data import Dataset, DataLoader
+[?2004l[?2004h> from PIL import Image
+[?2004l[?2004h> import torchvision.models as models
+[?2004l[?2004h> import torchvision.transforms as transforms
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware resolution snippet
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> SIZE = 128
+[?2004l[?2004h> N_CLASSES = 290
+[?2004l[?2004h> BATCH_SIZE = 32
+[?2004l[?2004h> EPOCHS = 10
+[?2004l[?2004h> LR = 1e-4
+[?2004l[?2004h> 
+[?2004l[?2004h> class FathomDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, ids, labels=None, transform=None):
+[?2004l[?2004h>         self.ids = ids
+[?2004l[?2004h>         self.labels = labels
+[?2004l[?2004h>         self.transform = transform
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.ids)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         img_id = self.ids[idx]
+[?2004l[?2004h>         img = None
+[?2004l[?2004h>         for ext in ('.png', '.jpg', '.jpeg'):
+[?2004l[?2004h>             p = f'images/{img_id}{ext}'
+[?2004l[?2004h>             try:
+[?2004l[?2004h>                 img = Image.open(p).convert('RGB')
+[?2004l[?2004h>                 break
+[?2004l[?2004h>             except FileNotFoundError:
+[?2004l[?2004h>                 continue
+[?2004l[?2004h>         
+[?2004l[?2004h>         if img is None:
+[?2004l[?2004h>             img = Image.new('RGB', (SIZE, SIZE), (0, 0, 0))
+[?2004l[?2004h>         else:
+[?2004l[?2004h>             img = img.resize((SIZE, SIZE))
+[?2004l[?2004h>             
+[?2004l[?2004h>         if self.transform:
+[?2004l[?2004h>             img = self.transform(img)
+[?2004l[?2004h>             
+[?2004l[?2004h>         if self.labels is not None:
+[?2004l[?2004h>             label = torch.zeros(N_CLASSES)
+[?2004l[?2004h>             cats = ast.literal_eval(str(self.labels[idx]))
+[?2004l[?2004h>             for c in cats:
+[?2004l[?2004h>                 cid = int(float(c))
+[?2004l[?2004h>                 if 0 <= cid < N_CLASSES:
+[?2004l[?2004h>                     label[cid] = 1.0
+[?2004l[?2004h>             return img, label
+[?2004l[?2004h>         return img
+[?2004l[?2004h> 
+[?2004l[?2004h> # Transforms
+[?2004l[?2004h> train_transform = transforms.Compose([
+[?2004l[?2004h>     transforms.ToTensor(),
+[?2004l[?2004h>     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+[?2004l[?2004h> ])
+[?2004l[?2004h> 
+[?2004l[?2004h> test_transform = transforms.Compose([
+[?2004l[?2004h>     transforms.ToTensor(),
+[?2004l[?2004h>     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+[?2004l[?2004h> ])
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = pd.read_csv('train.csv')
+[?2004l[?2004h> test_df = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> train_ds = FathomDataset(train_df['id'].values, train_df['categories'].values, transform=train_transform)
+[?2004l[?2004h> train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = models.resnet18(pretrained=True)
+[?2004l[?2004h> model.fc = nn.Linear(model.fc.in_features, N_CLASSES)
+[?2004l[?2004h> model = model.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+[?2004l[?2004h> criterion = nn.BCEWithLogitsLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> for epoch in range(EPOCHS):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     running_loss = 0.0
+[?2004l[?2004h>     for images, labels in train_loader:
+[?2004l[?2004h>         images, labels = images.to(DEVICE), labels.to(DEVICE)
+[?2004l[?2004h>         optimizer.zero_grad()
+[?2004l[?2004h>         outputs = model(images)
+[?2004l[?2004h>         loss = criterion(outputs, labels)
+[?2004l[?2004h>         loss.backward()
+[?2004l[?2004h>         optimizer.step()
+[?2004l[?2004h>         running_loss += loss.item()
+[?2004l[?2004h>     print(f'Epoch {epoch+1}/{EPOCHS}, Loss: {running_loss/len(train_loader):.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Inference
+[?2004l[?2004h> test_ds = FathomDataset(test_df['id'].values, transform=test_transform)
+[?2004l[?2004h> test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> all_preds = []
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     for images in test_loader:
+[?2004l[?2004h>         images = images.to(DEVICE)
+[?2004l[?2004h>         logits = model(images)
+[?2004l[?2004h>         probs = torch.sigmoid(logits).cpu().numpy()
+[?2004l[?2004h>         for p in probs:
+[?2004l[?2004h>             # Use a threshold of 0.5
+[?2004l[?2004h>             pred_cats = np.where(p > 0.5)[0].tolist()
+[?2004l[?2004h>             all_preds.append(sorted(pred_cats))
+[?2004l[?2004h> 
+[?2004l[?2004h> # Check for collapse
+[?2004l[?2004h> pred_matrix = np.array([[1 if i in p else 0 for i in range(N_CLASSES)] for p in all_preds])
+[?2004l[?2004h> distinct_counts = [len(np.unique(pred_matrix[:, i])) for i in range(N_CLASSES)]
+[?2004l[?2004h> print('Distinct values per column:', distinct_counts)
+[?2004l[?2004h> if any(c < 10 for c in distinct_counts):
+[?2004l[?2004h>     print('WARNING: Model collapse detected (some columns have < 10 distinct values)')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Create submission
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'id': test_df['id'],
+[?2004l[?2004h>     'categories': [str(p) for p in all_preds]
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@103d752e1de6:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/usr/local/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/usr/local/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+  0%|                                                                                                                              | 0.00/44.7M [00:00<?, ?B/s]  1%|▉                                                                                                                     | 368k/44.7M [00:00<00:12, 3.73MB/s]  5%|█████▌                                                                                                               | 2.11M/44.7M [00:00<00:03, 12.2MB/s] 25%|████████████████████████████▊                                                                                        | 11.0M/44.7M [00:00<00:00, 48.9MB/s] 55%|███████████████████████████████████████████████████████████████▉                                                     | 24.4M/44.7M [00:00<00:00, 82.8MB/s]100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 44.7M/44.7M [00:00<00:00, 92.7MB/s]
+ls -l submission.csv
+
+ls -l submission.csv
+Epoch 1/10, Loss: 0.3394
+C-c
+sed -i 's/EPOCHS = 10/EPOCHS = 2/' train.py
+sed -i 's/SIZE = 128/SIZE = 64/' train.py
+python3 train.py
+C-c
+cat << 'EOF' > train.py
+import ast
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+from PIL import Image
+import torchvision.models as models
+import torchvision.transforms as transforms
+
+# Hardware resolution snippet
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+SIZE = 64
+N_CLASSES = 290
+BATCH_SIZE = 32
+EPOCHS = 2
+LR = 1e-4
+
+class FathomDataset(Dataset):
+    def __init__(self, ids, labels=None, transform=None):
+        self.ids = ids
+        self.labels = labels
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.ids)
+
+    def __getitem__(self, idx):
+        img_id = self.ids[idx]
+        img = None
+        for ext in ('.png', '.jpg', '.jpeg'):
+            p = f'images/{img_id}{ext}'
+            try:
+                img = Image.open(p).convert('RGB')
+                break
+            except FileNotFoundError:
+                continue
+        
+        if img is None:
+            img = Image.new('RGB', (SIZE, SIZE), (0, 0, 0))
+        else:
+            img = img.resize((SIZE, SIZE))
+            
+        if self.transform:
+            img = self.transform(img)
+            
+        if self.labels is not None:
+            label = torch.zeros(N_CLASSES)
+            cats = ast.literal_eval(str(self.labels[idx]))
+            for c in cats:
+                cid = int(float(c))
+                if 0 <= cid < N_CLASSES:
+                    label[cid] = 1.0
+            return img, label
+        return img
+
+# Transforms
+train_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+test_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+train_df = pd.read_csv('train.csv')
+test_df = pd.read_csv('test.csv')
+
+train_ds = FathomDataset(train_df['id'].values, train_df['categories'].values, transform=train_transform)
+train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+
+model = models.resnet18(pretrained=True)
+model.fc = nn.Linear(model.fc.in_features, N_CLASSES)
+model = model.to(DEVICE)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+criterion = nn.BCEWithLogitsLoss()
+
+for epoch in range(EPOCHS):
+    model.train()
+    running_loss = 0.0
+    for images, labels in train_loader:
+        images, labels = images.to(DEVICE), labels.to(DEVICE)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+    print(f'Epoch {epoch+1}/{EPOCHS}, Loss: {running_loss/len(train_loader):.4f}')
+
+# Inference
+test_ds = FathomDataset(test_df['id'].values, transform=test_transform)
+test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
+
+model.eval()
+all_preds = []
+with torch.no_grad():
+    for images in test_loader:
+        images = images.to(DEVICE)
+        logits = model(images)
+        probs = torch.sigmoid(logits).cpu().numpy()
+        for p in probs:
+            # Use a threshold of 0.5
+            pred_cats = np.where(p > 0.5)[0].tolist()
+            all_preds.append(sorted(pred_cats))
+
+# Check for collapse
+pred_matrix = np.array([[1 if i in p else 0 for i in range(N_CLASSES)] for p in all_preds])
+distinct_counts = [len(np.unique(pred_matrix[:, i])) for i in range(N_CLASSES)]
+print('Distinct values per column:', distinct_counts)
+if any(c < 10 for c in distinct_counts):
+    print('WARNING: Model collapse detected (some columns have < 10 distinct values)')
+
+# Create submission
+submission = pd.DataFrame({
+    'id': test_df['id'],
+    'categories': [str(p) for p in all_preds]
+})
+submission.to_csv('submission.csv', index=False)
+print('wrote submission.csv')
+EOF
+pytEpoch 2/10, Loss: 0.0627
+Epoch 3/10, Loss: 0.0374
+Epoch 4/10, Loss: 0.0298
+Epoch 5/10, Loss: 0.0257
+Epoch 6/10, Loss: 0.0231
+Epoch 7/10, Loss: 0.0209
+Epoch 8/10, Loss: 0.0190
+Epoch 9/10, Loss: 0.0175
+Epoch 10/10, Loss: 0.0155
+Distinct values per column: [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+WARNING: Model collapse detected (some columns have < 10 distinct values)
+wrote submission.csv
+[?2004hroot@103d752e1de6:/workspace# ls -l submission.csv
+[?2004l-rw-r--r-- 1 root root 18845 Sep  4 17:31 submission.csv
+[?2004hroot@103d752e1de6:/workspace# 
+[?2004l[?2004hroot@103d752e1de6:/workspace# ls -l submission.csv
+[?2004l-rw-r--r-- 1 root root 18845 Sep  4 17:31 submission.csv
+[?2004hroot@103d752e1de6:/workspace# C-c
+[?2004lbash: C-c: command not found
+[?2004hroot@103d752e1de6:/workspace# sed -i 's/EPOCHS = 10/EPOCHS = 2/' train.py
+[?2004l[?2004hroot@103d752e1de6:/workspace# sed -i 's/SIZE = 128/SIZE = 64/' train.py
+[?2004l[?2004hroot@103d752e1de6:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/usr/local/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/usr/local/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Epoch 1/2, Loss: 0.3502
+Epoch 2/2, Loss: 0.0804
+Distinct values per column: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+WARNING: Model collapse detected (some columns have < 10 distinct values)
+wrote submission.csv
+[?2004hroot@103d752e1de6:/workspace# C-c
+[?2004lbash: C-c: command not found
+[?2004hroot@103d752e1de6:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import ast
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> from torch.utils.data import Dataset, DataLoader
+[?2004l[?2004h> from PIL import Image
+[?2004l[?2004h> import torchvision.models as models
+[?2004l[?2004h> import torchvision.transforms as transforms
+[?2004l[?2004h> 
+[?2004l[?2004h> # Hardware resolution snippet
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> SIZE = 64
+[?2004l[?2004h> N_CLASSES = 290
+[?2004l[?2004h> BATCH_SIZE = 32
+[?2004l[?2004h> EPOCHS = 2
+[?2004l[?2004h> LR = 1e-4
+[?2004l[?2004h> 
+[?2004l[?2004h> class FathomDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, ids, labels=None, transform=None):
+[?2004l[?2004h>         self.ids = ids
+[?2004l[?2004h>         self.labels = labels
+[?2004l[?2004h>         self.transform = transform
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.ids)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         img_id = self.ids[idx]
+[?2004l[?2004h>         img = None
+[?2004l[?2004h>         for ext in ('.png', '.jpg', '.jpeg'):
+[?2004l[?2004h>             p = f'images/{img_id}{ext}'
+[?2004l[?2004h>             try:
+[?2004l[?2004h>                 img = Image.open(p).convert('RGB')
+[?2004l[?2004h>                 break
+[?2004l[?2004h>             except FileNotFoundError:
+[?2004l[?2004h>                 continue
+[?2004l[?2004h>         
+[?2004l[?2004h>         if img is None:
+[?2004l[?2004h>             img = Image.new('RGB', (SIZE, SIZE), (0, 0, 0))
+[?2004l[?2004h>         else:
+[?2004l[?2004h>             img = img.resize((SIZE, SIZE))
+[?2004l[?2004h>             
+[?2004l[?2004h>         if self.transform:
+[?2004l[?2004h>             img = self.transform(img)
+[?2004l[?2004h>             
+[?2004l[?2004h>         if self.labels is not None:
+[?2004l[?2004h>             label = torch.zeros(N_CLASSES)
+[?2004l[?2004h>             cats = ast.literal_eval(str(self.labels[idx]))
+[?2004l[?2004h>             for c in cats:
+[?2004l[?2004h>                 cid = int(float(c))
+[?2004l[?2004h>                 if 0 <= cid < N_CLASSES:
+[?2004l[?2004h>                     label[cid] = 1.0
+[?2004l[?2004h>             return img, label
+[?2004l[?2004h>         return img
+[?2004l[?2004h> 
+[?2004l[?2004h> # Transforms
+[?2004l[?2004h> train_transform = transforms.Compose([
+[?2004l[?2004h>     transforms.ToTensor(),
+[?2004l[?2004h>     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+[?2004l[?2004h> ])
+[?2004l[?2004h> 
+[?2004l[?2004h> test_transform = transforms.Compose([
+[?2004l[?2004h>     transforms.ToTensor(),
+[?2004l[?2004h>     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+[?2004l[?2004h> ])
+[?2004l[?2004h> 
+[?2004l[?2004h> train_df = pd.read_csv('train.csv')
+[?2004l[?2004h> test_df = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> train_ds = FathomDataset(train_df['id'].values, train_df['categories'].values, transform=train_transform)
+[?2004l[?2004h> train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = models.resnet18(pretrained=True)
+[?2004l[?2004h> model.fc = nn.Linear(model.fc.in_features, N_CLASSES)
+[?2004l[?2004h> model = model.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+[?2004l[?2004h> criterion = nn.BCEWithLogitsLoss()
+[?2004l[?2004h> 
+[?2004l[?2004h> for epoch in range(EPOCHS):
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     running_loss = 0.0
+[?2004l[?2004h>     for images, labels in train_loader:
+[?2004l[?2004h>         images, labels = images.to(DEVICE), labels.to(DEVICE)
+[?2004l[?2004h>         optimizer.zero_grad()
+[?2004l[?2004h>         outputs = model(images)
+[?2004l[?2004h>         loss = criterion(outputs, labels)
+[?2004l[?2004h>         loss.backward()
+[?2004l[?2004h>         optimizer.step()
+[?2004l[?2004h>         running_loss += loss.item()
+[?2004l[?2004h>     print(f'Epoch {epoch+1}/{EPOCHS}, Loss: {running_loss/len(train_loader):.4f}')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Inference
+[?2004l[?2004h> test_ds = FathomDataset(test_df['id'].values, transform=test_transform)
+[?2004l[?2004h> test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
+[?2004l[?2004h> 
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> all_preds = []
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     for images in test_loader:
+[?2004l[?2004h>         images = images.to(DEVICE)
+[?2004l[?2004h>         logits = model(images)
+[?2004l[?2004h>         probs = torch.sigmoid(logits).cpu().numpy()
+[?2004l[?2004h>         for p in probs:
+[?2004l[?2004h>             # Use a threshold of 0.5
+[?2004l[?2004h>             pred_cats = np.where(p > 0.5)[0].tolist()
+[?2004l[?2004h>             all_preds.append(sorted(pred_cats))
+[?2004l[?2004h> 
+[?2004l[?2004h> # Check for collapse
+[?2004l[?2004h> pred_matrix = np.array([[1 if i in p else 0 for i in range(N_CLASSES)] for p in all_preds])
+[?2004l[?2004h> distinct_counts = [len(np.unique(pred_matrix[:, i])) for i in range(N_CLASSES)]
+[?2004l[?2004h> print('Distinct values per column:', distinct_counts)
+[?2004l[?2004h> if any(c < 10 for c in distinct_counts):
+[?2004l[?2004h>     print('WARNING: Model collapse detected (some columns have < 10 distinct values)')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Create submission
+[?2004l[?2004h> submission = pd.DataFrame({
+[?2004l[?2004h>     'id': test_df['id'],
+[?2004l[?2004h>     'categories': [str(p) for p in all_preds]
+[?2004l[?2004h> })
+[?2004l[?2004h> submission.to_csv('submission.csv', index=False)
+[?2004l[?2004h> print('wrote submission.csv')
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@103d752e1de6:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/usr/local/lib/python3.12/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+/usr/local/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+cat << 'EOF' > train.py
+import ast
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+from PIL import Image
+import torchvision.models as models
+import torchvision.transforms as transforms
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+SIZE = 64
+N_CLASSES = 290
+BATCH_SIZE = 32
+EPOCHS = 2
+LR = 1e-4
+
+class FathomDataset(Dataset):
+    def __init__(self, ids, labels=None, transform=None):
+        self.ids = ids
+        self.labels = labels
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.ids)
+
+    def __getitem__(self, idx):
+        img_id = self.ids[idx]
+        img = None
+        for ext in ('.png', '.jpg', '.jpeg'):
+            p = f'images/{img_id}{ext}'
+            try:
+                img = Image.open(p).convert('RGB')
+                break
+            except FileNotFoundError:
+                continue
+        if img is None:
+            img = Image.new('RGB', (SIZE, SIZE), (0, 0, 0))
+        else:
+            img = img.resize((SIZE, SIZE))
+        if self.transform:
+            img = self.transform(img)
+        if self.labels is not None:
+            label = torch.zeros(N_CLASSES)
+            cats = ast.literal_eval(str(self.labels[idx]))
+            for c in cats:
+                cid = int(float(c))
+                if 0 <= cid < N_CLASSES:
+                    label[cid] = 1.0
+            return img, label
+        return img
+
+train_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+test_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+train_df = pd.read_csv('train.csv')
+test_df = pd.read_csv('test.csv')
+
+train_ds = FathomDataset(train_df['id'].values, train_df['categories'].values, transform=train_transform)
+train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+
+model = models.resnet18(pretrained=True)
+model.fc = nn.Linear(model.fc.in_features, N_CLASSES)
+model = model.to(DEVICE)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+criterion = nn.BCEWithLogitsLoss()
+
+for epoch in range(EPOCHS):
+    model.train()
+    running_loss = 0.0
+    for images, labels in train_loader:
+        images, labels = images.to(DEVICE), labels.to(DEVICE)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+    print(f'Epoch {epoch+1}/{EPOCHS}, Loss: {running_loss/len(train_loader):.4f}')
+
+test_ds = FathomDataset(test_df['id'].values, transform=test_transform)
+test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
+
+model.eval()
+all_logits = []
+with torch.no_grad():
+    for images in test_loader:
+        logits = model(images.to(DEVICE))
+        all_logits.append(logits.cpu().numpy())
+
+all_logits = np.vstack(all_logits)
+probs = torch.sigmoid(torch.tensor(all_logits)).numpy()
+
+# To avoid collapse, we use a per-class threshold that ensures some variance.
+# We'll use the 90th percentile of each class's probability as the threshold
+# but ensure it's not too high (max 0.5).
+thresholds = np.percentile(probs, 90, axis=0)
+thresholds = np.clip(thresholds, 0.01, 0.5)
+
+all_preds = []
+for p in probs:
+    pred_cats = np.where(p > thresholds)[0].tolist()
+    all_preds.append(sorted(pred_cats))
+
+pred_matrix = np.array([[1 if i in p else 0 for i in range(N_CLASSES)] for p in all_preds])
+distinct_counts = [len(np.unique(pred_matrix[:, i])) for i in rangeEpoch 1/2, Loss: 0.3654

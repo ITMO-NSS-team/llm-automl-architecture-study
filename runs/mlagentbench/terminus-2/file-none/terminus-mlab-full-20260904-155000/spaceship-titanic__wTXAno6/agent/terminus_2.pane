@@ -1,0 +1,469 @@
+[?2004hroot@f40cb3719adb:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@f40cb3719adb:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@f40cb3719adb:/workspace# ls -la
+[?2004ltotal 668
+drwxr-xr-x 2 root root   4096 Sep  3 15:43 .
+drwxr-xr-x 1 root root   4096 Sep  4 16:08 ..
+-rw-rw-r-- 1 root root 125993 Sep  3 15:43 test.csv
+-rw-rw-r-- 1 root root 543385 Sep  3 15:43 train.csv
+-rw-rw-r-- 1 root root   1938 Sep  3 15:43 train.py
+[?2004hroot@f40cb3719adb:/workspace# cat task_descriptor.txt
+[?2004lcat: task_descriptor.txt: No such file or directory
+[?2004hroot@f40cb3719adb:/workspace# cat train.py
+[?2004limport pandas as pd
+from sklearn.linear_model import LogisticRegression
+
+
+def create_new_dataframe(data, column_names):
+    new_data = {}
+    for column in column_names:
+        if column in data.columns:
+            new_data[column] = data[column]
+        else:
+            new_data[column] = pd.Series(0, index=data.index)
+    return pd.DataFrame(new_data)
+
+
+df = pd.read_csv("train.csv")
+num_examples = df.shape[0]
+df = df.sample(frac=1, random_state=1)
+train_data = df[0:int(0.8 * num_examples)]
+val_data = df[int(0.8 * num_examples) + 1:]
+
+for part in (train_data, val_data):
+    part[["Deck", "Cabin_num", "Side"]] = part["Cabin"].str.split("/", expand=True)
+train_data = train_data.drop('Cabin', axis=1)
+val_data = val_data.drop('Cabin', axis=1)
+
+TargetY = train_data["Transported"]
+TargetY_test = val_data["Transported"]
+
+selectColumns = ["Deck", "Cabin_num", "Side"]
+ResourceX = pd.get_dummies(train_data[selectColumns])
+ResourceX_test = pd.get_dummies(val_data[selectColumns])
+
+# ***********************************************
+# In this part of the code, write and train the model on the above dataset to perform the task.
+# This part should populate the variable train_accuracy and val_accuracy
+# ***********************************************
+
+
+# ***********************************************
+# End of the main training module
+# ***********************************************
+
+print(f"Train Accuracy: {train_accuracy}")
+print(f"Validation Accuracy: {val_accuracy}")
+
+test_data = pd.read_csv('test.csv')
+test_data[["Deck", "Cabin_num", "Side"]] = test_data["Cabin"].str.split("/", expand=True)
+test_data = test_data.drop('Cabin', axis=1)
+
+test_X = pd.get_dummies(test_data[selectColumns])
+test_X = test_X.reindex(columns=ResourceX.columns, fill_value=0)
+
+test_preds = model.predict(test_X)
+pd.DataFrame({'PassengerId': test_data.PassengerId,
+              'Transported': test_preds}).to_csv('submission.csv', index=False)
+[?2004hroot@f40cb3719adb:/workspace# head -n 5 train.csv
+[?2004lPassengerId,HomePlanet,CryoSleep,Cabin,Destination,Age,VIP,RoomService,FoodCourt,ShoppingMall,Spa,VRDeck,Transported
+5397_03,Mars,True,D/162/S,55 Cancri e,30.0,False,0.0,0.0,0.0,0.0,0.0,True
+2941_01,Earth,False,G/477/P,TRAPPIST-1e,16.0,,24.0,0.0,13.0,717.0,0.0,False
+3081_01,Europa,False,C/118/S,55 Cancri e,50.0,False,0.0,1547.0,0.0,1784.0,1.0,True
+8941_01,Mars,False,E/575/P,TRAPPIST-1e,26.0,True,1.0,445.0,170.0,614.0,68.0,False
+[?2004hroot@f40cb3719adb:/workspace# sed '1,5d' train.csv | head -n 5
+[?2004l4930_02,Europa,False,B/161/P,TRAPPIST-1e,51.0,False,0.0,3571.0,106.0,0.0,0.0,True
+2513_01,Earth,False,,TRAPPIST-1e,28.0,False,0.0,55.0,0.0,656.0,0.0,False
+4023_01,Earth,False,E/246/P,TRAPPIST-1e,27.0,False,1.0,355.0,757.0,0.0,,False
+6107_01,Earth,False,F/1263/P,55 Cancri e,18.0,False,0.0,0.0,0.0,63.0,525.0,True
+5695_01,Earth,True,G/922/S,TRAPPIST-1e,39.0,False,0.0,0.0,0.0,0.0,0.0,True
+[?2004hroot@f40cb3719adb:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> 
+[?2004l[?2004h> # Device selection
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess(df):
+[?2004l[?2004h>     # Cabin splitting
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Handling missing values
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=['float64', 'int64']).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>         
+[?2004l[?2004h>     # Encoding
+[?2004l[?2004h>     df = pd.get_dummies(df, columns=[c for c in cat_cols if c != 'PassengerId'])
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train_df_raw = pd.read_csv('train.csv')
+[?2004l[?2004h> test_df_raw = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Separate target
+[?2004l[?2004h> y = train_df_raw['Transported'].astype(int).values
+[?2004l[?2004h> X_raw = train_df_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Preprocess train and test
+[?2004l[?2004h> # Combine for consistent dummy encoding
+[?2004l[?2004h> all_data = pd.concat([X_raw, test_df_raw])
+[?2004l[?2004h> all_processed = preprocess(all_data)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Separate again
+[?2004l[?2004h> X_processed = all_processed.iloc[:len(train_df_raw)].drop('PassengerId', axis=1)
+[?2004l[?2004h> test_processed = all_processed.iloc[len(train_df_raw):].drop('PassengerId', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Split train/val
+[?2004l[?2004h> X_train, X_val, y_train, y_val = train_test_split(X_processed, y, test_size=0.2, random_state=42)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Scaling
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train_scaled = scaler.fit_transform(X_train)
+[?2004l[?2004h> X_val_scaled = scaler.transform(X_val)
+[?2004l[?2004h> test_scaled = scaler.transform(test_processed)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Convert to Tensors
+[?2004l[?2004h> X_train_t = torch.tensor(X_train_scaled, dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> y_train_t = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val_t = torch.tensor(X_val_scaled, dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> y_val_t = torch.tensor(y_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Model
+[?2004l[?2004h> class TitanicModel(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(TitanicModel, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(64, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = TitanicModel(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training loop
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(100):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train_t)
+[?2004l[?2004h>     loss = criterion(outputs, y_train_t)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Evaluation
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     val_preds = model(X_val_t)
+[?2004l[?2004h>     val_acc = ((val_preds > 0.5).float() == y_val_t).float().mean().item()
+[?2004l[?2004h>     train_preds = model(X_train_t)
+[?2004l[?2004h>     train_acc = ((train_preds > 0.5).float() == y_train_t).float().mean().item()
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_acc}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_acc}")
+[?2004l[?2004h> 
+[?2004l[?2004h> # Submission
+[?2004l[?2004h> X_test_t = torch.tensor(test_scaled, dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_outputs = model(X_test_t)
+[?2004l[?2004h>     test_preds = (test_outputs > 0.5).float().cpu().numpy().astype(int)
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'PassengerId': test_df_raw.PassengerId, 'Transported': test_preds.flatten()}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f40cb3719adb:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+ls -la submission.csv
+python3 train.py
+Train Accuracy: 0.9397807121276855
+Validation Accuracy: 0.7081236243247986
+sed -i "s/include=['object', 'bool']/include=['object', 'bool', 'string']=" train.py
+[?2004hroot@f40cb3719adb:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 17364 Sep  4 16:10 submission.csv
+[?2004hroot@f40cb3719adb:/workspace# python3 train.py
+[?2004lpython3 train.py
+DEVICE= cpu
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+ls -la submission.csv
+Train Accuracy: 0.9453532099723816
+Validation Accuracy: 0.7052479982376099
+[?2004hroot@f40cb3719adb:/workspace# sed -i "s/include=['object', 'bool']/include=['object', 'bool', 'string']=" train.py
+[?2004lsed: -e expression #1, char 66: unterminated `s' command
+[?2004hroot@f40cb3719adb:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+cat << 'EOF' > train.py
+import pandas as pd
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+# Device selection
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+def preprocess(df):
+    # Cabin splitting
+    df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+    df = df.drop('Cabin', axis=1)
+    
+    # Handling missing values
+    num_cols = df.select_dtypes(include=['float64', 'int64']).columns
+    cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+    
+    for col in num_cols:
+        df[col] = df[col].fillna(df[col].median())
+    
+    for col in cat_cols:
+        df[col] = df[col].fillna('Unknown')
+        
+    # Encoding
+    df = pd.get_dummies(df, columns=[c for c in cat_cols if c != 'PassengerId'])
+    return df
+
+# Load data
+train_df_raw = pd.read_csv('train.csv')
+test_df_raw = pd.read_csv('test.csv')
+
+# Separate target
+y = train_df_raw['Transported'].astype(int).values
+X_raw = train_df_raw.drop('Transported', axis=1)
+
+# Preprocess train and test
+all_data = pd.concat([X_raw, test_df_raw])
+all_processed = preprocess(all_data)
+
+# Separate again
+X_processed = all_processed.iloc[:len(train_df_raw)].drop('PassengerId', axis=1)
+test_processed = all_processed.iloc[len(train_df_raw):].drop('PassengerId', axis=1)
+
+# Split train/val
+X_train, X_val, y_train, y_val = train_test_split(X_processed, y, test_size=0.2, random_state=42)
+
+# Scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_val_scaled = scaler.transform(X_val)
+test_scaled = scaler.transform(test_processed)
+
+# Convert to Tensors
+X_train_t = torch.tensor(X_train_scaled, dtype=torch.float32).to(DEVICE)
+y_train_t = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+X_val_t = torch.tensor(X_val_scaled, dtype=torch.float32).to(DEVICE)
+y_val_t = torch.tensor(y_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+
+# Model with Dropout
+class TitanicModel(nn.Module):
+    def __init__(self, input_dim):
+        super(TitanicModel, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(input_dim, 64),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(64, 32),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(32, 1),
+            nn.Sigmoid()
+        )
+    def forward(self, x):
+        return self.net(x)
+
+model = TitanicModel(X_train.shape[1]).to(DEVICE)
+criterion = nn.BCELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+
+# Training loop
+model.train()
+for epoch in range(150):
+    optimizer.zero_grad()
+    outputs = model(X_train_t)
+    loss = criterion(outputs, y_train_t)
+    loss.backward()
+    optimizer.step()
+
+# Evaluation
+model.eval()
+with torch.no_grad():
+    val_preds = model(X_val_t)
+    val_acc = ((val_preds > 0.5).float() == y_val_t).float().mean().item()
+    train_preds = model(X_train_t)
+    train_acc = ((train_preds > 0.5).float() == y_train_t).float().mean().item()
+
+print(f"Train Accuracy: {train_acc}")
+print(f"Validation Accuracy: {val_acc}")
+
+# Submission
+X_test_t = torch.tensor(test_scaled, dtype=torch.float32).to(DEVICE)
+with torch.no_grad():
+    test_outputs = model(X_test_t)
+    test_preds = (test_outputs > 0.5).float().cpu().numpy().astype(int)
+
+pd.DataFrame({'PassengerId': test_df_raw.PassengerId, 'Transported': test_preds.flatten()}).to_csv('submission.csv', index=False)
+EOF
+python3 train.py
+Train Accuracy: 0.9439151287078857
+Validation Accuracy: 0.7045291066169739
+[?2004hroot@f40cb3719adb:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 17364 Sep  4 16:11 submission.csv
+[?2004hroot@f40cb3719adb:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import torch
+[?2004l[?2004h> import torch.nn as nn
+[?2004l[?2004h> import torch.optim as optim
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from sklearn.preprocessing import StandardScaler
+[?2004l[?2004h> 
+[?2004l[?2004h> # Device selection
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> def preprocess(df):
+[?2004l[?2004h>     # Cabin splitting
+[?2004l[?2004h>     df[['Deck', 'Cabin_num', 'Side']] = df['Cabin'].str.split('/', expand=True)
+[?2004l[?2004h>     df = df.drop('Cabin', axis=1)
+[?2004l[?2004h>     
+[?2004l[?2004h>     # Handling missing values
+[?2004l[?2004h>     num_cols = df.select_dtypes(include=['float64', 'int64']).columns
+[?2004l[?2004h>     cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in num_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna(df[col].median())
+[?2004l[?2004h>     
+[?2004l[?2004h>     for col in cat_cols:
+[?2004l[?2004h>         df[col] = df[col].fillna('Unknown')
+[?2004l[?2004h>         
+[?2004l[?2004h>     # Encoding
+[?2004l[?2004h>     df = pd.get_dummies(df, columns=[c for c in cat_cols if c != 'PassengerId'])
+[?2004l[?2004h>     return df
+[?2004l[?2004h> 
+[?2004l[?2004h> # Load data
+[?2004l[?2004h> train_df_raw = pd.read_csv('train.csv')
+[?2004l[?2004h> test_df_raw = pd.read_csv('test.csv')
+[?2004l[?2004h> 
+[?2004l[?2004h> # Separate target
+[?2004l[?2004h> y = train_df_raw['Transported'].astype(int).values
+[?2004l[?2004h> X_raw = train_df_raw.drop('Transported', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Preprocess train and test
+[?2004l[?2004h> all_data = pd.concat([X_raw, test_df_raw])
+[?2004l[?2004h> all_processed = preprocess(all_data)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Separate again
+[?2004l[?2004h> X_processed = all_processed.iloc[:len(train_df_raw)].drop('PassengerId', axis=1)
+[?2004l[?2004h> test_processed = all_processed.iloc[len(train_df_raw):].drop('PassengerId', axis=1)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Split train/val
+[?2004l[?2004h> X_train, X_val, y_train, y_val = train_test_split(X_processed, y, test_size=0.2, random_state=42)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Scaling
+[?2004l[?2004h> scaler = StandardScaler()
+[?2004l[?2004h> X_train_scaled = scaler.fit_transform(X_train)
+[?2004l[?2004h> X_val_scaled = scaler.transform(X_val)
+[?2004l[?2004h> test_scaled = scaler.transform(test_processed)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Convert to Tensors
+[?2004l[?2004h> X_train_t = torch.tensor(X_train_scaled, dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> y_train_t = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> X_val_t = torch.tensor(X_val_scaled, dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> y_val_t = torch.tensor(y_val, dtype=torch.float32).unsqueeze(1).to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Model with Dropout
+[?2004l[?2004h> class TitanicModel(nn.Module):
+[?2004l[?2004h>     def __init__(self, input_dim):
+[?2004l[?2004h>         super(TitanicModel, self).__init__()
+[?2004l[?2004h>         self.net = nn.Sequential(
+[?2004l[?2004h>             nn.Linear(input_dim, 64),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.3),
+[?2004l[?2004h>             nn.Linear(64, 32),
+[?2004l[?2004h>             nn.ReLU(),
+[?2004l[?2004h>             nn.Dropout(0.2),
+[?2004l[?2004h>             nn.Linear(32, 1),
+[?2004l[?2004h>             nn.Sigmoid()
+[?2004l[?2004h>         )
+[?2004l[?2004h>     def forward(self, x):
+[?2004l[?2004h>         return self.net(x)
+[?2004l[?2004h> 
+[?2004l[?2004h> model = TitanicModel(X_train.shape[1]).to(DEVICE)
+[?2004l[?2004h> criterion = nn.BCELoss()
+[?2004l[?2004h> optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+[?2004l[?2004h> 
+[?2004l[?2004h> # Training loop
+[?2004l[?2004h> model.train()
+[?2004l[?2004h> for epoch in range(150):
+[?2004l[?2004h>     optimizer.zero_grad()
+[?2004l[?2004h>     outputs = model(X_train_t)
+[?2004l[?2004h>     loss = criterion(outputs, y_train_t)
+[?2004l[?2004h>     loss.backward()
+[?2004l[?2004h>     optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h> # Evaluation
+[?2004l[?2004h> model.eval()
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     val_preds = model(X_val_t)
+[?2004l[?2004h>     val_acc = ((val_preds > 0.5).float() == y_val_t).float().mean().item()
+[?2004l[?2004h>     train_preds = model(X_train_t)
+[?2004l[?2004h>     train_acc = ((train_preds > 0.5).float() == y_train_t).float().mean().item()
+[?2004l[?2004h> 
+[?2004l[?2004h> print(f"Train Accuracy: {train_acc}")
+[?2004l[?2004h> print(f"Validation Accuracy: {val_acc}")
+[?2004l[?2004h> 
+[?2004l[?2004h> # Submission
+[?2004l[?2004h> X_test_t = torch.tensor(test_scaled, dtype=torch.float32).to(DEVICE)
+[?2004l[?2004h> with torch.no_grad():
+[?2004l[?2004h>     test_outputs = model(X_test_t)
+[?2004l[?2004h>     test_preds = (test_outputs > 0.5).float().cpu().numpy().astype(int)
+[?2004l[?2004h> 
+[?2004l[?2004h> pd.DataFrame({'PassengerId': test_df_raw.PassengerId, 'Transported': test_preds.flatten()}).to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@f40cb3719adb:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns
+python3 train.py
+Train Accuracy: 0.970519483089447
+Validation Accuracy: 0.7145938277244568
+ls -la submission.csv
+[?2004hroot@f40cb3719adb:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/workspace/train.py:21: Pandas4Warning: For backward compatibility, 'str' dtypes are included by select_dtypes when 'object' dtype is specified. This behavior is deprecated and will be removed in a future version. Explicitly pass 'str' to `include` to select them, or to `exclude` to remove them and silence this warning.
+See https://pandas.pydata.org/docs/user_guide/migration-3-strings.html#string-migration-select-dtypes for details on how to write code that works with pandas 2 and 3.
+  cat_cols = df.select_dtypes(include=['object', 'bool']).columns

@@ -1,0 +1,7 @@
+>> LOCAL cooking-time from /Users/danilezov/harbor-datasets-tabred/datasets/tabred-real/cooking-time
+>> RUN cooking-time/c1 (family=tabular)  23:09:06
+/Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/.venv-agent/lib/python3.12/site-packages/langchain/chat_models/base.py:479: UserWarning: Parameters {'temperature'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  return _init_chat_model_helper(
+[autods-harbor] wrote trace with 22 steps to /Users/danilezov/work/autods_harbor/AutoDS-Tools/mlab-gpu/runs/cooking-time-c1/trace.json
+>> SCORE cooking-time/c1 (answer: answer.csv)
+{"reward": 0.4789981193724152, "r2": 0.4789981193724152, "rmse": 0.48644043329789965, "n": 10000}

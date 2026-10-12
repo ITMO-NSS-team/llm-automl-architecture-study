@@ -1,0 +1,609 @@
+[?2004hroot@3220800786cf:/workspace# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@3220800786cf:/workspace# clear
+[?2004l[H[J[3J[?2004hroot@3220800786cf:/workspace# ls -la
+[?2004ltotal 9072
+drwxr-xr-x 2 root root    4096 Sep  3 11:57 .
+drwxr-xr-x 1 root root    4096 Sep  4 16:32 ..
+-rw-rw-r-- 1 root root    1086 Sep  3 11:57 task_descriptor.txt
+-rw-rw-r-- 1 root root 1899150 Sep  3 11:57 test.csv
+-rw-rw-r-- 1 root root 7371801 Sep  3 11:57 train.csv
+-rw-rw-r-- 1 root root    1484 Sep  3 11:57 train.py
+[?2004hroot@3220800786cf:/workspace# cat data_description.txt
+[?2004lcat: data_description.txt: No such file or directory
+[?2004hroot@3220800786cf:/workspace# cat evaluation_details.txt
+[?2004lcat: evaluation_details.txt: No such file or directory
+[?2004hroot@3220800786cf:/workspace# cat train.py
+[?2004limport numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+SEED = 42
+
+
+def compute_metrics_for_regression(y_test, y_test_pred):
+    metrics = {}
+    for i, task in enumerate(DIMENSIONS):
+        rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+        metrics[f"rmse_{task}"] = rmse
+    return metrics
+
+
+def train_model(X_train, y_train, X_valid, y_valid):
+    # TODO. define and train the model
+    model = None
+    return model
+
+
+def predict(model, X):
+    # TODO. predict the model
+    y_pred = np.random.rand(len(X), len(DIMENSIONS))
+    return y_pred
+
+
+if __name__ == '__main__':
+    train_df = pd.read_csv('train.csv')
+    X = list(train_df['full_text'])
+    y = np.array([train_df[d].values for d in DIMENSIONS]).T
+
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+    model = train_model(X_train, y_train, X_valid, y_valid)
+
+    y_valid_pred = predict(model, X_valid)
+    metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+    print(metrics)
+    print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+
+    test_df = pd.read_csv('test.csv')
+    y_test_pred = predict(model, list(test_df['full_text']))
+    out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+    out.insert(0, 'text_id', test_df['text_id'])
+    out.to_csv('submission.csv', index=False)
+[?2004hroot@3220800786cf:/workspace# cat task_descriptor.txt
+[?2004lDataset Description
+The dataset presented here (the ELLIPSE corpus) comprises argumentative essays written by 8th-12th grade English Language Learners (ELLs). The essays have been scored according to six analytic measures: cohesion, syntax, vocabulary, phraseology, grammar, and conventions.
+
+Each measure represents a component of proficiency in essay writing, with greater scores corresponding to greater proficiency in that measure. The scores range from 1.0 to 5.0 in increments of 0.5. Your task is to predict the score of each of the six measures for the essays given in the test set.
+
+File and Field Information
+train.csv - The training set, comprising the full_text of each essay, identified by a unique text_id. The essays are also given a score for each of the seven analytic measures above: cohesion, etc. These analytic measures comprise the target for the competition.
+test.csv - For the test data we give only the full_text of an essay together with its text_id.
+sample_submission.csv - A submission file in the correct format. See the evaluation_details.txt for details.
+[?2004hroot@3220800786cf:/workspace# head -n 5 train.csv
+[?2004ltext_id,full_text,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+C7BD62EA392F,"Dear Principal:
+
+I personally don't think its a good idea that your considering changing school policy so that people may not participate in sports or other activities unless they have at least a grade B average.
+
+[?2004hroot@3220800786cf:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from torch.utils.data import DataLoader, Dataset
+[?2004l[?2004h> from torch.optim import AdamW
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from transformers import AutoTokenizer, AutoModelForSequenceClassification, get_linear_schedule_withwarmup
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+[?2004l[?2004h> SEED = 42
+[?2004l[?2004h> MODEL_NAME = 'distilbert-base-uncased'
+[?2004l[?2004h> MAX_LEN = 256
+[?2004l[?2004h> BATCH_SIZE = 16
+[?2004l[?2004h> EPOCHS = 3
+[?2004l[?2004h> LEARNING_RATE = 2e-5
+[?2004l[?2004h> 
+[?2004l[?2004h> class EssayDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, texts, labels, tokenizer, max_len):
+[?2004l[?2004h>         self.texts = texts
+[?2004l[?2004h>         self.labels = labels
+[?2004l[?2004h>         self.tokenizer = tokenizer
+[?2004l[?2004h>         self.max_len = max_len
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.texts)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         text = str(self.texts[idx])
+[?2004l[?2004h>         inputs = self.tokenizer.encode_plus(
+[?2004l[?2004h>             text, 
+[?2004l[?2004h>             None, 
+[?2004l[?2004h>             add_special_tokens=True, 
+[?2004l[?2004h>             max_length=self.max_len, 
+[?2004l[?2004h>             padding='max_length', 
+[?2004l[?2004h>             truncation=True, 
+[?2004l[?2004h>             return_tensors='pt'
+[?2004l[?2004h>         )
+[?2004l[?2004h>         return {
+[?2004l[?2004h>             'input_ids': inputs['input_ids'].flatten(),
+[?2004l[?2004h>             'attention_mask': inputs['attention_mask'].flatten(),
+[?2004l[?2004h>             'labels': torch.tensor(self.labels[idx], dtype=torch.float)
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h> def compute_metrics_for_regression(y_test, y_test_pred):
+[?2004l[?2004h>     metrics = {}
+[?2004l[?2004h>     for i, task in enumerate(DIMENSIONS):
+[?2004l[?2004h>         rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+[?2004l[?2004h>         metrics[f"rmse_{task}"] = rmse
+[?2004l[?2004h>     return metrics
+[?2004l[?2004h> 
+[?2004l[?2004h> def train_model(X_train, y_train, X_valid, y_valid):
+[?2004l[?2004h>     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+[?2004l[?2004h>     model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=len(DIMENSIONS))
+[?2004l[?2004h>     model.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h>     train_dataset = EssayDataset(X_train, y_train, tokenizer, MAX_LEN)
+[?2004l[?2004h>     valid_dataset = EssayDataset(X_valid, y_valid, tokenizer, MAX_LEN)
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+[?2004l[?2004h>     valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
+[?2004l[?2004h> 
+[?2004l[?2004h>     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     for epoch in range(EPOCHS):
+[?2004l[?2004h>         for batch in train_loader:
+[?2004l[?2004h>             optimizer.zero_grad()
+[?2004l[?2004h>             input_ids = batch['input_ids'].to(DEVICE)
+[?2004l[?2004h>             attention_mask = batch['attention_mask'].to(DEVICE)
+[?2004l[?2004h>             labels = batch['labels'].to(DEVICE)
+[?2004l[?2004h>             
+[?2004l[?2004h>             outputs = model(input_ids, attention_mask=attention_mask)
+[?2004l[?2004h>             loss = torch.nn.MSELoss()(outputs.logits, labels)
+[?2004l[?2004h>             
+[?2004l[?2004h>             loss.backward()
+[?2004l[?2004h>             optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h>     return (model, tokenizer)
+[?2004l[?2004h> 
+[?2004l[?2004h> def predict(model_tuple, X):
+[?2004l[?2004h>     model, tokenizer = model_tuple
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     
+[?2004l[?2004h>     preds = []
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         for i in range(0, len(X), BATCH_SIZE):
+[?2004l[?2004h>             batch_texts = X[i:i+BATCH_SIZE]
+[?2004l[?2004h>             inputs = tokenizer(batch_texts, padding=True, truncation=True, max_length=MAX_LEN, return_tensors="pt").to(DEVICE)
+[?2004l[?2004h>             outputs = model(**inputs)
+[?2004l[?2004h>             preds.append(outputs.logits.cpu().numpy())
+[?2004l[?2004h>             
+[?2004l[?2004h>     return np.vstack(preds)
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     train_df = pd.read_csv('train.csv')
+[?2004l[?2004h>     X = list(train_df['full_text'])
+[?2004l[?2004h>     y = np.array([train_df[d].values for d in DIMENSIONS]).T
+[?2004l[?2004h> 
+[?2004l[?2004h>     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+[?2004l[?2004h>     model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+[?2004l[?2004h> 
+[?2004l[?2004h>     y_valid_pred = predict(model_tuple, X_valid)
+[?2004l[?2004h>     metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+[?2004l[?2004h>     print(metrics)
+[?2004l[?2004h>     print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+[?2004l[?2004h> 
+[?2004l[?2004h>     test_df = pd.read_csv('test.csv')
+[?2004l[?2004h>     y_test_pred = predict(model_tuple, list(test_df['full_text']))
+[?2004l[?2004h>     out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+[?2004l[?2004h>     out.insert(0, 'text_id', test_df['text_id'])
+[?2004l[?2004h>     out.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3220800786cf:/workspace# python3 train.py
+[?2004lTraceback (most recent call last):
+  File "/workspace/train.py", line 7, in <module>
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification, get_linear_schedule_withwarmup
+ImportError: cannot import name 'get_linear_schedule_withwarmup' from 'transformers' (/usr/local/lib/python3.12/site-packages/transformers/__init__.py)
+[?2004hroot@3220800786cf:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from torch.utils.data import DataLoader, Dataset
+[?2004l[?2004h> from torch.optim import AdamW
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from transformers import AutoTokenizer, AutoModelForSequenceClassification
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+[?2004l[?2004h> SEED = 42
+[?2004l[?2004h> MODEL_NAME = 'distilbert-base-uncased'
+[?2004l[?2004h> MAX_LEN = 256
+[?2004l[?2004h> BATCH_SIZE = 16
+[?2004l[?2004h> EPOCHS = 3
+[?2004l[?2004h> LEARNING_RATE = 2e-5
+[?2004l[?2004h> 
+[?2004l[?2004h> class EssayDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, texts, labels, tokenizer, max_len):
+[?2004l[?2004h>         self.texts = texts
+[?2004l[?2004h>         self.labels = labels
+[?2004l[?2004h>         self.tokenizer = tokenizer
+[?2004l[?2004h>         self.max_len = max_len
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.texts)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         text = str(self.texts[idx])
+[?2004l[?2004h>         inputs = self.tokenizer.encode_plus(
+[?2004l[?2004h>             text, 
+[?2004l[?2004h>             None, 
+[?2004l[?2004h>             add_special_tokens=True, 
+[?2004l[?2004h>             max_length=self.max_len, 
+[?2004l[?2004h>             padding='max_length', 
+[?2004l[?2004h>             truncation=True, 
+[?2004l[?2004h>             return_tensors='pt'
+[?2004l[?2004h>         )
+[?2004l[?2004h>         return {
+[?2004l[?2004h>             'input_ids': inputs['input_ids'].flatten(),
+[?2004l[?2004h>             'attention_mask': inputs['attention_mask'].flatten(),
+[?2004l[?2004h>             'labels': torch.tensor(self.labels[idx], dtype=torch.float)
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h> def compute_metrics_for_regression(y_test, y_test_pred):
+[?2004l[?2004h>     metrics = {}
+[?2004l[?2004h>     for i, task in enumerate(DIMENSIONS):
+[?2004l[?2004h>         rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+[?2004l[?2004h>         metrics[f"rmse_{task}"] = rmse
+[?2004l[?2004h>     return metrics
+[?2004l[?2004h> 
+[?2004l[?2004h> def train_model(X_train, y_train, X_valid, y_valid):
+[?2004l[?2004h>     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+[?2004l[?2004h>     model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=len(DIMENSIONS))
+[?2004l[?2004h>     model.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h>     train_dataset = EssayDataset(X_train, y_train, tokenizer, MAX_LEN)
+[?2004l[?2004h>     valid_dataset = EssayDataset(X_valid, y_valid, tokenizer, MAX_LEN)
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+[?2004l[?2004h>     valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
+[?2004l[?2004h> 
+[?2004l[?2004h>     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     for epoch in range(EPOCHS):
+[?2004l[?2004h>         for batch in train_loader:
+[?2004l[?2004h>             optimizer.zero_grad()
+[?2004l[?2004h>             input_ids = batch['input_ids'].to(DEVICE)
+[?2004l[?2004h>             attention_mask = batch['attention_mask'].to(DEVICE)
+[?2004l[?2004h>             labels = batch['labels'].to(DEVICE)
+[?2004l[?2004h>             
+[?2004l[?2004h>             outputs = model(input_ids, attention_mask=attention_mask)
+[?2004l[?2004h>             loss = torch.nn.MSELoss()(outputs.logits, labels)
+[?2004l[?2004h>             
+[?2004l[?2004h>             loss.backward()
+[?2004l[?2004h>             optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h>     return (model, tokenizer)
+[?2004l[?2004h> 
+[?2004l[?2004h> def predict(model_tuple, X):
+[?2004l[?2004h>     model, tokenizer = model_tuple
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     
+[?2004l[?2004h>     preds = []
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         for i in range(0, len(X), BATCH_SIZE):
+[?2004l[?2004h>             batch_texts = X[i:i+BATCH_SIZE]
+[?2004l[?2004h>             inputs = tokenizer(batch_texts, padding=True, truncation=True, max_length=MAX_LEN, return_tensors="pt").to(DEVICE)
+[?2004l[?2004h>             outputs = model(**inputs)
+[?2004l[?2004h>             preds.append(outputs.logits.cpu().numpy())
+[?2004l[?2004h>             
+[?2004l[?2004h>     return np.vstack(preds)
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     train_df = pd.read_csv('train.csv')
+[?2004l[?2004h>     X = list(train_df['full_text'])
+[?2004l[?2004h>     y = np.array([train_df[d].values for d in DIMENSIONS]).T
+[?2004l[?2004h> 
+[?2004l[?2004h>     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+[?2004l[?2004h>     model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+[?2004l[?2004h> 
+[?2004l[?2004h>     y_valid_pred = predict(model_tuple, X_valid)
+[?2004l[?2004h>     metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+[?2004l[?2004h>     print(metrics)
+[?2004l[?2004h>     print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+[?2004l[?2004h> 
+[?2004l[?2004h>     test_df = pd.read_csv('test.csv')
+[?2004l[?2004h>     y_test_pred = predict(model_tuple, list(test_df['full_text']))
+[?2004l[?2004h>     out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+[?2004l[?2004h>     out.insert(0, 'text_id', test_df['text_id'])
+[?2004l[?2004h>     out.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3220800786cf:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+tokenizer_config.json:   0%|                                                                                                        | 0.00/48.0 [00:00<?, ?B/s]tokenizer_config.json: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 48.0/48.0 [00:00<00:00, 447kB/s]
+config.json:   0%|                                                                                                                   | 0.00/483 [00:00<?, ?B/s]config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 483/483 [00:00<00:00, 4.31MB/s]
+vocab.txt: 0.00B [00:00, ?B/s]vocab.txt: 232kB [00:00, 8.33MB/s]
+tokenizer.json: 0.00B [00:00, ?B/s]tokenizer.json: 308kB [00:00, 2.90MB/s]tokenizer.json: 466kB [00:00, 2.95MB/s]
+/usr/local/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+model.safetensors:   0%|                                                                                                            | 0.00/268M [00:00<?, ?B/s]model.safetensors:  26%|█████████████████████████▎                                                                         | 68.6M/268M [00:02<00:06, 29.9MB/s]model.safetensors:  80%|████████████████████████████████████████████████████████████████████████████████▍                    | 214M/268M [00:02<00:00, 104MB/s]model.safetensors: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████| 268M/268M [00:02<00:00, 129MB/s]model.safetensors: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████| 268M/268M [00:02<00:00, 98.6MB/s]
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+ls -la submission.csv
+head -n 5 submission.csv
+ls -la submission.csv
+head -n 5 submission.csv
+ls -la submission.csv
+head -n 5 submission.csv
+ls -la submission.csv
+head -n 5 submission.csv
+C-c
+cat << 'EOF' > train.py
+import numpy as np
+import pandas as pd
+import torch
+from torch.utils.data import DataLoader, Dataset
+from torch.optim import AdamW
+from sklearn.model_selection import train_test_split
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+DEVICE = ('cuda' if torch.cuda.is_available()
+          else 'mps' if torch.backends.mps.is_available() else 'cpu')
+print('DEVICE=', DEVICE)
+
+DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+SEED = 42
+MODEL_NAME = 'distilbert-base-uncased'
+MAX_LEN = 128
+BATCH_SIZE = 8
+EPOCHS = 1
+LEARNING_RATE = 5e-5
+
+class EssayDataset(Dataset):
+    def __init__(self, texts, labels, tokenizer, max_len):
+        self.texts = texts
+        self.labels = labels
+        self.tokenizer = tokenizer
+        self.max_len = max_len
+
+    def __len__(self):
+        return len(self.texts)
+
+    def __getitem__(self, idx):
+        text = str(self.texts[idx])
+        inputs = self.tokenizer.encode_plus(
+            text, 
+            None, 
+            add_special_tokens=True, 
+            max_length=self.max_len, 
+            padding='max_length', 
+            truncation=True, 
+            return_tensors='pt'
+        )
+        return {
+            'input_ids': inputs['input_ids'].flatten(),
+            'attention_mask': inputs['attention_mask'].flatten(),
+            'labels': torch.tensor(self.labels[idx], dtype=torch.float)
+        }
+
+def compute_metrics_for_regression(y_test, y_test_pred):
+    metrics = {}
+    for i, task in enumerate(DIMENSIONS):
+        rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+        metrics[f"rmse_{task}"] = rmse
+    return metrics
+
+def train_model(X_train, y_train, X_valid, y_valid):
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=len(DIMENSIONS))
+    model.to(DEVICE)
+
+    train_dataset = EssayDataset(X_train, y_train, tokenizer, MAX_LEN)
+    valid_dataset = EssayDataset(X_valid, y_valid, tokenizer, MAX_LEN)
+    
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
+
+    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+    
+    model.train()
+    for epoch in range(EPOCHS):
+        for batch in train_loader:
+            optimizer.zero_grad()
+            input_ids = batch['input_ids'].to(DEVICE)
+            attention_mask = batch['attention_mask'].to(DEVICE)
+            labels = batch['labels'].to(DEVICE)
+            
+            outputs = model(input_ids, attention_mask=attention_mask)
+            loss = torch.nn.MSELoss()(outputs.logits, labels)
+            
+            loss.backward()
+            optimizer.step()
+
+    return (model, tokenizer)
+
+def predict(model_tuple, X):
+    model, tokenizer = model_tuple
+    model.eval()
+    
+    preds = []
+    with torch.no_grad():
+        for i in range(0, len(X), BATCH_SIZE):
+            batch_texts = X[i:i+BATCH_SIZE]
+            inputs = tokenizer(batch_texts, padding=True, truncation=True, max_length=MAX_LEN, return_tensors="pt").to(DEVICE)
+            outputs = model(**inputs)
+            preds.append(outputs.logits.cpu().numpy())
+            
+    return np.vstack(preds)
+
+if __name__ == '__main__':
+    train_df = pd.read_csv('train.csv')
+    X = list(train_df['full_text'])
+    y = np.array([train_df[d].values for d in DIMENSIONS]).T
+
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+    model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+
+    y_valid_pred = predict(model_tuple, X_valid)
+    metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+    print(metrics)
+    print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+
+    test_df = pd.read_csv('test.csv')
+    y_tes{'rmse_cohesion': 0.5637731656802064, 'rmse_syntax': 0.5210805143945229, 'rmse_vocabulary': 0.47605075848299133, 'rmse_phraseology': 0.49554687970457106, 'rmse_grammar': 0.557622760887379, 'rmse_conventions': 0.5071785449522989}
+final MCRMSE on validation set:  0.5202087706836617
+[?2004hroot@3220800786cf:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 56000 Sep  4 18:03 submission.csv
+[?2004hroot@3220800786cf:/workspace# head -n 5 submission.csv
+[?2004ltext_id,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+8A9E12ADD91C,2.536015,2.431797,2.6748152,2.5189269,2.4563038,2.4560587
+D1C5C7879A33,2.915677,2.8016925,3.0211666,2.8613086,2.8505082,2.887731
+A4A90A401002,3.6877892,3.5904768,3.7622852,3.6799617,3.7067866,3.74004
+F12C7794CDCB,3.4589252,3.3672206,3.4992342,3.4563258,3.4459403,3.4857213
+[?2004hroot@3220800786cf:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 56000 Sep  4 18:03 submission.csv
+[?2004hroot@3220800786cf:/workspace# head -n 5 submission.csv
+[?2004ltext_id,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+8A9E12ADD91C,2.536015,2.431797,2.6748152,2.5189269,2.4563038,2.4560587
+D1C5C7879A33,2.915677,2.8016925,3.0211666,2.8613086,2.8505082,2.887731
+A4A90A401002,3.6877892,3.5904768,3.7622852,3.6799617,3.7067866,3.74004
+F12C7794CDCB,3.4589252,3.3672206,3.4992342,3.4563258,3.4459403,3.4857213
+[?2004hroot@3220800786cf:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 56000 Sep  4 18:03 submission.csv
+[?2004hroot@3220800786cf:/workspace# head -n 5 submission.csv
+[?2004ltext_id,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+8A9E12ADD91C,2.536015,2.431797,2.6748152,2.5189269,2.4563038,2.4560587
+D1C5C7879A33,2.915677,2.8016925,3.0211666,2.8613086,2.8505082,2.887731
+A4A90A401002,3.6877892,3.5904768,3.7622852,3.6799617,3.7067866,3.74004
+F12C7794CDCB,3.4589252,3.3672206,3.4992342,3.4563258,3.4459403,3.4857213
+[?2004hroot@3220800786cf:/workspace# ls -la submission.csv
+[?2004l-rw-r--r-- 1 root root 56000 Sep  4 18:03 submission.csv
+[?2004hroot@3220800786cf:/workspace# head -n 5 submission.csv
+[?2004ltext_id,cohesion,syntax,vocabulary,phraseology,grammar,conventions
+8A9E12ADD91C,2.536015,2.431797,2.6748152,2.5189269,2.4563038,2.4560587
+D1C5C7879A33,2.915677,2.8016925,3.0211666,2.8613086,2.8505082,2.887731
+A4A90A401002,3.6877892,3.5904768,3.7622852,3.6799617,3.7067866,3.74004
+F12C7794CDCB,3.4589252,3.3672206,3.4992342,3.4563258,3.4459403,3.4857213
+[?2004hroot@3220800786cf:/workspace# C-c
+[?2004lbash: C-c: command not found
+[?2004hroot@3220800786cf:/workspace# cat << 'EOF' > train.py
+[?2004l[?2004h> import numpy as np
+[?2004l[?2004h> import pandas as pd
+[?2004l[?2004h> import torch
+[?2004l[?2004h> from torch.utils.data import DataLoader, Dataset
+[?2004l[?2004h> from torch.optim import AdamW
+[?2004l[?2004h> from sklearn.model_selection import train_test_split
+[?2004l[?2004h> from transformers import AutoTokenizer, AutoModelForSequenceClassification
+[?2004l[?2004h> 
+[?2004l[?2004h> DEVICE = ('cuda' if torch.cuda.is_available()
+[?2004l[?2004h>           else 'mps' if torch.backends.mps.is_available() else 'cpu')
+[?2004l[?2004h> print('DEVICE=', DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h> DIMENSIONS = ["cohesion", "syntax", "vocabulary", "phraseology", "grammar", "conventions"]
+[?2004l[?2004h> SEED = 42
+[?2004l[?2004h> MODEL_NAME = 'distilbert-base-uncased'
+[?2004l[?2004h> MAX_LEN = 128
+[?2004l[?2004h> BATCH_SIZE = 8
+[?2004l[?2004h> EPOCHS = 1
+[?2004l[?2004h> LEARNING_RATE = 5e-5
+[?2004l[?2004h> 
+[?2004l[?2004h> class EssayDataset(Dataset):
+[?2004l[?2004h>     def __init__(self, texts, labels, tokenizer, max_len):
+[?2004l[?2004h>         self.texts = texts
+[?2004l[?2004h>         self.labels = labels
+[?2004l[?2004h>         self.tokenizer = tokenizer
+[?2004l[?2004h>         self.max_len = max_len
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __len__(self):
+[?2004l[?2004h>         return len(self.texts)
+[?2004l[?2004h> 
+[?2004l[?2004h>     def __getitem__(self, idx):
+[?2004l[?2004h>         text = str(self.texts[idx])
+[?2004l[?2004h>         inputs = self.tokenizer.encode_plus(
+[?2004l[?2004h>             text, 
+[?2004l[?2004h>             None, 
+[?2004l[?2004h>             add_special_tokens=True, 
+[?2004l[?2004h>             max_length=self.max_len, 
+[?2004l[?2004h>             padding='max_length', 
+[?2004l[?2004h>             truncation=True, 
+[?2004l[?2004h>             return_tensors='pt'
+[?2004l[?2004h>         )
+[?2004l[?2004h>         return {
+[?2004l[?2004h>             'input_ids': inputs['input_ids'].flatten(),
+[?2004l[?2004h>             'attention_mask': inputs['attention_mask'].flatten(),
+[?2004l[?2004h>             'labels': torch.tensor(self.labels[idx], dtype=torch.float)
+[?2004l[?2004h>         }
+[?2004l[?2004h> 
+[?2004l[?2004h> def compute_metrics_for_regression(y_test, y_test_pred):
+[?2004l[?2004h>     metrics = {}
+[?2004l[?2004h>     for i, task in enumerate(DIMENSIONS):
+[?2004l[?2004h>         rmse = np.sqrt(((y_test[:, i] - y_test_pred[:, i]) ** 2).mean())
+[?2004l[?2004h>         metrics[f"rmse_{task}"] = rmse
+[?2004l[?2004h>     return metrics
+[?2004l[?2004h> 
+[?2004l[?2004h> def train_model(X_train, y_train, X_valid, y_valid):
+[?2004l[?2004h>     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+[?2004l[?2004h>     model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=len(DIMENSIONS))
+[?2004l[?2004h>     model.to(DEVICE)
+[?2004l[?2004h> 
+[?2004l[?2004h>     train_dataset = EssayDataset(X_train, y_train, tokenizer, MAX_LEN)
+[?2004l[?2004h>     valid_dataset = EssayDataset(X_valid, y_valid, tokenizer, MAX_LEN)
+[?2004l[?2004h>     
+[?2004l[?2004h>     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+[?2004l[?2004h>     valid_loader = DataLoader(valid_dataset, batch_size=BATCH_SIZE)
+[?2004l[?2004h> 
+[?2004l[?2004h>     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE)
+[?2004l[?2004h>     
+[?2004l[?2004h>     model.train()
+[?2004l[?2004h>     for epoch in range(EPOCHS):
+[?2004l[?2004h>         for batch in train_loader:
+[?2004l[?2004h>             optimizer.zero_grad()
+[?2004l[?2004h>             input_ids = batch['input_ids'].to(DEVICE)
+[?2004l[?2004h>             attention_mask = batch['attention_mask'].to(DEVICE)
+[?2004l[?2004h>             labels = batch['labels'].to(DEVICE)
+[?2004l[?2004h>             
+[?2004l[?2004h>             outputs = model(input_ids, attention_mask=attention_mask)
+[?2004l[?2004h>             loss = torch.nn.MSELoss()(outputs.logits, labels)
+[?2004l[?2004h>             
+[?2004l[?2004h>             loss.backward()
+[?2004l[?2004h>             optimizer.step()
+[?2004l[?2004h> 
+[?2004l[?2004h>     return (model, tokenizer)
+[?2004l[?2004h> 
+[?2004l[?2004h> def predict(model_tuple, X):
+[?2004l[?2004h>     model, tokenizer = model_tuple
+[?2004l[?2004h>     model.eval()
+[?2004l[?2004h>     
+[?2004l[?2004h>     preds = []
+[?2004l[?2004h>     with torch.no_grad():
+[?2004l[?2004h>         for i in range(0, len(X), BATCH_SIZE):
+[?2004l[?2004h>             batch_texts = X[i:i+BATCH_SIZE]
+[?2004l[?2004h>             inputs = tokenizer(batch_texts, padding=True, truncation=True, max_length=MAX_LEN, return_tensors="pt").to(DEVICE)
+[?2004l[?2004h>             outputs = model(**inputs)
+[?2004l[?2004h>             preds.append(outputs.logits.cpu().numpy())
+[?2004l[?2004h>             
+[?2004l[?2004h>     return np.vstack(preds)
+[?2004l[?2004h> 
+[?2004l[?2004h> if __name__ == '__main__':
+[?2004l[?2004h>     train_df = pd.read_csv('train.csv')
+[?2004l[?2004h>     X = list(train_df['full_text'])
+[?2004l[?2004h>     y = np.array([train_df[d].values for d in DIMENSIONS]).T
+[?2004l[?2004h> 
+[?2004l[?2004h>     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.10, random_state=SEED)
+[?2004l[?2004h>     model_tuple = train_model(X_train, y_train, X_valid, y_valid)
+[?2004l[?2004h> 
+[?2004l[?2004h>     y_valid_pred = predict(model_tuple, X_valid)
+[?2004l[?2004h>     metrics = compute_metrics_for_regression(y_valid, y_valid_pred)
+[?2004l[?2004h>     print(metrics)
+[?2004l[?2004h>     print("final MCRMSE on validation set: ", np.mean(list(metrics.values())))
+[?2004l[?2004h> 
+[?2004l[?2004h>     test_df = pd.read_csv('test.csv')
+[?2004l[?2004h>     y_test_pred = predict(model_tuple, list(test_df['full_text']))
+[?2004l[?2004h>     out = pd.DataFrame(y_test_pred, columns=DIMENSIONS)
+[?2004l[?2004h>     out.insert(0, 'text_id', test_df['text_id'])
+[?2004l[?2004h>     out.to_csv('submission.csv', index=False)
+[?2004l[?2004h> EOF
+[?2004l[?2004hroot@3220800786cf:/workspace# python3 train.py
+[?2004lDEVICE= cpu
+/usr/local/lib/python3.12/site-packages/transformers/tokenization_utils_base.py:1601: FutureWarning: `clean_up_tokenization_spaces` was not set. It will be set to `True` by default. This behavior will be depracted in transformers v4.45, and will be then set to `False` by default. For more details check this issue: https://github.com/huggingface/transformers/issues/31884
+  warnings.warn(
+Some weights of DistilBertForSequenceClassification were not initialized from the model checkpoint at distilbert-base-uncased and are newly initialized: ['classifier.bias', 'classifier.weight', 'pre_classifier.bias', 'pre_classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
