@@ -8,17 +8,17 @@ section,comparison,a,b,tasks_compared,mean_difference,ci95_low,ci95_high,tasks_w
 6.2,AutoDS-Tools: library part vs no file,autods-tools/file-library,autods-tools/file-none,8,+0.1202,+0.0194,+0.2462,6,2,0.0547,24/24,24/24,1
 6.2,AutoDS-Tools: discipline part vs no file,autods-tools/file-discipline,autods-tools/file-none,8,+0.0166,-0.0122,+0.0620,3,4,1.0000,24/24,24/24,1
 6.2,AutoDS-Tools: whole file vs library part,autods-tools/file-both,autods-tools/file-library,8,-0.0228,-0.0669,+0.0159,5,3,0.8438,23/24,24/24,1
-6.3,Terminus-2: whole file vs no file,terminus-2/file-both,terminus-2/file-none,6,+0.1094,+0.0181,+0.2291,5,1,0.0938,13/24,22/24,0.0078
-6.3,Terminus-2: library part vs no file,terminus-2/file-library,terminus-2/file-none,3,+0.2018,+0.0830,+0.3874,3,0,,3/24,22/24,3.7e-08
-6.3,Terminus-2: discipline part vs no file,terminus-2/file-discipline,terminus-2/file-none,7,+0.0053,-0.0101,+0.0238,3,4,0.9375,11/24,22/24,0.0013
-6.3,Terminus-2: discipline trimmed vs no file,terminus-2/file-discipline-trimmed,terminus-2/file-none,8,-0.0527,-0.1410,+0.0032,4,3,0.8125,24/24,22/24,0.49
-6.3,Terminus-2: discipline trimmed vs discipline part,terminus-2/file-discipline-trimmed,terminus-2/file-discipline,7,-0.0656,-0.1670,+0.0042,3,4,0.3750,24/24,11/24,2.6e-05
-6.3,Terminus-2: library part vs whole file,terminus-2/file-library,terminus-2/file-both,2,+0.0009,-0.0001,+0.0019,1,1,,3/24,13/24,0.005
-6.5,Terminus-2: enriched image vs stock image,terminus-2/enriched-image,terminus-2/stock-image,8,-0.0371,-0.0894,+0.0031,4,4,0.5469,24/24,24/24,1
-6.6,Terminus-2: gemma-4-26b-a4b-it vs gemma-4-31b-it,terminus-2/model-gemma-4-26b-a4b-it,terminus-2/file-none,8,-0.0451,-0.1300,+0.0168,2,6,0.1953,19/24,22/24,0.42
-6.6,Terminus-2: glm-4.7 vs gemma-4-31b-it,terminus-2/model-glm-4.7,terminus-2/file-none,8,-0.2348,-0.9477,+0.3094,1,7,0.1484,24/24,22/24,0.49
-6.6,AutoDS-Tools: gemma-4-26b-a4b-it vs gemma-4-31b-it,autods-tools/model-gemma-4-26b-a4b-it,autods-tools/file-both,8,-0.0170,-0.0265,-0.0078,0,8,0.0078,18/24,23/24,0.097
-6.6,AutoDS-Tools: glm-4.7 vs gemma-4-31b-it,autods-tools/model-glm-4.7,autods-tools/file-both,7,+0.0929,-0.0093,+0.2175,3,4,0.5781,17/24,23/24,0.048
+6.2,Terminus-2: whole file vs no file,terminus-2/file-both,terminus-2/file-none,6,+0.1094,+0.0181,+0.2291,5,1,0.0938,13/24,22/24,0.0078
+6.2,Terminus-2: library part vs no file,terminus-2/file-library,terminus-2/file-none,3,+0.2018,+0.0830,+0.3874,3,0,,3/24,22/24,3.7e-08
+6.2,Terminus-2: discipline part vs no file,terminus-2/file-discipline,terminus-2/file-none,7,+0.0053,-0.0101,+0.0238,3,4,0.9375,11/24,22/24,0.0013
+6.2,Terminus-2: discipline trimmed vs no file,terminus-2/file-discipline-trimmed,terminus-2/file-none,8,-0.0527,-0.1410,+0.0032,4,3,0.8125,24/24,22/24,0.49
+6.2,Terminus-2: discipline trimmed vs discipline part,terminus-2/file-discipline-trimmed,terminus-2/file-discipline,7,-0.0656,-0.1670,+0.0042,3,4,0.3750,24/24,11/24,2.6e-05
+6.2,Terminus-2: library part vs whole file,terminus-2/file-library,terminus-2/file-both,2,+0.0009,-0.0001,+0.0019,1,1,,3/24,13/24,0.005
+6.3,Terminus-2: enriched image vs stock image,terminus-2/enriched-image,terminus-2/stock-image,8,-0.0371,-0.0894,+0.0031,4,4,0.5469,24/24,24/24,1
+6.4,Terminus-2: gemma-4-26b-a4b-it vs gemma-4-31b-it,terminus-2/model-gemma-4-26b-a4b-it,terminus-2/file-none,8,-0.0451,-0.1300,+0.0168,2,6,0.1953,19/24,22/24,0.42
+6.4,Terminus-2: glm-4.7 vs gemma-4-31b-it,terminus-2/model-glm-4.7,terminus-2/file-none,8,-0.2348,-0.9477,+0.3094,1,7,0.1484,24/24,22/24,0.49
+6.4,AutoDS-Tools: gemma-4-26b-a4b-it vs gemma-4-31b-it,autods-tools/model-gemma-4-26b-a4b-it,autods-tools/file-both,8,-0.0170,-0.0265,-0.0078,0,8,0.0078,18/24,23/24,0.097
+6.4,AutoDS-Tools: glm-4.7 vs gemma-4-31b-it,autods-tools/model-glm-4.7,autods-tools/file-both,7,+0.0929,-0.0093,+0.2175,3,4,0.5781,17/24,23/24,0.048
 5.1,AutoDS-Tools with file vs tuned XGBoost,autods-tools/file-both,published/XGBoost,8,-0.0208,-0.0808,+0.0284,3,5,0.5469,23/24,,
 5.1,AutoDS-Tools with file vs tuned LightGBM,autods-tools/file-both,published/LightGBM,8,-0.0011,-0.0422,+0.0412,3,5,0.9453,23/24,,
 5.1,AutoDS-Tools with file vs MLP-PLR ensemble,autods-tools/file-both,published/MLP-PLR ens.,8,-0.1050,-0.2273,+0.0045,3,5,0.2500,23/24,,

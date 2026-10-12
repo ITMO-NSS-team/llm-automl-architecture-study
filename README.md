@@ -33,20 +33,20 @@ to the tables, figures and sections of the paper.
 |---|---|---|---|---|---|---|
 | [`fedot-llm/library-built-in`](runs/tabred/fedot-llm/library-built-in) | library built in | FEDOT | gemma-4-31b-it | 2 | 28 | Table 3, Fig. 2, Table 6 |
 | [`terminus-2/stock-image`](runs/tabred/terminus-2/stock-image) | none | stock | gemma-4-31b-it | 2 | 24 | Table 3, Fig. 2, Table 6 |
-| [`terminus-2/enriched-image`](runs/tabred/terminus-2/enriched-image) | none | enriched | gemma-4-31b-it | 2 | 24 | Sections 6.1, 6.5 and 7.1, Fig. 4 |
-| [`terminus-2/file-none`](runs/tabred/terminus-2/file-none) | none | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Section 6.6, Fig. 4 |
+| [`terminus-2/enriched-image`](runs/tabred/terminus-2/enriched-image) | none | enriched | gemma-4-31b-it | 2 | 24 | Sections 6.1, 6.3 and 7.1, Fig. 4 |
+| [`terminus-2/file-none`](runs/tabred/terminus-2/file-none) | none | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Section 6.4, Fig. 4 |
 | [`terminus-2/file-library`](runs/tabred/terminus-2/file-library) | library | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Fig. 4 |
 | [`terminus-2/file-discipline`](runs/tabred/terminus-2/file-discipline) | discipline | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Fig. 4 |
 | [`terminus-2/file-discipline-trimmed`](runs/tabred/terminus-2/file-discipline-trimmed) | discipline trimmed | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Fig. 4 |
 | [`terminus-2/file-both`](runs/tabred/terminus-2/file-both) | both | enriched | gemma-4-31b-it | 4 | 24 | Table 8, Fig. 4 |
-| [`terminus-2/model-gemma-4-26b-a4b-it`](runs/tabred/terminus-2/model-gemma-4-26b-a4b-it) | none | enriched | gemma-4-26b-a4b-it | 4 | 24 | Section 6.6, Fig. 4 |
-| [`terminus-2/model-glm-4.7`](runs/tabred/terminus-2/model-glm-4.7) | none | enriched | glm-4.7 | 4 | 24 | Section 6.6, Fig. 4 |
+| [`terminus-2/model-gemma-4-26b-a4b-it`](runs/tabred/terminus-2/model-gemma-4-26b-a4b-it) | none | enriched | gemma-4-26b-a4b-it | 4 | 24 | Section 6.4, Fig. 4 |
+| [`terminus-2/model-glm-4.7`](runs/tabred/terminus-2/model-glm-4.7) | none | enriched | glm-4.7 | 4 | 24 | Section 6.4, Fig. 4 |
 | [`autods-tools/file-none`](runs/tabred/autods-tools/file-none) | none | enriched | gemma-4-31b-it | 4 | 24 | Table 7, Fig. 2, Fig. 4, Section 7 |
 | [`autods-tools/file-library`](runs/tabred/autods-tools/file-library) | library | enriched | gemma-4-31b-it | 4 | 24 | Table 7, Fig. 4, Section 7 |
 | [`autods-tools/file-discipline`](runs/tabred/autods-tools/file-discipline) | discipline | enriched | gemma-4-31b-it | 4 | 24 | Table 7, Fig. 4, Section 7 |
 | [`autods-tools/file-both`](runs/tabred/autods-tools/file-both) | both | enriched | gemma-4-31b-it | 4 | 24 | Table 3, Fig. 2, Tables 6 and 7, Fig. 4, Section 7 |
-| [`autods-tools/model-gemma-4-26b-a4b-it`](runs/tabred/autods-tools/model-gemma-4-26b-a4b-it) | both | enriched | gemma-4-26b-a4b-it | 4 | 24 | Section 6.6, Fig. 4 |
-| [`autods-tools/model-glm-4.7`](runs/tabred/autods-tools/model-glm-4.7) | both | enriched | glm-4.7 | 4 | 24 | Section 6.6, Fig. 4 |
+| [`autods-tools/model-gemma-4-26b-a4b-it`](runs/tabred/autods-tools/model-gemma-4-26b-a4b-it) | both | enriched | gemma-4-26b-a4b-it | 4 | 24 | Section 6.4, Fig. 4 |
+| [`autods-tools/model-glm-4.7`](runs/tabred/autods-tools/model-glm-4.7) | both | enriched | glm-4.7 | 4 | 24 | Section 6.4, Fig. 4 |
 
 ### MLAgentBench (`runs/mlagentbench`)
 
